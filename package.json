@@ -2,25 +2,43 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev"
+    "build": "npm run build:css && remix build",
+    "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
+    "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
+    "deploy": "fly deploy --remote-only",
+    "start": "remix-serve build"
   },
   "dependencies": {
-    "@remix-run/node": "^1.7.2",
-    "@remix-run/react": "^1.7.2",
-    "@remix-run/vercel": "^1.7.2",
-    "@vercel/node": "^2.4.4",
+    "@headlessui/react": "^1.7.1",
+    "@heroicons/react": "^2.0.11",
+    "@remix-run/node": "^1.7.5",
+    "@remix-run/react": "^1.7.5",
+    "@remix-run/serve": "^1.7.5",
+    "@starknet-react/core": "^0.14.6",
+    "bn.js": "^5.2.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "starknet": "^4.9.0",
+    "tailwindcss-radix": "^2.6.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.7.2",
-    "@remix-run/eslint-config": "^1.7.2",
-    "@remix-run/serve": "^1.7.2",
+    "@remix-run/dev": "^1.7.5",
+    "@remix-run/eslint-config": "^1.7.5",
+    "@types/bn.js": "^5.1.1",
+    "@types/node": "^18.8.2",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "autoprefixer": "^10.4.8",
+    "concurrently": "^7.3.0",
+    "esbuild-register": "^3.3.3",
     "eslint": "^8.23.1",
-    "typescript": "^4.7.4"
+    "happy-dom": "^7.5.6",
+    "postcss": "^8.4.16",
+    "react-is": "^17.0.2",
+    "tailwindcss": "^3.1.8",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
   },
   "engines": {
     "node": ">=14"
