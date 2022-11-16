@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "americana";
+    src: url("/assets/fonts/americana/Americana-Regular.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+  
+@font-face {
+    font-family: "americana";
+    src: url("/assets/fonts/americana/AmericanaStd-Italic.woff2") format("woff2");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "trash";
+    src: url("/assets/fonts/trashplus/trashplusbold_italic.woff2") format("woff2");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "trash";
+    src: url("/assets/fonts/trashplus/trashplusbold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@layer components {
+    /* This won't be included in your compiled CSS unless you actually use it */
+    .menu-bg {
+        box-sizing: border-box;
+        background: linear-gradient(90.2deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.13) 0.01%, rgba(255, 255, 255, 0.2) 0.02%, rgba(255, 255, 255, 0.1) 43.23%, rgba(255, 255, 255, 0) 70.83%, rgba(255, 255, 255, 0.24) 100%);
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(22.78px);
+        border-radius: 40px;
+    } 
+}
+
+@layer utilities {
+    .chip-clip {
+        clip-path: polygon(0 37%, 0 26%, 1% 23%, 4% 20%, 4% 18%, 4% 2%, 5% 0, 43% 0, 44% 0, 48% 4%, 51% 5%, 99% 5%, 100% 7%, 100% 49%, 99% 52%, 91% 56%, 90% 56%, 90% 69%, 91% 70%, 99% 70%, 100% 72%, 100% 98%, 100% 100%, 4% 100%, 4% 98%, 4% 42%, 4% 41%, 0 39%);
+    }
+
+    .scroll-snap-end {
+        scroll-snap-align: end;
+    }
+
+    .scroll-snap-center {
+        scroll-snap-align: center;
+    }
+    .scroll-snap-start {
+        scroll-snap-align: start;
+    } 
+ }
+
+.full-screen-video {
+    width: 100vw;
+    height: 47vw;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.snap-mandatory {
+    scroll-snap-points-y: repeat(100vh);
+    scroll-snap-type: y mandatory;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/**
+ * Carousel overflow
+ */
+.preventOverflow {
+    position: relative;
+    overflow: hidden;
+}
+
+.preventOverflow .slick-list {
+    overflow: visible;
+}
+
+.preventOverflow::before,
+.preventOverflow::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 124px;
+    z-index: 1;
+}
+
+.preventOverflow::before {
+    left: 0;
+    background: linear-gradient(90deg, #000000 51.85%, rgba(0, 0, 0, 0) 100%);
+}
+
+.preventOverflow::after {
+    right: 0;
+    background: linear-gradient(-90deg, #000000 51.85%, rgba(0, 0, 0, 0) 100%);
+
+}
+
+@media screen and (min-width: 640px) {
+    .preventOverflow::before,
+    .preventOverflow::after {
+        content: "";
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .preventOverflow::before,
+    .preventOverflow::after {
+        width: 244px;
+    }
+}
+
+#carbo-map {
+    margin-top: -20%;
+}
+
+/**
+ * Image
+ */
+.lord-img {
+    position: relative;
+}
+
+.lord-img__placeholder {
+    display: block;
+}
+
+.lord-img img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#line-marker {
+    /* Vector 1 */
+    /* border-left: 1px solid #0AF2AD; */
+    /* border-bottom: 1px solid #0AF2AD; */
+    box-shadow: inset 1px -1px 0 #0AF2AD;
+    border-radius: 0 0 0 8px;
+
+    height: calc(91.66667vw * .18 - 1px);
+}
+@media screen and (min-width: 769px) {
+    #line-marker { 
+        height: calc(83.3333vw * .21 - 1px);
+        border-radius: 0 0 0 32px;
+    }
+}
+
+@media screen and (min-width: 1280px){
+    #line-marker {
+        height: 45.4%;
+    }
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    object-position: 50% 50%;
+    object-fit: cover;
+    z-index: -1;
+    min-width: 640px;
+    max-width: 1440px;
+}
+
+.clip-video img {
+    clip-path: url(#clip-video);
+}
+
+.clip-video::after {
+    content: "";
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+}
+
+.oHidden {
+    overflow: hidden
+}
+
+body > div {
+    overflow: hidden
+}
