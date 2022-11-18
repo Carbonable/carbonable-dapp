@@ -1,5 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import { links } from "./links";
+import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TELEGRAM_LINK, TWITTER_LINK, YOUTUBE_LINK } from "~/utils/links";
+import { LinkFooter } from "../Buttons/LinkButton";
 
 export default function NavMenu() {
 
@@ -19,7 +21,17 @@ export default function NavMenu() {
                         </NavLink>
                     ))}
                 </div>
-                
+            </div>
+            <div className="absolute bottom-4 items-center justify-center w-[320px] font-inter font-bold">
+                <div className="w-full flex flex-wrap items-center justify-center px-8">
+                    <LinkFooter className="w-[64px] m-1" href={TWITTER_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/twitter-icon.svg" alt="twitter" /></LinkFooter>
+                    <LinkFooter className="w-[64px] m-1" href={DISCORD_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/discord-icon.svg" alt="discord" /></LinkFooter>
+                    <LinkFooter className="w-[64px] m-1" href={LINKEDIN_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/linkedin-icon.svg" alt="linkedin" /></LinkFooter>
+                    <LinkFooter className="w-[64px] m-1" href={MEDIUM_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/medium-icon.svg" alt="medium" /></LinkFooter>
+                    <LinkFooter className="w-[64px] m-1" href={TELEGRAM_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/telegram-icon.svg" alt="telegram" /></LinkFooter>
+                    <LinkFooter className="w-[64px] m-1" href={YOUTUBE_LINK}><img className="w-[32px] h-[32px]" src="/assets/images/icons/youtube-icon.svg" alt="youtube" /></LinkFooter>
+                </div>
+                <div className="w-full flex items-center justify-center mt-4">Powered by <img className="w-[112px] ml-2" src="/assets/images/common/starknet.png" alt="Starknet logo" /></div>
             </div>
         </div>
     )
