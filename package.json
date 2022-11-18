@@ -10,14 +10,14 @@
     "start": "remix-serve build"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.1",
-    "@heroicons/react": "^2.0.11",
+    "@heroicons/react": "^2.0.13",
     "@remix-run/node": "^1.7.5",
     "@remix-run/react": "^1.7.5",
     "@remix-run/serve": "^1.7.5",
     "@starknet-react/core": "^0.14.6",
     "bn.js": "^5.2.1",
     "react": "^18.2.0",
+    "react-burger-menu": "^3.0.8",
     "react-dom": "^18.2.0",
     "starknet": "^4.9.0",
     "tailwindcss-radix": "^2.6.0"
@@ -28,6 +28,7 @@
     "@types/bn.js": "^5.1.1",
     "@types/node": "^18.8.2",
     "@types/react": "^18.0.15",
+    "@types/react-burger-menu": "^2.8.3",
     "@types/react-dom": "^18.0.6",
     "autoprefixer": "^10.4.8",
     "concurrently": "^7.3.0",
