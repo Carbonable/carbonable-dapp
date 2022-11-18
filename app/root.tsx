@@ -61,7 +61,7 @@ export function CatchBoundary() {
             <div className="text-9xl font-trash w-full text-center">{caught.status}</div>
             <div className="text-7xl font-americana w-full text-center">{caught.statusText}</div>
             <div className="text-center mt-4">
-              <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
+              <Link to={"/"} className="text-green text-center">Go to launchpad</Link>
             </div>
           </div>
         </div>
