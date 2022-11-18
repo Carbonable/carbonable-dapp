@@ -4,7 +4,7 @@ export const links = [
         label: 'Dashboard'
     },
     {
-        href: '/launchpad',
+        href: '/',
         label: 'Launchpad'
     },
     {
