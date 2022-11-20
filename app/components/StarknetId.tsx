@@ -1,12 +1,25 @@
+import type { Connector} from '@starknet-react/core';
 import { useAccount, useConnectors } from '@starknet-react/core';
 import { useEffect, useState } from 'react';
 import { fetchStarnetId } from '~/utils/starknetId';
 
+function getAvailableConnectors(connectors: Connector<any>[]):Connector<any>[] {
+    let availableConnectors = [];
+    for(const connector of connectors) {
+        if(connector.available()) {
+            availableConnectors.push(connector);
+        }
+    }
+
+    return availableConnectors;
+}
 
 export default function Index() {
     const { address, status } = useAccount();
     const { connect, connectors } = useConnectors();
     const [starnetId, setStarnetId] = useState("");
+    const availableConnectors = getAvailableConnectors(connectors);
+    console.log(availableConnectors)
 
     useEffect(() => {
         getStarnetId();
