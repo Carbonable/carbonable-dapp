@@ -3,11 +3,28 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import { useEffect } from "react";
 import WalletButton from "./Buttons/ActionButton";
 
-export default function Header({toggleMenu, menuOpen, starknetId}: any) {
-    const { status } = useAccount();
-    const { connect, available, refresh, disconnect } = useConnectors();
-    
 
+export default function Header({toggleMenu, menuOpen, starknetId}: any) {
+    const  { address, status }  = useAccount();
+    const { connect, available, refresh, disconnect } = useConnectors();
+
+
+    
+    function minifyAddressOrDomain(address?: string): string | undefined {
+        if (!address) return;
+    
+        if (address.length > 24) {
+          const firstPart =
+            address.charAt(0) + address.charAt(1) + address.charAt(2);
+          const secondPart =
+            address.charAt(address.length - 3) +
+            address.charAt(address.length - 2) +
+            address.charAt(address.length - 1);
+          return firstPart + "..." + secondPart;
+        } else {
+          return address;
+        }
+      }
     
 
     useEffect(() => {
@@ -34,7 +51,7 @@ export default function Header({toggleMenu, menuOpen, starknetId}: any) {
 
                     {status === 'connected' && 
                         <>
-                            <span className="mr-12 font-trash hidden lg:block">{starknetId}</span>
+                            <span className="mr-12 font-trash hidden lg:block">{ starknetId !== '' ? starknetId : minifyAddressOrDomain(address)} </span>
                             <ArrowLeftOnRectangleIcon onClick={() => disconnect()} className="w-7 ml-auto cursor-pointer hover:text-green lg:hidden" />
                             <WalletButton className="bg-beaige hidden lg:block" onClick={() => disconnect()}>Disconnect</WalletButton>
                         </>
