@@ -1,7 +1,8 @@
-import { NavLink } from "@remix-run/react";
 import { links } from "./links";
 import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/links";
 import { LinkFooter } from "../Buttons/LinkButton";
+import NavLinkInside from "./NavLinkInside";
+import NavLinkOutside from "./NavLinkInsideOutside";
 
 export default function NavMenu() {
 
@@ -12,27 +13,14 @@ export default function NavMenu() {
                 <div className="mt-12 w-full">
                     {links.map((link) => (      
                         <>
-                            {link.isOpen && <NavLink key={link.label} className="uppercase font-inter text-base xl:text-lg" to={link.href}>
-                                {({ isActive }) => (
-                                    <div  className="w-full flex justify-start items-center">
-                                        <div className={isActive ? "w-[3px] h-[48px] bg-nav-selected" : "w-[3px] h-[48px] bg-transparent"}></div>
-                                        <div className={isActive ? "py-4 pl-8 font-thin text-green" : "py-4 pl-8 font-bold text-beaige"}>{link.label}</div>
-                                    </div>
-                                )}
-                            </NavLink> }
-                            {link.isOpen === false && <NavLink key={link.label} className="uppercase font-inter text-base cursor-not-allowed xl:text-lg" to={link.href}>
-                                <div  className="w-full flex justify-start items-center">
-                                    <div className="w-[3px] h-[48px] bg-transparent"></div>
-                                    <div className="p4-3 pl-8 text-beaige/30">{link.label}</div>
-                                </div>
-                            </NavLink> }
+                            {link.outsideLink && <NavLinkOutside link={link} key={link.label} />}
+                            {false === link.outsideLink && <NavLinkInside link={link} key={link.label} />}
                         </>
-                        
-                    ))}
+                        ))}
                 </div>
             </div>
-            <div className="absolute bottom-4 items-center justify-center w-[320px] font-inter font-bold">
-                <div className="w-full flex flex-wrap items-center justify-center px-8">
+            <div className="absolute bottom-4 items-center justify-center w-[290px] font-inter font-bold">
+                <div className="w-full flex flex-wrap items-center justify-center px-4">
                     <LinkFooter className="w-[50px] m-1" href={TWITTER_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/twitter-icon.svg" alt="twitter" /></LinkFooter>
                     <LinkFooter className="w-[50px] m-1" href={DISCORD_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/discord-icon.svg" alt="discord" /></LinkFooter>
                     <LinkFooter className="w-[50px] m-1" href={LINKEDIN_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/linkedin-icon.svg" alt="linkedin" /></LinkFooter>

@@ -8,3 +8,4 @@ export const TELEGRAM_LINK="https://t.me/+wBP-WGlcMi9lMTRk";
 export const EMAIL_LINK="mailto:reachout@carbonable.io";
 export const LEGACY_LAUNCHPAD_LINK="https://legacy.carbonable.io/launchpad/";
 export const STARKNET_ID_INDEXER="https://goerli.indexer.starknet.id";
+export const ASPECT_LINK="https://testnet.aspect.co/"

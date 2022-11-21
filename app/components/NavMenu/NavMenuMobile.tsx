@@ -1,9 +1,10 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { NavLink } from "@remix-run/react";
 import { slide as Menu } from 'react-burger-menu';
 import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/links";
 import { LinkFooter } from "../Buttons/LinkButton";
 import { links } from "./links";
+import NavLinkInside from "./NavLinkInside";
+import NavLinkOutside from "./NavLinkInsideOutside";
 
 export default function NavMenu({menuOpen, handleStateChange, closeMenu, canClose, addressToDisplay}: any) {
 
@@ -24,23 +25,10 @@ export default function NavMenu({menuOpen, handleStateChange, closeMenu, canClos
                 <div className="mt-8 w-full">
                     {links.map((link) => (      
                         <>
-                            {link.isOpen && <NavLink key={link.label} className="uppercase font-inter text-base" to={link.href} onClick={closeMenu}>
-                                {({ isActive }) => (
-                                    <div  className="w-full flex justify-start items-center">
-                                        <div className={isActive ? "w-[3px] h-[44px] bg-nav-selected" : "w-[3px] h-[44px] bg-transparent"}></div>
-                                        <div className={isActive ? "py-2 pl-8 font-thin text-green" : "py-3 pl-8 font-bold text-beaige"}>{link.label}</div>
-                                    </div>
-                                )}
-                            </NavLink> }
-                            {link.isOpen === false && <NavLink key={link.label} className="uppercase font-inter text-base cursor-not-allowed" to={link.href} onClick={closeMenu}>
-                                {({ isActive }) => (
-                                    <div  className="w-full flex justify-start items-center">
-                                        <div className="w-[3px] h-[44px] bg-transparent"></div>
-                                        <div className="py-2 pl-8 text-beaige/30">{link.label}</div>
-                                    </div>
-                                )}
-                            </NavLink> }
+                            {link.outsideLink && <NavLinkOutside link={link} key={link.label} />}
+                            {false === link.outsideLink && <NavLinkInside link={link} key={link.label} closeMenu={closeMenu} />}
                         </>
+                        
                     ))}
                 </div>
                 <div className="absolute bottom-4 items-center justify-center w-full font-inter font-bold">
