@@ -3,23 +3,29 @@ import Header from "~/components/Header";
 import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
-import { fetchStarnetId } from "~/utils/starknetId";
+import { getStarknetId } from "~/utils/starknetId";
 import { useAccount } from "@starknet-react/core";
+
+function minifyAddressOrStarknetId(address: string | undefined, starknetId: string) {
+    const input = starknetId !== "" ? starknetId : address || "";
+    return input.length > 24 ? `${input.substring(0, 4)}...${input.substring(input.length - 5, input.length - 1)}` : input;
+}
 
 
 export default function Index() {
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const [starknetId, setStarknetId] = useState("");
     const { status, address } = useAccount();
+    const [addressToDisplay, setAddressToDisplay] = useState("");
 
     async function getStarnetId() {
-        const starknetId = await fetchStarnetId(address);
-        setStarknetId(starknetId);
+        const id = await getStarknetId(address);
+        setAddressToDisplay(minifyAddressOrStarknetId(address, id));
     }
 
     useEffect(() => {
         getStarnetId();
+        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
@@ -38,9 +44,9 @@ export default function Index() {
     return (
         <div className="mx-auto flex" id="outer-container">
             <div className="fixed z-50 top-0 left-0 lg:hidden">
-                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} starknetId={starknetId} />
+                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
             </div>
-            <header className="min-h-[72px] fixed top-0 w-full"><Header toggleMenu={toggleMenu} menuOpen={menuOpen} starknetId={starknetId} /></header>
+            <header className="min-h-[72px] fixed top-0 w-full"><Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} /></header>
             <nav className='hidden lg:block lg:w-[400px]'>
                 <div className="sticky top-0 left-0">
                     <NavMenu />

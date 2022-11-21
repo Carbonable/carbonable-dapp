@@ -5,9 +5,9 @@ import { STARKNET_ID_INDEXER } from "./links";
  * Fetch starknet ID from wallet address
  * 
  * @param { string } address
- * @returns { Promise<string> } starnknetId or empty string
+ * @returns { Promise<UserAdresses> } User addresses
  */
-export async function fetchStarnetId(address: string | undefined): Promise<string> {
+export async function getStarknetId(address: string | undefined): Promise<string> {
     // If no wallet is connected
     if (address === undefined) {
         return "";
@@ -17,10 +17,10 @@ export async function fetchStarnetId(address: string | undefined): Promise<strin
     const feltAddr = new BN(address.slice(2), 16).toString(10);
 
     // Call indexer
-    const res = await fetch(STARKNET_ID_INDEXER + "/addr_to_domain?addr=" + feltAddr);
+    const res = await fetch(STARKNET_ID_INDEXER + "/addr_to_domains?addr=" + feltAddr);
 
     // Format the answer
     const domain = await res.json();
 
-    return domain.domain ? domain.domain : "";
+    return domain.domains ? domain.domains[0] : "";
 }
