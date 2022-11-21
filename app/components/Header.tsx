@@ -3,7 +3,7 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import { useEffect } from "react";
 import WalletButton from "./Buttons/ActionButton";
 
-export default function Header({toggleMenu, menuOpen, starknetId}: any) {
+export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
     const { status } = useAccount();
     const { connect, available, refresh, disconnect } = useConnectors();
     
@@ -34,7 +34,7 @@ export default function Header({toggleMenu, menuOpen, starknetId}: any) {
 
                     {status === 'connected' && 
                         <>
-                            <span className="mr-12 font-trash hidden lg:block">{starknetId}</span>
+                            <span className="mr-12 font-trash hidden lg:block">{addressToDisplay}</span>
                             <ArrowLeftOnRectangleIcon onClick={() => disconnect()} className="w-7 ml-auto cursor-pointer hover:text-green lg:hidden" />
                             <WalletButton className="bg-beaige hidden lg:block" onClick={() => disconnect()}>Disconnect</WalletButton>
                         </>

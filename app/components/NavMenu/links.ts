@@ -1,27 +1,33 @@
 export const links = [
     {
         href: '/dashboard',
-        label: 'Dashboard'
+        label: 'Dashboard',
+        isOpen: false
     },
     {
         href: '/',
-        label: 'Launchpad'
+        label: 'Launchpad',
+        isOpen: true
     },
     {
         href: '/farming',
-        label: 'Farming'
+        label: 'Farming',
+        isOpen: false
     },
     {
         href: '/portfolio',
-        label: 'Portfolio'
+        label: 'Portfolio',
+        isOpen: true
     },
     {
         href: '/simulator',
-        label: 'Simulator'
+        label: 'Simulator',
+        isOpen: false
     },
     {
         href: '/impact',
-        label: 'Impact'
+        label: 'Impact',
+        isOpen: false
     },
 
 ]
