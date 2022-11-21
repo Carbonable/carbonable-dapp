@@ -2,32 +2,37 @@ export const links = [
     {
         href: '/dashboard',
         label: 'Dashboard',
-        isOpen: false
+        isOpen: false,
+        outsideLink: false
     },
     {
         href: '/',
         label: 'Launchpad',
-        isOpen: true
+        isOpen: true,
+        outsideLink: false
     },
     {
         href: '/farming',
         label: 'Farming',
-        isOpen: false
+        isOpen: false,
+        outsideLink: false
     },
     {
-        href: '/portfolio',
+        href: 'https://testnet.aspect.co',
         label: 'Portfolio',
-        isOpen: true
+        isOpen: true,
+        outsideLink: true
     },
     {
         href: '/simulator',
         label: 'Simulator',
-        isOpen: false
+        isOpen: false,
+        outsideLink: false
     },
     {
         href: '/impact',
         label: 'Impact',
-        isOpen: false
-    },
-
+        isOpen: false,
+        outsideLink: false
+    }
 ]
