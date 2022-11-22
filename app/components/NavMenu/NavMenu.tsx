@@ -12,10 +12,10 @@ export default function NavMenu() {
                 <div className="w-full text-center"><img className="w-8/12 mx-auto" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
                 <div className="mt-12 w-full">
                     {links.map((link) => (      
-                        <>
-                            {link.outsideLink && <NavLinkOutside link={link} key={link.label} />}
-                            {false === link.outsideLink && <NavLinkInside link={link} key={link.label} />}
-                        </>
+                        <div key={link.label} >
+                            {link.outsideLink && <NavLinkOutside link={link} />}
+                            {false === link.outsideLink && <NavLinkInside link={link} />}
+                        </div>
                         ))}
                 </div>
             </div>

@@ -24,10 +24,10 @@ export default function NavMenu({menuOpen, handleStateChange, closeMenu, canClos
                 <div className="w-full text-center mt-4 px-4 overflow-x-hidden text-ellipsis font-trash">{addressToDisplay}</div>
                 <div className="mt-8 w-full">
                     {links.map((link) => (      
-                        <>
-                            {link.outsideLink && <NavLinkOutside link={link} key={link.label} />}
-                            {false === link.outsideLink && <NavLinkInside link={link} key={link.label} closeMenu={closeMenu} />}
-                        </>
+                        <div key={`${link.label}_mobile`} >
+                            {link.outsideLink && <NavLinkOutside link={link} />}
+                            {false === link.outsideLink && <NavLinkInside link={link} closeMenu={closeMenu} />}
+                        </div>
                         
                     ))}
                 </div>

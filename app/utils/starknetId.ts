@@ -7,10 +7,10 @@ import { STARKNET_ID_INDEXER } from "./links";
  * @param { string } address
  * @returns { Promise<UserAdresses> } User addresses
  */
-export async function getStarknetId(address: string | undefined): Promise<string> {
+export async function getStarknetId(address: string | undefined): Promise<string | undefined> {
     // If no wallet is connected
     if (address === undefined) {
-        return "";
+        return undefined;
     }
 
     // Transform address to felt

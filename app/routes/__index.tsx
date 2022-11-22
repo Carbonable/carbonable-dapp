@@ -6,16 +6,18 @@ import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
 import { useAccount } from "@starknet-react/core";
 
-function minifyAddressOrStarknetId(address: string | undefined, starknetId: string) {
-    const input = starknetId !== "" ? starknetId : address || "";
-    return input.length > 24 ? `${input.substring(0, 4)}...${input.substring(input.length - 5, input.length - 1)}` : input;
+function minifyAddressOrStarknetId(address: string | undefined, starknetId: string |undefined) {
+    const input = starknetId !== undefined ? starknetId : address;
+    if (input === undefined) { return ""; }
+
+    return input.length > 24 ? `${input.substring(0, 5)} ... ${input.substring(input.length - 5, input.length)}` : input;
 }
 
 
 export default function Index() {
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const { status, address } = useAccount();
+    const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
 
     async function getStarnetId() {
@@ -27,7 +29,7 @@ export default function Index() {
         getStarnetId();
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status]);
+    }, [account, address, status]);
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);

@@ -1,6 +1,19 @@
+import { json } from "@remix-run/node";
+import { NavLink, useLoaderData } from "@remix-run/react";
+import { db } from "~/utils/db.server";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
+import type { Projects } from "@prisma/client";
+import LaunchpadCard from "~/components/Launchpad/LaunchpadCard";
+
+
+export async function loader() {
+    const allProjects = await db.projects.findMany()
+  
+    return json(allProjects);
+};
 
 export default function Launchpad() {
+    const projects = useLoaderData();
 
     return (
         <div className="mx-auto mt-4 md:mt-12 lg:mt-6">
@@ -20,10 +33,18 @@ export default function Launchpad() {
                     <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                 </div>
                 <div className="w-11/12 mx-auto flex flex-wrap items-start justify-center mt-10">
-                    <img src="/assets/images/projects/1/image.png" alt="project 1 NFT" className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]" />
-                    <img src="/assets/images/projects/2/image.png" alt="project 1 NFT" className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]" />
-                    <img src="/assets/images/projects/3/image.png" alt="project 1 NFT" className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]" />
-                    <img src="/assets/images/projects/3/image.png" alt="project 1 NFT" className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]" />
+                    {projects.map((project: Projects) => (     
+                        <div key={project.slug} className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]">
+                            { project.contentReady && 
+                                <NavLink to={`/projects/${project.slug}`}>
+                                    <LaunchpadCard {...project} />
+                                </NavLink>
+                            }
+                            { project.contentReady === false && 
+                                <LaunchpadCard {...project} />
+                            }
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

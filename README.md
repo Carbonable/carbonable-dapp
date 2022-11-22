@@ -1,34 +1,87 @@
-# Welcome to Remix!
+<div align="center">
+  <h1 align="center">Carbonable Homepage</h1>
+  <p align="center">
+    <a href="https://discord.gg/zUy9UvB7cd">
+        <img src="https://img.shields.io/badge/Discord-6666FF?style=for-the-badge&logo=discord&logoColor=white">
+    </a>
+    <a href="https://twitter.com/intent/follow?screen_name=Carbonable_io">
+        <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white">
+    </a>       
+  </p>
+  <h3 align="center">Carbonable homepage written in React with Remix</h3>
+</div>
 
-- [Remix Docs](https://remix.run/docs)
+## Usage
 
-## Deployment
+### Set up the project
 
-After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
+#### 📦 Install the requirements
 
-If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
+- [Flyctl](https://fly.io/docs/hands-on/install-flyctl/)
 
-```sh
-npm i -g vercel
-vercel
+```bash
+fly auth signup
 ```
 
-It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
+### 🎉 Install
 
-## Development
-
-To run your Remix app locally, make sure your project's local dependencies are installed:
-
-```sh
+```bash
 npm install
 ```
 
-Afterwards, start the Remix development server like so:
+### ⛏️ Run for dev
 
-```sh
+```bash
 npm run dev
 ```
 
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+### 🌡️ Deploy for preview
 
-If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
+```bash
+# Push changes on github
+git add .
+git commit -m "commit message"
+git push
+
+# Your branch will be deployed automatically on Fly.io
+```
+
+### 🚀 Deployment for prod
+
+Merge your branch into main, it will deploy automatically to production
+
+### 💾 Database
+
+#### Dev
+
+##### Installation
+Install [Postgres](https://www.postgresql.org/download/)
+
+Start Postgres
+
+Create a database named carbonable_dapp
+
+##### Connection
+
+Connection with pgAdmin: localhost:5432 postgres/[password]
+
+##### Build database
+```bash
+npx prisma db push
+npx prisma migrate dev --name [name of the migration]
+```
+
+If your database gets messed up, you can always delete the prisma/dev.db file and run npx prisma db push again. 
+Remember to also restart your dev server with npm run dev.
+
+#### Prod
+
+##### Connection
+
+```bash
+flyctl proxy 15432:5432 carbonable-dapp-db.internal
+```
+
+Connection with pgAdmin: localhost:543154322 postgres/[password]
+
+
