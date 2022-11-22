@@ -12,6 +12,9 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
+[deploy]
+  release_command = "npx prisma migrate deploy && npx prisma db seed"
+
 [[services]]
   http_checks = []
   internal_port = 8080
