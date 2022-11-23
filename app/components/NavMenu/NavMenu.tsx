@@ -2,19 +2,19 @@ import { links } from "./links";
 import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/links";
 import { LinkFooter } from "../Buttons/LinkButton";
 import NavLinkInside from "./NavLinkInside";
-import NavLinkOutside from "./NavLinkInsideOutside";
+import NavLinkOutside from "./NavLinkOutside";
 
 export default function NavMenu() {
 
     return (
-        <div className="bg-black bg-navigation m-8 rounded-xl lg:!h-[calc(100vh_-_60px)]">
+        <div className="bg-black bg-navigation mt-4 m-8 rounded-xl lg:!h-[calc(100vh_-_50px)]">
             <div className="outline-none border-none py-12">
-                <div className="w-full text-center"><img className="w-8/12 mx-auto" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
+                <div className="w-full text-left pl-8"><img className="w-8/12" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
                 <div className="mt-12 w-full">
                     {links.map((link) => (      
                         <div key={link.label} >
                             {link.outsideLink && <NavLinkOutside link={link} />}
-                            {false === link.outsideLink && <NavLinkInside link={link} />}
+                            {false === link.outsideLink && <NavLinkInside link={link}></NavLinkInside>}
                         </div>
                         ))}
                 </div>
