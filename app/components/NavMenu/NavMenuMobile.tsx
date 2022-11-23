@@ -4,7 +4,7 @@ import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/
 import { LinkFooter } from "../Buttons/LinkButton";
 import { links } from "./links";
 import NavLinkInside from "./NavLinkInside";
-import NavLinkOutside from "./NavLinkInsideOutside";
+import NavLinkOutside from "./NavLinkOutside";
 
 export default function NavMenu({menuOpen, handleStateChange, closeMenu, canClose, addressToDisplay}: any) {
 

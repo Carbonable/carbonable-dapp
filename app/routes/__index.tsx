@@ -48,13 +48,13 @@ export default function Index() {
             <div className="fixed z-50 top-0 left-0 lg:hidden">
                 <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
             </div>
-            <header className="min-h-[110px] fixed top-0 w-full z-10 bg-header"><Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} /></header>
+            <header className="min-h-[90px] fixed top-0 w-full z-10 bg-header"><Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} /></header>
             <nav className='hidden lg:block lg:w-[360px] z-20'>
-                <div className="sticky top-12 left-0">
+                <div className="sticky top-6 left-0">
                     <NavMenu />
                 </div>
             </nav>
-            <main className='w-full lg:w-[calc(100vw_-_360px)] mt-[80px]' id="page-wrap">
+            <main className='w-full lg:w-[calc(100vw_-_360px)] mt-[80px] pb-16 px-8 pt-8' id="page-wrap">
                 <Outlet />
             </main>
         </div>
