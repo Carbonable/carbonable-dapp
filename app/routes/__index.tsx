@@ -54,7 +54,7 @@ export default function Index() {
                     <NavMenu />
                 </div>
             </nav>
-            <main className='w-full lg:w-[calc(100vw_-_360px)] mt-[80px] pb-16 px-8 pt-8' id="page-wrap">
+            <main className='w-full lg:w-[calc(100vw_-_360px)] mt-[80px] pb-16 px-2 pt-8 md:px-8' id="page-wrap">
                 <Outlet />
             </main>
         </div>

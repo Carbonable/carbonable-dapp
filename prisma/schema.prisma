@@ -29,6 +29,7 @@ model Projects {
   isSoldOut    Boolean  @default(false)
   saleDate     DateTime
   contentReady Boolean  @default(false)
+  estimatedAPR String
 }
 
 enum AnalyticsType {

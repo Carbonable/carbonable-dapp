@@ -84,7 +84,8 @@ function getProjects() {
            saleIsOpen: false,
            isSoldOut: true,
            saleDate: new Date('2022-06-21T16:45:01.246Z'),
-           contentReady: true
+           contentReady: true,
+           estimatedAPR: "51%"
         },
         {
             name: "Las delicias",
@@ -92,15 +93,17 @@ function getProjects() {
             saleIsOpen: true,
             isSoldOut: false,
             saleDate: new Date('2022-12-21T16:45:01.246Z'),
-            contentReady: true
+            contentReady: true,
+            estimatedAPR: "51%"
          },
          {
              name: "Chaco Agroforestry",
              slug: "agroforestry-chaco-paraguay",
-             saleIsOpen: true,
+             saleIsOpen: false,
              isSoldOut: false,
              saleDate: new Date('2023-01-21T16:45:01.246Z'),
-             contentReady: false
+             contentReady: false,
+             estimatedAPR: "51%"
           }
     ]
 }

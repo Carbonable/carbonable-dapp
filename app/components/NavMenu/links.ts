@@ -18,7 +18,7 @@ export const links = [
         outsideLink: false
     },
     {
-        href: 'https://testnet.aspect.co',
+        href: 'https://mintsquare.io/starknet',
         label: 'Portfolio',
         isOpen: true,
         outsideLink: true
