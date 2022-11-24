@@ -3,7 +3,7 @@ import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
 import type { Projects } from "@prisma/client";
-import LaunchpadCard from "~/components/Launchpad/LaunchpadCard";
+import LaunchpadCard from "~/components/Project/ProjectCard";
 
 
 export async function loader() {
