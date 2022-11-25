@@ -6,7 +6,7 @@ interface ButtonProps {
 
 const modalCssClass = 'font-inter text-black/50 uppercase rounded-full px-6 py-2 text-sm hover:bg-gradient-to-r from-green to-lightblue ';
 const whitelistCssClass = 'font-inter text-black/50 uppercase rounded-full p-3 font-bold hover:bg-gradient-to-r from-green to-lightblue ';
-const greenButtonCssClass = 'font-inter text-black/50 uppercase bg-green rounded-full px-6 py-2 font-semibold hover:bg-gradient-to-r from-green to-lightblue ';
+const greenButtonCssClass = 'font-inter text-black/50 uppercase bg-green rounded-full px-6 py-2 font-semibold hover:bg-gradient-to-r from-green to-lightblue text-sm ';
 
 export default function WalletButton({ children, className, onClick }: ButtonProps) {
     return <button className={modalCssClass + className} onClick = {() => { onClick(true); }}>{children}</button>;

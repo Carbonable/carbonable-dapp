@@ -18,16 +18,16 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
 
     return (
         <>
-            <div className="py-2 px-3 flex items-center justify-center bg-navigation rounded-full mt-4 w-11/12 mx-auto md:px-4 lg:bg-none lg:mt-0 lg:py-4 lg:px-12 lg:w-full">
-                <div className="w-2/12 md:w-1/12 overflow-hidden; lg:hidden lg:w-0">
-                    {!menuOpen && <Bars3Icon className="w-10 bg-green-blue text-black/50 p-2 rounded-full" onClick={toggleMenu} /> }
-                    {menuOpen && <XMarkIcon className="w-10 bg-green-blue text-black/50 p-2 rounded-full" onClick={toggleMenu} /> }
+            <div className="py-2 px-3 flex items-center justify-center bg-navigation rounded-full mt-4 w-11/12 mx-auto md:px-8 md:py-4 lg:bg-none lg:mt-0 lg:py-4 lg:px-12 lg:w-full">
+                <div className="w-2/12 overflow-hidden; lg:hidden lg:w-0">
+                    {!menuOpen && <Bars3Icon className="w-10 bg-green-blue text-black/50 p-2 rounded-full md:w-12" onClick={toggleMenu} /> }
+                    {menuOpen && <XMarkIcon className="w-10 bg-green-blue text-black/50 p-2 rounded-full md:w-12" onClick={toggleMenu} /> }
                 </div>
-                <div className="w-7/12 text-left md:w-8/12 lg:hidden lg:w-0"><img className="w-8/12 md:w-4/12" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
+                <div className="w-7/12 text-left lg:hidden lg:w-0"><img className="w-8/12 md:w-6/12" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
                     {status === 'disconnected' && available.map((wallet) => (
                         <div className="ml-2" key={wallet.id()}>
-                            <img className="w-8 ml-4 cursor-pointer lg:hidden" key={wallet.id() + "_mobile"} src={`/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.name()}`} onClick={() => connect(wallet)} />
+                            <img className="w-8 ml-4 cursor-pointer md:w-10 lg:hidden" key={wallet.id() + "_mobile"} src={`/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.name()}`} onClick={() => connect(wallet)} />
                             <WalletButton key={wallet.id() + "_desktop"} className="bg-beaige items-center justify-center hidden lg:flex" onClick={() => connect(wallet)}>Connect with {wallet.name()} <img className="w-4 ml-2 mr-1" src={`/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.name()}`} /></WalletButton>
                         </div>
                     ))}

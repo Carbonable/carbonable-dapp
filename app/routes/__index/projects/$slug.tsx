@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({
 export default function Project() {
   const project = useLoaderData<unknown>() as Projects;
     return (
-        <div>
+        <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12">
           <ProjectOverview project={project} />
         </div>
     )
