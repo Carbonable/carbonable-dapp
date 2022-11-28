@@ -9,17 +9,25 @@ import type { Projects } from "@prisma/client";
 export const loader: LoaderFunction = async ({
     params,
   }) => {
-    const project = await db.projects.findUnique({
+    try {
+      const project = await db.projects.findUnique({
         where: {
           slug: params.slug,
         },  
-    })
+      });
 
-    if (project === null){
+      if (project === null){
+        throw new Response("Not Found", {status: 404})
+      }
+  
+      return json<Projects>(project);
+
+    } catch {
       throw new Response("Not Found", {status: 404})
     }
+    
 
-    return json<Projects>(project);
+    
 };
 
 export default function Project() {

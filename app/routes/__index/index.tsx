@@ -7,14 +7,19 @@ import LaunchpadCard from "~/components/Project/ProjectCard";
 
 
 export async function loader() {
-    const allProjects = await db.projects.findMany({
-        orderBy: [
-          {
-            saleDate: 'desc',
-          }
-        ]});
-  
-    return json(allProjects);
+    try {
+        const allProjects = await db.projects.findMany({
+            orderBy: [
+              {
+                saleDate: 'desc',
+              }
+            ]});
+      
+        return json(allProjects);
+    } catch {
+        return json([]);
+    }
+    
 };
 
 export default function Launchpad() {
