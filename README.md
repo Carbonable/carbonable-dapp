@@ -79,7 +79,7 @@ Remember to also restart your dev server with npm run dev.
 ##### Connection
 
 ```bash
-flyctl proxy 15432:5432 carbonable-dapp-db.internal
+flyctl proxy 15432:5432 dev-carbonable-db.internal
 ```
 
 Connection with pgAdmin: localhost:543154322 postgres/[password]

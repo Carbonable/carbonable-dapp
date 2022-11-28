@@ -772,12 +772,8 @@ video {
   width: 33.333333%;
 }
 
-.w-1\/4 {
-  width: 25%;
-}
-
-.w-1\/2 {
-  width: 50%;
+.w-6 {
+  width: 1.5rem;
 }
 
 .w-10\/12 {
@@ -795,10 +791,6 @@ video {
 
 .w-1\/5 {
   width: 20%;
-}
-
-.w-6 {
-  width: 1.5rem;
 }
 
 .min-w-max {
@@ -1567,12 +1559,12 @@ input::-webkit-inner-spin-button {
     margin-top: 4rem;
   }
 
-  .xl\:w-3\/12 {
-    width: 25%;
+  .xl\:w-4\/12 {
+    width: 33.333333%;
   }
 
-  .xl\:w-9\/12 {
-    width: 75%;
+  .xl\:w-8\/12 {
+    width: 66.666667%;
   }
 
   .xl\:w-full {
@@ -1591,6 +1583,10 @@ input::-webkit-inner-spin-button {
     width: 58.333333%;
   }
 
+  .xl\:w-9\/12 {
+    width: 75%;
+  }
+
   .xl\:w-\[30\%\] {
     width: 30%;
   }
@@ -1603,20 +1599,12 @@ input::-webkit-inner-spin-button {
     width: 32%;
   }
 
-  .xl\:w-4\/12 {
-    width: 33.333333%;
-  }
-
-  .xl\:w-8\/12 {
-    width: 66.666667%;
-  }
-
   .xl\:justify-start {
     justify-content: flex-start;
   }
 
-  .xl\:pl-12 {
-    padding-left: 3rem;
+  .xl\:pl-6 {
+    padding-left: 1.5rem;
   }
 
   .xl\:pl-7 {
@@ -1627,12 +1615,12 @@ input::-webkit-inner-spin-button {
     padding-left: 2rem;
   }
 
-  .xl\:pl-6 {
-    padding-left: 1.5rem;
-  }
-
   .xl\:pl-4 {
     padding-left: 1rem;
+  }
+
+  .xl\:pl-12 {
+    padding-left: 3rem;
   }
 
   .xl\:text-left {
@@ -1678,10 +1666,6 @@ input::-webkit-inner-spin-button {
     margin-left: 0px;
   }
 
-  .\32xl\:w-6\/12 {
-    width: 50%;
-  }
-
   .\32xl\:w-7\/12 {
     width: 58.333333%;
   }
@@ -1690,110 +1674,45 @@ input::-webkit-inner-spin-button {
     width: 22%;
   }
 
-  .\32xl\:w-8\/12 {
-    width: 66.666667%;
-  }
-
   .\32xl\:w-9\/12 {
     width: 75%;
-  }
-
-  .\32xl\:min-w-\[200px\] {
-    min-width: 200px;
   }
 
   .\32xl\:min-w-\[220px\] {
     min-width: 220px;
   }
 
-  .\32xl\:max-w-\[200px\] {
-    max-width: 200px;
-  }
-
-  .\32xl\:max-w-\[260px\] {
-    max-width: 260px;
+  .\32xl\:max-w-\[140px\] {
+    max-width: 140px;
   }
 
   .\32xl\:max-w-\[400px\] {
     max-width: 400px;
   }
 
-  .\32xl\:max-w-2xl {
-    max-width: 42rem;
-  }
-
-  .\32xl\:max-w-5xl {
-    max-width: 64rem;
-  }
-
-  .\32xl\:max-w-7xl {
-    max-width: 80rem;
-  }
-
-  .\32xl\:max-w-4xl {
-    max-width: 56rem;
-  }
-
   .\32xl\:max-w-6xl {
     max-width: 72rem;
-  }
-
-  .\32xl\:max-w-\[150px\] {
-    max-width: 150px;
-  }
-
-  .\32xl\:max-w-\[140px\] {
-    max-width: 140px;
-  }
-
-  .\32xl\:p-20 {
-    padding: 5rem;
-  }
-
-  .\32xl\:pl-8 {
-    padding-left: 2rem;
-  }
-
-  .\32xl\:pl-10 {
-    padding-left: 2.5rem;
   }
 
   .\32xl\:pl-12 {
     padding-left: 3rem;
   }
 
+  .\32xl\:pl-8 {
+    padding-left: 2rem;
+  }
+
   .\32xl\:pl-16 {
     padding-left: 4rem;
-  }
-
-  .\32xl\:pr-4 {
-    padding-right: 1rem;
-  }
-
-  .\32xl\:pr-1 {
-    padding-right: 0.25rem;
   }
 
   .\32xl\:pr-0 {
     padding-right: 0px;
   }
 
-  .\32xl\:text-\[2\.8vw\] {
-    font-size: 2.8vw;
-  }
-
-  .\32xl\:text-\[2\.2vw\] {
-    font-size: 2.2vw;
-  }
-
   .\32xl\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
-  }
-
-  .\32xl\:text-6xl {
-    font-size: 3.75rem;
-    line-height: 1;
   }
 
   .\32xl\:text-2xl {
@@ -1804,5 +1723,18 @@ input::-webkit-inner-spin-button {
   .\32xl\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
+  }
+
+  .\32xl\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+
+  .\32xl\:text-\[2\.8vw\] {
+    font-size: 2.8vw;
+  }
+
+  .\32xl\:text-\[2\.2vw\] {
+    font-size: 2.2vw;
   }
 }

@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model SimulatorConfig {
-  id     String @id @default(uuid())
-  type   String @unique
-  config Json
-}
-
-model SimulatorAnalytics {
-  id        String        @id @default(uuid())
-  createdAt DateTime      @default(now())
-  type      AnalyticsType
-  value     Int
-}
-
 model Projects {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
@@ -30,9 +17,4 @@ model Projects {
   saleDate     DateTime
   contentReady Boolean  @default(false)
   estimatedAPR String
-}
-
-enum AnalyticsType {
-  YIELD
-  OFFSET
 }
