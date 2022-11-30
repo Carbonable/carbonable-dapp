@@ -11,6 +11,7 @@ import {
 } from "@remix-run/react";
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
 import styles from "./styles/app.css";
+import { testnet2 } from "./utils/blockchain/providers";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -27,7 +28,8 @@ export default function App() {
   const connectors = [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
-  ]
+  ];
+
   return (
     <html lang="en">
       <head>
@@ -35,7 +37,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <StarknetConfig connectors={connectors}>
+        <StarknetConfig defaultProvider={testnet2} connectors={connectors}>
           <Outlet />
           <ScrollRestoration />
           <Scripts />

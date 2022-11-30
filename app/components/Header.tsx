@@ -1,20 +1,20 @@
 import { ArrowLeftOnRectangleIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
 import { useEffect } from "react";
+import { providers } from "~/utils/blockchain/providers";
 import WalletButton from "./Buttons/ActionButton";
 
 export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
     const { status } = useAccount();
-    const { connect, available, refresh, disconnect } = useConnectors();
-    
-
-    
+    const { connect, available, disconnect } = useConnectors();
+    const { library } = useStarknet();
 
     useEffect(() => {
-        const interval = setInterval(refresh, 5000)
-        return () => clearInterval(interval)
-      }, [refresh]);
-
+        library.provider.baseUrl = providers.testnet2.baseUrl;
+        library.provider.feederGatewayUrl = providers.testnet2.feederGatewayUrl;
+        library.provider.gatewayUrlseUrl = providers.testnet2.gatewayUrl;
+        library.provider.chainId = providers.testnet2.chainId;
+    }, [status]);
 
     return (
         <>
