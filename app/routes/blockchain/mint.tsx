@@ -10,9 +10,11 @@ import { json } from "@remix-run/node";
 export async function action({ request }: ActionArgs) {
     const data = await request.formData();
     const amount = data.get("amount");
+    const price = data.get("price");
 
     try {
         console.log(amount)
+        console.log(price)
         return json({ message: "Minting successful" });
     } catch (error) {
         return json({ error: "Error when minting" });

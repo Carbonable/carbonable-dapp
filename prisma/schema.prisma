@@ -10,11 +10,9 @@ datasource db {
 model Projects {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
-  name         String
   slug         String   @unique
-  saleIsOpen   Boolean  @default(false)
-  isSoldOut    Boolean  @default(false)
   saleDate     DateTime
   contentReady Boolean  @default(false)
   estimatedAPR String
+  minterContract String @unique
 }
