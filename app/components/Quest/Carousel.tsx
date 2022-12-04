@@ -61,42 +61,44 @@ export default function Carousel() {
         {
             name: 'project1.png',
             title: 'Community Badge lvl-1',
-            subtitle: 'Become a Carbonable OG'
+            subtitle: 'Become a Carbonable OG',
+            mintable: true
         },
         {
             name: 'project2.png',
-            title: 'Greenwashing',
-            subtitle: 'Premium, transparent and traceable carbon removal'
+            title: '???',
+            subtitle: '?',
+            mintable: false
         },
         {
             name: 'project3.png',
-            title: 'Short-term returns',
-            subtitle: 'Earn ongoing high, lasting and transparent yields'
-        },
-        {
-            name: 'project4.png',
-            title: 'Volatile yields',
-            subtitle: 'Gain exposure to a booming market with ever-increasing asset values'
-        },
-        {
-            name: 'project5.png',
-            title: 'Illiquid investments',
-            subtitle: 'Resell your assets at your own discretion'
-        },
+            title: '???',
+            subtitle: '?',
+            mintable: false
+        }
 
     ];
     
     return (
-        <div className=" preventOverflow">
+        <div className=" preventOverflow mb-20">
             <div id="assets" className="w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                
-                <Slider ref={slider => (slidz = slider)} {...settings} className="w-10/12 mx-auto ">
+                    <div className="w-full grid grid-flow-col place-content-center gap-x-8">
                     {slides.map((image, index) => (
                         <div key={`image_${index}`} className="px-2  outline-0">
-                            <img alt={`Carbonable project ${index}`} onClick={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110 cursor-pointer" : "rounded-lg brightness-50 cursor-pointer"} />
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110 cursor-pointer h-40 z-0" : "rounded-lg brightness-50 cursor-pointer h-40 z-0"}   />
+                            { (image.mintable && index === activeSlide )   &&
+                            <div className=" z-10 uppercase font-inter font-bold  text-black  py-1 px-2 text-[8px] md:text-xs  lg:px-3 flex justify-center"> <button className="h-12 w-3/4 rounded-xl bg-green">Mint</button> </div>
+                            }
+                             { (!image.mintable && index === activeSlide )   &&
+                            <div className=" z-10 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
+                            }
+                            
+            
                         </div>
                     ))}
-                </Slider>
+                    </div>
+             
                 <div className="flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
