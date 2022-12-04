@@ -9,6 +9,9 @@ import LaunchpadCard from "~/components/Project/ProjectCard";
 export async function loader() {
     try {
         const allProjects = await db.projects.findMany({
+            where: {
+                isDisplay: true
+            },  
             orderBy: [
               {
                 saleDate: 'desc',

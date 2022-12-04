@@ -301,6 +301,18 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "sold_out",
+        "outputs": [
+            {
+                "name": "status",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "whitelist_merkle_root",

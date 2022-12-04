@@ -1,11 +1,14 @@
 import { ArrowTopRightOnSquareIcon, MinusIcon, PaperAirplaneIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useFetcher, useTransition } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MintButton, WhitelistButton } from "../Buttons/ActionButton";
 import { PlusIconBlack } from "../Icons/PlusIcon";
 import moment from "moment";
 
 import type { Projects } from "@prisma/client";
+import { useMaxBuyPerTx } from "~/hooks/minter";
+import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
+import { toFelt } from "starknet/utils/number";
 
 function EstimatedAPR({estimatedAPR}: {estimatedAPR: string}) {
     return (
@@ -25,42 +28,93 @@ export function ReportComponent() {
 
 export function SimularorComponent() {
     return (
-        <div>
-            <>
-                <div className="font-trash font-bold text-base uppercase 2xl:text-xl">Estimate your gain for you</div>
-                <div className="font-americana font-light text-base uppercase 2xl:text-xl">and the planet</div>
-                <div className="mt-4"><a href="https://carbonable.io#simulator" target="_blank" className="bg-green-blue font-inter uppercase text-black/50 px-8 py-4 rounded-full text-sm font-semibold flex items-center justify-center w-fit" rel="noreferrer">Simulator <ArrowTopRightOnSquareIcon className="w-4 ml-4 text-black/50" /></a></div>
-            </>
-        </div>
+        <>
+            <div className="font-trash font-bold text-base uppercase 2xl:text-xl">Estimate your gain for you</div>
+            <div className="font-americana font-light text-base uppercase 2xl:text-xl">and the planet</div>
+            <div className="mt-4"><a href="https://carbonable.io#simulator" target="_blank" className="bg-green-blue font-inter uppercase text-black/50 px-8 py-4 rounded-full text-sm font-semibold flex items-center justify-center w-fit" rel="noreferrer">Simulator <ArrowTopRightOnSquareIcon className="w-4 ml-4 text-black/50" /></a></div>
+        </>
     )
 }
 
-export function MintComponent({estimatedAPR, price, paymentTokenSymbol}: any) {
-    const mint = useFetcher();
-    const ref = useRef<HTMLInputElement>(null);
-    const refPrice = useRef<HTMLInputElement>(null);
+export function ProgressComponent({progress}: any) {
+    return (
+        <div>{progress}</div>
+    )
+}
+
+export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, updateProgress}: any) {
     const [amount, setAmount] = useState(1);
+    const { maxBuyPerTx } = useMaxBuyPerTx(minterContract);
+    const { connect, available } = useConnectors();
+    const { status } = useAccount();
+    const [txHash, setTxHash] = useState("");
+    const [txStatus, setTxStatus] = useState("NOT_RECEIVED");
+    const { data: dataTx, error: errorTx } = useTransactionReceipt({ hash: txHash, watch: true });
+
+    const calls = [
+        {
+            contractAddress: paymentTokenAddress,
+            entrypoint: 'approve',
+            calldata: [toFelt(minterContract), (amount * price * Math.pow(10, parseInt(paymentTokenDecimals))), '0']  
+        },
+        {
+            contractAddress: minterContract,
+            entrypoint: publicSaleOpen ? 'public_buy' : 'whitelist_buy',
+            calldata: [toFelt(amount)]  
+        },
+    ];
+
+    const { execute, data: dataExecute } = useStarknetExecute({ calls,
+        metadata: {
+            method: 'Approve and buy tokens',
+            message: 'Approve and buy tokens',
+        } });
+
+    const connectAndExecute = () => {
+        if (status === 'disconnected') {
+            connect(available[0]);
+        }
+
+        execute();
+    }
+
+    useEffect(() => {
+        if (amount < 1){
+            setAmount(1);
+        }
+        if (amount > parseInt(maxBuyPerTx)) {
+            setAmount(maxBuyPerTx);
+        }
+    }, [amount, maxBuyPerTx]);
+
+    useEffect(() => {
+        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
+    }, [dataExecute])
+
+    useEffect(() => {
+        setTxStatus(dataTx?.status ? dataTx.status : "NOT_RECEIVED");
+        updateProgress(dataTx?.status ? dataTx.status : "NOT_RECEIVED");
+        if (dataTx?.status === "ACCEPTED_ON_L2") {
+            refreshProjectTotalSupply();
+        }
+    }, [dataTx, refreshProjectTotalSupply, updateProgress]);
 
     return (
         <div>
-            <mint.Form
-                    method="post"
-                    action="/blockchain/mint"
-                    className="w-full flex items-start justify-start"
-                    >
+            <div className="w-full flex items-start justify-start" >
                 <div className="w-4/12 flex items-center justify-center bg-black rounded-full text-white p-2 border border-white xl:w-4/12 2xl:max-w-[140px]">
                     <MinusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => amount > 1 ? setAmount(amount - 1) : 1} />
                     <div className="w-8/12 text-center">
-                        <input className="bg-transparent w-full text-center outline-none" type="number" value={amount} name="amount" ref={ref} aria-label="Amount" aria-describedby="error-message" onChange={(e) => parseInt(e.target.value) > 0 ? setAmount(parseInt(e.target.value) || 1) : 1} />
+                        <input className="bg-transparent w-full text-center outline-none" type="number" value={amount} readOnly name="amount" aria-label="Amount" aria-describedby="error-message" />
                     </div>
-                    <PlusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige"  onClick={() => setAmount(amount + 1)} />
+                    <PlusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => setAmount(amount + 1)} />
                 </div>
                 <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
-                    <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={mint.submit}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol ? paymentTokenSymbol.toString() : ""}</MintButton>
-                    <input hidden type="number" value={(amount * price)} name="price" ref={refPrice} aria-label="Price" />
+                    <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton>
+                    <input hidden type="number" value={(amount * price)} readOnly name="price" aria-label="Price" />
                     <div className="mt-2 xl:w-full xl:text-left xl:pl-7 2xl:pl-12"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
                 </div>
-            </mint.Form>
+            </div>
         </div>
     )
 }
