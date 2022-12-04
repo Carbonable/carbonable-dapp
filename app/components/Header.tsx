@@ -9,12 +9,26 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
     const { connect, available, disconnect } = useConnectors();
     const { library } = useStarknet();
 
+    /**
+     * Hack to force testnet-2 use
+     * TODO: Remove and add network management in front
+     */
     useEffect(() => {
-        library.provider.baseUrl = providers.testnet2.baseUrl;
-        library.provider.feederGatewayUrl = providers.testnet2.feederGatewayUrl;
-        library.provider.gatewayUrlseUrl = providers.testnet2.gatewayUrl;
-        library.provider.chainId = providers.testnet2.chainId;
-    }, [status]);
+        if (library.provider) {
+            library.provider.baseUrl = providers.testnet2.baseUrl;
+            library.provider.feederGatewayUrl = providers.testnet2.feederGatewayUrl;
+            library.provider.gatewayUrlseUrl = providers.testnet2.gatewayUrl;
+            library.provider.chainId = providers.testnet2.chainId;
+
+            return;
+        }
+
+        library.baseUrl = providers.testnet2.baseUrl;
+        library.feederGatewayUrl = providers.testnet2.feederGatewayUrl;
+        library.gatewayUrlseUrl = providers.testnet2.gatewayUrl;
+        library.chainId = providers.testnet2.chainId;
+        
+    }, [library, status]);
 
     return (
         <>

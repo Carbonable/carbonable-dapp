@@ -12,11 +12,11 @@ export const loader: LoaderFunction = async ({
     try {
       const project = await db.projects.findUnique({
         where: {
-          slug: params.slug,
+          slug: params.slug
         },  
       });
 
-      if (project === null){
+      if (project === null || project.isDisplay === false){
         throw new Response("Not Found", {status: 404})
       }
   

@@ -15,4 +15,5 @@ model Projects {
   contentReady Boolean  @default(false)
   estimatedAPR String
   minterContract String @unique
+  isDisplay    Boolean  @default(false)
 }
