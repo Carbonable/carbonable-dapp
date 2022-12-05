@@ -9,6 +9,8 @@ import type { Projects } from "@prisma/client";
 import { useMaxBuyPerTx } from "~/hooks/minter";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
 import { toFelt } from "starknet/utils/number";
+import { TxStatus } from "~/utils/blockchain/status";
+import { MintingComponent } from "./TransactionComponents";
 
 function EstimatedAPR({estimatedAPR}: {estimatedAPR: string}) {
     return (
@@ -36,20 +38,14 @@ export function SimularorComponent() {
     )
 }
 
-export function ProgressComponent({progress}: any) {
-    return (
-        <div>{progress}</div>
-    )
-}
-
 export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, updateProgress}: any) {
     const [amount, setAmount] = useState(1);
     const { maxBuyPerTx } = useMaxBuyPerTx(minterContract);
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     const [txHash, setTxHash] = useState("");
-    const [txStatus, setTxStatus] = useState("NOT_RECEIVED");
-    const { data: dataTx, error: errorTx } = useTransactionReceipt({ hash: txHash, watch: true });
+    const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
+    const [isMinting, setIsMinting] = useState(false);
 
     const calls = [
         {
@@ -92,16 +88,18 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
     }, [dataExecute])
 
     useEffect(() => {
-        setTxStatus(dataTx?.status ? dataTx.status : "NOT_RECEIVED");
-        updateProgress(dataTx?.status ? dataTx.status : "NOT_RECEIVED");
-        if (dataTx?.status === "ACCEPTED_ON_L2") {
+        updateProgress(dataTx?.status ? dataTx.status : TxStatus.NOT_RECEIVED);
+
+        setIsMinting(dataTx?.status === TxStatus.RECEIVED || dataTx?.status === TxStatus.PENDING ? true : false);
+        
+        if (dataTx?.status === TxStatus.ACCEPTED_ON_L2) {
             refreshProjectTotalSupply();
         }
     }, [dataTx, refreshProjectTotalSupply, updateProgress]);
 
     return (
         <div>
-            <div className="w-full flex items-start justify-start" >
+            <div className={isMinting ? "w-full flex items-center justify-start" : "w-full flex items-start justify-start" }>
                 <div className="w-4/12 flex items-center justify-center bg-black rounded-full text-white p-2 border border-white xl:w-4/12 2xl:max-w-[140px]">
                     <MinusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => amount > 1 ? setAmount(amount - 1) : 1} />
                     <div className="w-8/12 text-center">
@@ -109,11 +107,16 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
                     </div>
                     <PlusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => setAmount(amount + 1)} />
                 </div>
-                <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
-                    <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton>
-                    <input hidden type="number" value={(amount * price)} readOnly name="price" aria-label="Price" />
-                    <div className="mt-2 xl:w-full xl:text-left xl:pl-7 2xl:pl-12"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
-                </div>
+                {!isMinting && 
+                    <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
+                        <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton>
+                        <input hidden type="number" value={(amount * price)} readOnly name="price" aria-label="Price" />
+                        <div className="mt-2 xl:w-full xl:text-left xl:pl-7 2xl:pl-12"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
+                    </div>
+                }
+                {isMinting && <div className="w-8/12 flex flex-wrap items-center justify-center pl-8 xl:w-8/12 xl:justify-start xl:pl-6">
+                    <MintingComponent />
+                </div>}
             </div>
         </div>
     )
