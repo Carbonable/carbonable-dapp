@@ -1,6 +1,7 @@
 import type { Projects } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { encodeShortString } from "starknet/dist/utils/shortString";
 import { useMaxSupplyForMint, usePaymentTokenAddress, useProjectNftAddress, usePublicSaleOpen, useSoldout, useUnitPrice, useWhitelistedSaleOpen } from "~/hooks/minter";
 import { usePaymentTokenDecimals, usePaymentTokenSymbol } from "~/hooks/paymentToken";
 import { useProjectTotalSupply } from "~/hooks/project";
@@ -26,7 +27,6 @@ export default function ProjectOverview({project}: {project: Projects}) {
     const [progress, setProgress] = useState("NOT_RECEIVED");
 
     const updateProgress = (step: string) => {
-        console.log(progress);
         setProgress(step);
       };
 
