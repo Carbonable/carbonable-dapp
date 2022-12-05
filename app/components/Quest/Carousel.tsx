@@ -5,15 +5,16 @@ import PlusIconWhite from "~/components/Icons/PlusIcon";
 import { MEDIUM_LINK } from "~/utils/links";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { BadgeMint } from "../Buttons/ActionButton";
 
 
 export default function Carousel() {
-    const [activeSlide, setActiveSlide] = useState(0);
+    const [activeSlide, setActiveSlide] = useState(2);
     const handleClick = (index: number) => {
         setActiveSlide(index);
         slidz.slickGoTo(index);
     }
-
+  
     let slidz: any;
 
     const settings = {
@@ -81,17 +82,26 @@ export default function Carousel() {
     
     return (
         <div className=" preventOverflow mb-20">
-            <div id="assets" className="w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
+            <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                
-                    <div className="w-full grid grid-flow-col place-content-center gap-x-8">
+                    <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
                     {slides.map((image, index) => (
-                        <div key={`image_${index}`} className="px-2  outline-0">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110 cursor-pointer h-40 z-0" : "rounded-lg brightness-50 cursor-pointer h-40 z-0"}   />
+                        <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110  w-full h-40 z-0 " : "rounded-lg brightness-50 w-full h-40 z-0"}   />
                             { (image.mintable && index === activeSlide )   &&
-                            <div className=" z-10 uppercase font-inter font-bold  text-black  py-1 px-2 text-[8px] md:text-xs  lg:px-3 flex justify-center"> <button className="h-12 w-3/4 rounded-xl bg-green">Mint</button> </div>
+                            
+                            <div className="absolute  h-full bg-green z-20 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 "> 
+                                <div className="grid grid-flow-row  h-full items-stretch">
+                                    <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
+                                    <p className="font-americana font-thin text-2xl self-start">pioneer</p>
+                                    <BadgeMint className=" place-self-center self-end w-28" onClick={undefined}> Mint SBT</BadgeMint>
+                                </div> 
+                            </div>
                             }
                              { (!image.mintable && index === activeSlide )   &&
-                            <div className=" z-10 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
+                                <div className="absolute  h-full  bg-white/70  z-10 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 ">
+                                    <div className=" absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
+                                </div>
                             }
                             
             
@@ -99,7 +109,7 @@ export default function Carousel() {
                     ))}
                     </div>
              
-                <div className="flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
+                <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
                         {slides.map((image, index) => (

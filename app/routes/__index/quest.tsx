@@ -29,7 +29,7 @@ export default function Launchpad() {
                 
             </div>
             <div className="grid grid-col-1 md:grid-cols-6 m-auto w-11/12 xl:w-7/12 justify-items-center place-content-center">
-                    <div className=" col-span-2  flex items-center justify-center uppercase font-bold"> <LinkFooter href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"} > Start The Quest </LinkFooter> </div>
+                    <div className=" col-span-2  flex items-center justify-center uppercase font-bold"> <LinkFooter className="rounded-full" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"} > Start The Quest </LinkFooter> </div>
                     <div className=" col-span-4   flex items-center justify-center"><p>Be part of the change you want to see. <br /> Complete quest to get elligible to SBTs mint.</p></div>
             </div>
 
