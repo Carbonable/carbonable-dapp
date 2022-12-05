@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useMaxSupplyForMint, usePaymentTokenAddress, useProjectNftAddress, usePublicSaleOpen, useSoldout, useUnitPrice, useWhitelistedSaleOpen } from "~/hooks/minter";
 import { usePaymentTokenDecimals, usePaymentTokenSymbol } from "~/hooks/paymentToken";
 import { useProjectTotalSupply } from "~/hooks/project";
-import { ComingSoonComponent, MintComponent, ProgressComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
+import { TxStatus } from "~/utils/blockchain/status";
+import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
+import { ProgressComponent } from "./TransactionComponents";
 
 export default function ProjectOverview({project}: {project: Projects}) {
     const { whitelistedSaleOpen } = useWhitelistedSaleOpen(project.minterContract);
@@ -64,7 +66,7 @@ export default function ProjectOverview({project}: {project: Projects}) {
                     { moment(project.saleDate).isAfter(moment(new Date())) && !saleIsOpen && <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{supplyLeft} NFTs</div>}
                 </div>
                 <div className="mt-8 w-full md:mt-5 xl:mt-4">
-                    { saleIsOpen && !soldout && <MintComponent estimatedAPR={project.estimatedAPR}
+                    { saleIsOpen && !soldout && (progress === TxStatus.NOT_RECEIVED || progress === TxStatus.ACCEPTED_ON_L2) && <MintComponent estimatedAPR={project.estimatedAPR}
                                                                price={priceToDisplay}
                                                                paymentTokenSymbol={paymentTokenSymbol}
                                                                minterContract={project.minterContract}
@@ -79,8 +81,8 @@ export default function ProjectOverview({project}: {project: Projects}) {
                 </div>
                 <div className="mt-10 w-full md:mt-6 xl:mt-5">
                     { soldout && <ReportComponent />}
-                    { !soldout && (progress === "NOT_RECEIVED" || progress === "ACCEPTED_ON_L2") && <SimularorComponent />}
-                    { !soldout && progress !== "NOT_RECEIVED" && progress !== "ACCEPTED_ON_L2" && <ProgressComponent progress={progress} />}
+                    { !soldout && progress === TxStatus.NOT_RECEIVED && <SimularorComponent />}
+                    { !soldout && progress !== TxStatus.NOT_RECEIVED && <ProgressComponent progress={progress} />}
                 </div>
             </div>
         </div>
