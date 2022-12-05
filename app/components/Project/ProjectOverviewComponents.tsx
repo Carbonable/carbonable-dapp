@@ -101,11 +101,13 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         <div>
             <div className={isMinting ? "w-full flex items-center justify-start" : "w-full flex items-start justify-start" }>
                 <div className="w-4/12 flex items-center justify-center bg-black rounded-full text-white p-2 border border-white xl:w-4/12 2xl:max-w-[140px]">
-                    <MinusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => amount > 1 ? setAmount(amount - 1) : 1} />
+                    { !isMinting && <MinusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => amount > 1 ? setAmount(amount - 1) : 1} /> }
+                    { isMinting && <MinusIcon className="w-6 bg-grey p-1 rounded-full text-black" /> }
                     <div className="w-8/12 text-center">
                         <input className="bg-transparent w-full text-center outline-none" type="number" value={amount} readOnly name="amount" aria-label="Amount" aria-describedby="error-message" />
                     </div>
-                    <PlusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => setAmount(amount + 1)} />
+                    { !isMinting && <PlusIcon className="w-6 bg-white p-1 rounded-full text-black cursor-pointer hover:bg-beaige" onClick={() => setAmount(amount + 1)} /> }
+                    { isMinting && <PlusIcon className="w-6 bg-grey p-1 rounded-full text-black" /> }
                 </div>
                 {!isMinting && 
                     <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
