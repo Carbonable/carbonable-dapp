@@ -1,7 +1,6 @@
 import type { Projects } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { encodeShortString } from "starknet/dist/utils/shortString";
 import { useMaxSupplyForMint, usePaymentTokenAddress, useProjectNftAddress, usePublicSaleOpen, useSoldout, useUnitPrice, useWhitelistedSaleOpen } from "~/hooks/minter";
 import { usePaymentTokenDecimals, usePaymentTokenSymbol } from "~/hooks/paymentToken";
 import { useProjectTotalSupply } from "~/hooks/project";
@@ -66,7 +65,7 @@ export default function ProjectOverview({project}: {project: Projects}) {
                     { moment(project.saleDate).isAfter(moment(new Date())) && !saleIsOpen && <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{supplyLeft} NFTs</div>}
                 </div>
                 <div className="mt-8 w-full md:mt-5 xl:mt-4">
-                    { saleIsOpen && !soldout && (progress === TxStatus.NOT_RECEIVED || progress === TxStatus.ACCEPTED_ON_L2) && <MintComponent estimatedAPR={project.estimatedAPR}
+                    { saleIsOpen && !soldout && <MintComponent estimatedAPR={project.estimatedAPR}
                                                                price={priceToDisplay}
                                                                paymentTokenSymbol={paymentTokenSymbol}
                                                                minterContract={project.minterContract}
