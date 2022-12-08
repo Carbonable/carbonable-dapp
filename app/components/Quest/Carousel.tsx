@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import LinkButton, {  LinkOutsideButton } from "~/components/Buttons/LinkButton";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
@@ -6,15 +6,44 @@ import { MEDIUM_LINK } from "~/utils/links";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
+import { useStarknetExecute, useConnectors, useAccount } from '@starknet-react/core'
+import WalletMenu from "./WalletMenu";
+import ErrorMessage from "./ErrorMessage";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 
+interface Signature {
+    low: string,
+    high: string
+}
 
-export default function Carousel() {
+interface Props {
+    signatures: Array<Signature | null>
+}
+
+export default function Carousel({ signatures }: Props) {
+    const [signature, setSignature] = useState({ low: '0', high: '0' });
+    const [badgeType, setBadgeType] = useState(0);
+    const [menu, setMenu] = useState();
+    const { connect, connectors } = useConnectors()
+    const { account, address, status } = useAccount()
+    const { execute } = useStarknetExecute({ 
+        calls: {
+            contractAddress: "0x0690d1ef5edc7ad74ad5fc55664a0e751043fa5621324c1f37903162a20006b7",
+            entrypoint: 'mintBadge',
+            calldata: [signature.low, signature.high, badgeType]
+        }
+    })
     const [activeSlide, setActiveSlide] = useState(2);
     const handleClick = (index: number) => {
         setActiveSlide(index);
         slidz.slickGoTo(index);
     }
-  
+
+    useEffect(() => {
+        execute()
+    }, [signature, badgeType]);
+
     let slidz: any;
 
     const settings = {
@@ -32,30 +61,30 @@ export default function Carousel() {
             {
                 breakpoint: 1280,
                 settings: {
-                  slidesToShow: 3
+                    slidesToShow: 3
                 }
             },
             {
-              breakpoint: 1024,
-              settings: {
-                slidesToShow: 3
-              }
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3
+                }
             },
             {
                 breakpoint: 768,
                 settings: {
-                  slidesToShow: 3,
+                    slidesToShow: 3,
                 }
             },
             {
                 breakpoint: 640,
                 settings: {
-                  slidesToShow: 1,
-                  className: "center",
-                  centerMode: true,
+                    slidesToShow: 1,
+                    className: "center",
+                    centerMode: true,
                 }
             }
-          ]
+        ]
     };
 
     const slides = [
@@ -77,13 +106,11 @@ export default function Carousel() {
             subtitle: '?',
             mintable: false
         }
-
     ];
     
     return (
         <div className=" preventOverflow mb-20">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
-               
                     <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
                     {slides.map((image, index) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
@@ -94,21 +121,32 @@ export default function Carousel() {
                                 <div className="grid grid-flow-row  h-full items-stretch">
                                     <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
-                                    <BadgeMint className=" place-self-center self-end w-28" onClick={undefined}> Mint SBT</BadgeMint>
+                                    <BadgeMint className=" place-self-center self-end w-28" onClick={() => {
+                                        if (account) {
+                                            if (signatures[index]) {
+                                                const signature: Signature = signatures[index];
+                                                setSignature(signature);
+                                                setBadgeType(index);
+                                            }
+                                            else {
+                                                setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
+                                            }
+                                        }
+                                        else {
+                                            setMenu(<WalletMenu action={() => setMenu(null)} />);
+                                        }
+                                    }}> Mint SBT</BadgeMint>
                                 </div> 
                             </div>
                             }
-                             { (!image.mintable && index === activeSlide )   &&
+                            { (!image.mintable && index === activeSlide )   &&
                                 <div className="absolute  h-full  bg-white/70  z-10 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 ">
                                     <div className=" absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
                                 </div>
                             }
-                            
-            
                         </div>
                     ))}
                     </div>
-             
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
@@ -128,8 +166,8 @@ export default function Carousel() {
                         {slides[activeSlide].subtitle}
                     </div>
                 </div>
-             
             </div>
+            {menu}
         </div>
     )
 }

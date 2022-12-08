@@ -2,15 +2,42 @@ import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
+import { ec } from "starknet";
+import { pedersen } from "starknet/dist/utils/hash";
+import { sign } from "starknet/dist/utils/ellipticCurve";
 
 import { LinkFooter } from "~/components/Buttons/LinkButton";
 import Carousel from "~/components/Quest/Carousel";
 
+import eligibleUsers from "../../../public/eligibleUsers.json";
+import { BigNumberish} from "starknet/dist/utils/number";
 
-
+export async function loader() {
+    const user = '0x05806908591457559439330610Fc022AB0212c67548e55C8d51e9e5EDf2B7dc5' // This should be replaced by the user's address
+    const privateKey = process.env.QUEST_SIGNER_PRIVATE_KEY;
+    const starkKeyPair = ec.getKeyPair(privateKey);
+    let signatures = [];
+    for (let index = 0; index < eligibleUsers.length; index++) {
+        const token = eligibleUsers[index];
+        const whitelistedUser = token.user;
+        const tokenId = token.token_id;
+        if (whitelistedUser == user) {
+            const message = pedersen([user, tokenId]);
+            const signature = sign(starkKeyPair, message)
+            signatures.push(signature);
+        }
+        else signatures.push(null)
+    }
+    return signatures;
+};
 
 export default function Launchpad() {
-
+    interface Signature {
+        low: string,
+        high: string
+    }
+    const signatures: Array<Signature | null> = useLoaderData();
+    
     return (
         <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-20 ">
             
@@ -39,8 +66,7 @@ export default function Launchpad() {
                             <div className="font-trash font-bold text-lg mx-60">MINT YOUR BADGES</div>
                             <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                         </div>
-             <Carousel></Carousel>
-             
+            <Carousel signatures={signatures}></Carousel>
             </div>
         </div>
     )
