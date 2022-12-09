@@ -3,12 +3,18 @@ import type { Abi } from 'starknet';
 import { decodeShortString } from "starknet/dist/utils/shortString";
 import { toHex } from "starknet/utils/number";
 
-import PaymentTokenAbi from '../abi/eth_abi.json';
+import PaymentTokenAbiTestnet from '../abi/testnet2/eth_abi.json';
+import PaymentTokenAbiTestnet2 from '../abi/testnet2/eth_abi.json';
+import PaymentTokenAbiMainnet from '../abi/testnet2/eth_abi.json';
 
-export function usePaymentTokenContract(contractAddress: string | undefined) {
+export function usePaymentTokenContract(contractAddress: string | undefined, network: string) {
+  let abi = PaymentTokenAbiMainnet;
+  
+  if (network === "testnet") { abi = PaymentTokenAbiTestnet }
+  if (network === "testnet2") { abi = PaymentTokenAbiTestnet2 }
   
   return useContract({
-    abi: PaymentTokenAbi as Abi,
+    abi: abi as Abi,
     address: contractAddress,
   })
 }
@@ -19,8 +25,8 @@ export function usePaymentTokenContract(contractAddress: string | undefined) {
  * @param { string } contractAddress
  * @returns { any } Payment token decimals or undefined
  */
- export function usePaymentTokenDecimals(contractAddress: string): any {
-  const { contract: paymentToken } = usePaymentTokenContract(contractAddress);
+ export function usePaymentTokenDecimals(contractAddress: string, network: string): any {
+  const { contract: paymentToken } = usePaymentTokenContract(contractAddress, network);
   const { data, loading, error, refresh } = useStarknetCall({ contract: paymentToken, method: 'decimals', args: [] });
   const decimals = data ? data[0] : undefined;
 
@@ -33,8 +39,8 @@ export function usePaymentTokenContract(contractAddress: string | undefined) {
 * @param { string } contractAddress
 * @returns { any } Payment token symbol or undefined
 */
-export function usePaymentTokenSymbol(contractAddress: string): any {
-  const { contract: paymentToken } = usePaymentTokenContract(contractAddress);
+export function usePaymentTokenSymbol(contractAddress: string, network: string): any {
+  const { contract: paymentToken } = usePaymentTokenContract(contractAddress, network);
   const { data, loading, error, refresh } = useStarknetCall({ contract: paymentToken, method: 'symbol', args: [] });
 
   return { paymentTokenSymbol: data ? decodeShortString(toHex(data[0])).toString() : "", errorPaymentTokenSymbol: error, loadingPaymentTokenSymbol: loading, refreshPaymentTokenSymbol: refresh }; 

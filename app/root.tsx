@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -8,10 +9,13 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "@remix-run/react";
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
+import { Provider } from "starknet";
+import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
-import { testnet2 } from "./utils/blockchain/providers";
+import { db } from "./utils/db.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -24,20 +28,47 @@ export function links() {
   return [{ rel: "stylesheet", href: styles }]
 }
 
+
+export const loader: LoaderFunction = async ({
+  request, 
+}) => {
+  try {
+    const cookieHeader = request.headers.get("Cookie");
+    const cookie = (await userPrefs.parse(cookieHeader)) || {};
+
+    const defautlNetwork = await db.network.findFirst({
+      where: {
+        ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+      }
+    });
+    return json(defautlNetwork);
+  } catch {
+      return json([]);
+  }
+  
+};
+
 export default function App() {
+  const defautlNetwork = useLoaderData();
   const connectors = [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
   ];
 
+  const defaultProfider = new Provider({
+    sequencer: {
+      baseUrl: defautlNetwork.nodeUrl
+    }
+  })
+  
   return (
-    <html lang="en">
+    <html lang="en" className="bg-neutral-800 text-white">
       <head>
         <Meta />
         <Links />
       </head>
       <body>
-        <StarknetConfig defaultProvider={testnet2} connectors={connectors}>
+        <StarknetConfig defaultProvider={defaultProfider} connectors={connectors}>
           <Outlet />
           <ScrollRestoration />
           <Scripts />
@@ -51,7 +82,7 @@ export default function App() {
 export function CatchBoundary() {
   const caught = useCatch();
   return (
-    <html>
+    <html className="bg-neutral-800 text-white">
       <head>
         <title>Oops!</title>
         <Meta />

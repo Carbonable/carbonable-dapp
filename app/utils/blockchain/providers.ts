@@ -1,6 +1,3 @@
-import { Provider } from "starknet";
-import { StarknetChainId } from "starknet/constants";
-
 export const providers = {
     testnet:{
         address: "0x4b3071f45a09628009b15d544b4f65a614511cc520ff50273aaa79e76022b90",
@@ -27,30 +24,3 @@ export const providers = {
         gatewayUrl: "https://alpha-mainnet.starknet.io/gateway"
     }
 }
-
-export const testnet = new Provider({
-    sequencer: { 
-        baseUrl: "https://alpha4.starknet.io",
-        feederGatewayUrl:"https://alpha4.starknet.io/feeder_gateway",
-        gatewayUrl: "https://alpha4-2.starknet.io/gateway",
-        chainId: StarknetChainId.TESTNET,
-    }
-});
-
-export const testnet2 = new Provider({
-    sequencer: { 
-        baseUrl: "https://alpha4-2.starknet.io",
-        feederGatewayUrl:"https://alpha4-2.starknet.io/feeder_gateway",
-        gatewayUrl: "https://alpha4.starknet.io/gateway",
-        chainId: StarknetChainId.TESTNET,
-    }
-});
-
-export const mainnet = new Provider({
-    sequencer: { 
-        baseUrl: "https://alpha-mainnet.starknet.io",
-        feederGatewayUrl:"https://alpha-mainnet.starknet.io/feeder_gateway",
-        gatewayUrl: "https://alpha-mainnet.starknet.io/gateway",
-        chainId: StarknetChainId.MAINNET,
-    }
-});

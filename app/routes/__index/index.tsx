@@ -2,13 +2,13 @@ import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
-import type { Projects } from "@prisma/client";
+import type { Project } from "@prisma/client";
 import LaunchpadCard from "~/components/Project/ProjectCard";
 
 
 export async function loader() {
     try {
-        const allProjects = await db.projects.findMany({
+        const allProjects = await db.project.findMany({
             orderBy: [
               {
                 saleDate: 'desc',
@@ -43,7 +43,7 @@ export default function Launchpad() {
                     <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                 </div>
                 <div className="w-11/12 mx-auto flex flex-wrap items-start justify-center mt-10">
-                    {projects.map((project: Projects) => (     
+                    {projects.map((project: Project) => (     
                         <div key={project.slug} className="w-5/12 m-2 xl:w-[30%] 2xl:w-[22%]">
                             { project.contentReady && 
                                 <NavLink to={`/projects/${project.slug}`}>

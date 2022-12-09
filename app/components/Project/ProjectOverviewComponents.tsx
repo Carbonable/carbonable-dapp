@@ -5,7 +5,7 @@ import { MintButton, WhitelistButton } from "../Buttons/ActionButton";
 import { PlusIconBlack } from "../Icons/PlusIcon";
 import moment from "moment";
 
-import type { Projects } from "@prisma/client";
+import type { Project } from "@prisma/client";
 import { useMaxBuyPerTx } from "~/hooks/minter";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
 import { toFelt } from "starknet/utils/number";
@@ -38,9 +38,9 @@ export function SimularorComponent() {
     )
 }
 
-export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, updateProgress}: any) {
+export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, selectedNetwork, updateProgress}: any) {
     const [amount, setAmount] = useState(1);
-    const { maxBuyPerTx } = useMaxBuyPerTx(minterContract);
+    const { maxBuyPerTx } = useMaxBuyPerTx(minterContract, selectedNetwork);
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     const [txHash, setTxHash] = useState("");
@@ -124,7 +124,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
     )
 }
 
-export function SoldoutComponent({saleDate, estimatedAPR}: Projects) {
+export function SoldoutComponent({saleDate, estimatedAPR}: Project) {
     return (
         <div className="w-full flex items-center justify-center xl:justify-start">
             <div className="w-7/12 xl:w-[11rem]">
@@ -140,7 +140,7 @@ export function SoldoutComponent({saleDate, estimatedAPR}: Projects) {
     )
 }
 
-export function ComingSoonComponent({saleDate, estimatedAPR}: Projects) {
+export function ComingSoonComponent({saleDate, estimatedAPR}: Project) {
     const newsletter = useFetcher();
     const ref = useRef<HTMLInputElement>(null);
 
