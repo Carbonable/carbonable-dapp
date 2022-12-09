@@ -1,16 +1,30 @@
+import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
-import type { Projects } from "@prisma/client";
+import type { Project } from "@prisma/client";
 import LaunchpadCard from "~/components/Project/ProjectCard";
+import { userPrefs } from "~/cookie";
 
 
-export async function loader() {
+export const loader: LoaderFunction = async ({
+    request, 
+  }) => {
     try {
-        const allProjects = await db.projects.findMany({
+        const cookieHeader = request.headers.get("Cookie");
+        const cookie = (await userPrefs.parse(cookieHeader)) || {};
+
+        const selectedNetwork = await db.network.findFirst({
             where: {
-                isDisplay: true
+              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+            }
+        });
+
+        const allProjects = await db.project.findMany({
+            where: {
+                isDisplay: true,
+                network: selectedNetwork || undefined, 
             },  
             orderBy: [
               {
@@ -38,14 +52,14 @@ export default function Launchpad() {
                     <img src="/assets/images/backgrounds/launchpad-pastille.png" alt="NFT projects pastille" className="mt-2 w-1/5 md:mt-4 lg:mt-2 xl:mt-4" />
                 </div>
             </div>
-            <div className="relative w-full mt-12 lg:mt-12 xl:mt-16">
+            <div className="relative w-full mt-12 lg:mt-12 xl:mt-16 mb-12">
                 <div className="w-11/12 md:w-10/12 xl:w-9/12 mx-auto flex items-center justify-center">
                     <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                     <h1 className="w-10/12 items-center uppercase font-trash text-bold text-lg md:text-xl lg:text-2xl xl:text-3xl text-center">Projects to finance</h1>
                     <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                 </div>
                 <div className="w-11/12 mx-auto flex flex-wrap items-start justify-center mt-10">
-                    {projects.map((project: Projects) => (     
+                    {projects.map((project: Project) => (     
                         <div key={project.slug} className="w-11/12 m-2 md:w-[45%] xl:w-[32%] 2xl:w-[22%]">
                             { project.contentReady && 
                                 <NavLink to={`/projects/${project.slug}`}>

@@ -7,13 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Projects {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  slug         String   @unique
-  saleDate     DateTime
-  contentReady Boolean  @default(false)
-  estimatedAPR String
-  minterContract String @unique
-  isDisplay    Boolean  @default(false)
+model Project {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  slug            String   @unique
+  saleDate        DateTime
+  contentReady    Boolean  @default(false)
+  estimatedAPR    String
+  minterContract  String @unique
+  isDisplay       Boolean  @default(false)
+  network         Network @relation(fields: [networkId], references: [id])
+  networkId       String 
+
+}
+
+model Network {
+  id        String   @id
+  name      String   @unique
+  chainId   String   @unique
+  nodeUrl   String   @unique
+  isDefault Boolean  @default(false)
+  order     Int
+  projects  Project[]
 }

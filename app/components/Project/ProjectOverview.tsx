@@ -1,4 +1,4 @@
-import type { Projects } from "@prisma/client";
+import type { Project } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useMaxSupplyForMint, usePaymentTokenAddress, useProjectNftAddress, usePublicSaleOpen, useSoldout, useUnitPrice, useWhitelistedSaleOpen } from "~/hooks/minter";
@@ -8,17 +8,17 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
 import { ProgressComponent } from "./TransactionComponents";
 
-export default function ProjectOverview({project}: {project: Projects}) {
-    const { whitelistedSaleOpen } = useWhitelistedSaleOpen(project.minterContract);
-    const { publicSaleOpen } = usePublicSaleOpen(project.minterContract);
-    const { soldout } = useSoldout(project.minterContract);
-    const { projectNftAddress } = useProjectNftAddress(project.minterContract);
-    const { paymentTokenAddress } = usePaymentTokenAddress(project.minterContract);
-    const { maxSupplyForMint } = useMaxSupplyForMint(project.minterContract);
-    const { unitPrice } = useUnitPrice(project.minterContract);
-    const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(projectNftAddress);
-    const { paymentTokenDecimals } = usePaymentTokenDecimals(paymentTokenAddress);
-    const { paymentTokenSymbol } = usePaymentTokenSymbol(paymentTokenAddress);
+export default function ProjectOverview({project}: {project: Project}) {
+    const { whitelistedSaleOpen } = useWhitelistedSaleOpen(project.minterContract, project.networkId);
+    const { publicSaleOpen } = usePublicSaleOpen(project.minterContract, project.networkId);
+    const { soldout } = useSoldout(project.minterContract, project.networkId);
+    const { projectNftAddress } = useProjectNftAddress(project.minterContract, project.networkId);
+    const { paymentTokenAddress } = usePaymentTokenAddress(project.minterContract, project.networkId);
+    const { maxSupplyForMint } = useMaxSupplyForMint(project.minterContract, project.networkId);
+    const { unitPrice } = useUnitPrice(project.minterContract, project.networkId);
+    const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(projectNftAddress, project.networkId);
+    const { paymentTokenDecimals } = usePaymentTokenDecimals(paymentTokenAddress, project.networkId);
+    const { paymentTokenSymbol } = usePaymentTokenSymbol(paymentTokenAddress, project.networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
     const [supplyLeft, setSupplyLeft] = useState(0);
     const [priceToDisplay, setPriceToDisplay] = useState(0);
@@ -40,7 +40,6 @@ export default function ProjectOverview({project}: {project: Projects}) {
     }, [maxSupplyForMint, projectTotalSupply]);
 
     useEffect(() => {
-        // console.log(paymentTokenDecimals);
         if (paymentTokenDecimals === undefined || unitPrice === undefined) { return; }
 
         setPriceToDisplay(parseFloat(unitPrice) / Math.pow(10, parseInt(paymentTokenDecimals)));
@@ -73,6 +72,7 @@ export default function ProjectOverview({project}: {project: Projects}) {
                                                                publicSaleOpen={publicSaleOpen}
                                                                paymentTokenDecimals={paymentTokenDecimals}
                                                                refreshProjectTotalSupply={refreshProjectTotalSupply}
+                                                               selectedNetwork={project.networkId}
                                                                updateProgress={updateProgress}
                                                  /> }
                     { soldout && <SoldoutComponent {...project} />}

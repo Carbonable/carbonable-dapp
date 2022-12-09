@@ -1,10 +1,14 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import Header from "~/components/Header";
 import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
 import { useAccount } from "@starknet-react/core";
+import { db } from "~/utils/db.server";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { userPrefs } from "~/cookie";
 
 function minifyAddressOrStarknetId(address: string | undefined, starknetId: string |undefined) {
     const input = starknetId !== undefined ? starknetId : address;
@@ -14,11 +18,39 @@ function minifyAddressOrStarknetId(address: string | undefined, starknetId: stri
 }
 
 
-export default function Index() {
+export const loader: LoaderFunction = async ({
+    request, 
+  }) => {
+    try {
+        const networks = await db.network.findMany({
+          orderBy: {
+            order: 'asc'
+          }
+        });
 
+        const cookieHeader = request.headers.get("Cookie");
+        const cookie = (await userPrefs.parse(cookieHeader)) || {};
+
+        const defautlNetwork = await db.network.findFirst({
+            where: {
+              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+            }
+          });
+        
+        return json({ networks, defautlNetwork });
+    } catch {
+        return json([]);
+    }
+    
+  };
+  
+
+export default function Index() {
+    const networks = useLoaderData();
     const [menuOpen, setMenuOpen] = useState(false);
     const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
+   
 
     async function getStarnetId() {
         const id = await getStarknetId(address);
@@ -46,15 +78,17 @@ export default function Index() {
     return (
         <div className="mx-auto flex" id="outer-container">
             <div className="fixed z-50 top-0 left-0 lg:hidden">
-                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
+                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
             </div>
-            <header className="min-h-[90px] md:min-h-[120px] md:pb-12 lg:min-h-[80px] lg:pb-4 fixed top-0 w-full z-10 bg-header"><Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} /></header>
+            <header className="py-2 fixed top-0 w-full z-10 bg-neutral-800">
+                <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
+            </header>
             <nav className='hidden lg:block lg:w-[360px] z-20'>
-                <div className="sticky top-6 left-0">
-                    <NavMenu />
+                <div className="sticky top-0 left-0">
+                    <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
                 </div>
             </nav>
-            <main className='w-full lg:w-[calc(100vw_-_360px)] mt-[80px] pb-16 px-2 pt-8 md:mt-[120px] md:px-8 lg:mt-[60px]' id="page-wrap">
+            <main className='w-full mt-[80px]' id="page-wrap">
                 <Outlet />
             </main>
         </div>

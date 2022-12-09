@@ -1,13 +1,13 @@
-import type { Projects } from "@prisma/client";
+import type { Project } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { usePublicSaleOpen, useSoldout, useWhitelistedSaleOpen } from "~/hooks/minter";
 import { PlusIconBlack } from "../Icons/PlusIcon";
 
-export default function LaunchpadCard({slug, saleDate, minterContract}: Projects) {
-    const { whitelistedSaleOpen } = useWhitelistedSaleOpen(minterContract);
-    const { publicSaleOpen } = usePublicSaleOpen(minterContract);
-    const { soldout } = useSoldout(minterContract);
+export default function LaunchpadCard({slug, saleDate, minterContract, networkId}: Project) {
+    const { whitelistedSaleOpen } = useWhitelistedSaleOpen(minterContract, networkId);
+    const { publicSaleOpen } = usePublicSaleOpen(minterContract, networkId);
+    const { soldout } = useSoldout(minterContract, networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
 
 
