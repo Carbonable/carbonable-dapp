@@ -21,7 +21,7 @@ export async function loader({ params }: LoaderArgs) {
             const tokenId = token.token_id;
             if (tokenId.toString() == params.tokenId) {
                 if (simplifyAddress(whitelistedUser) == simplifyAddress(user)) {
-                    const message = pedersen([user, tokenId]);
+                    const message = pedersen([user.toLowerCase(), tokenId]);
                     const signature = sign(starkKeyPair, message)
                     res.low = signature[0];
                     res.high = signature[1];
@@ -34,5 +34,5 @@ export async function loader({ params }: LoaderArgs) {
 
 function simplifyAddress(hex: string) {
     // Remove the firsts zeros and the 0x
-    return hex.replace(/^0x0*/, '').toLocaleLowerCase();
+    return hex.replace(/^0x0*/, '').toLowerCase();
 }
