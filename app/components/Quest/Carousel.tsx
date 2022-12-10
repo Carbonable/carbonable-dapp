@@ -10,21 +10,19 @@ import { useStarknetExecute, useConnectors, useAccount } from '@starknet-react/c
 import WalletMenu from "./WalletMenu";
 import ErrorMessage from "./ErrorMessage";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import LoadingScreen from "./LoadingScreen";
+import SuccessMessage from "./SuccessMessage";
 
 interface Signature {
     low: string,
     high: string
 }
 
-interface Props {
-    signatures: Array<Signature | null>
-}
-
-export default function Carousel({ signatures }: Props) {
+export default function Carousel() {
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
-    const [menu, setMenu] = useState();
+    const [menu, setMenu] = useState(null);
+    const [currentTransactionHash, setCurrentTransactionHash] = useState('');
     const { connect, connectors } = useConnectors()
     const { account, address, status } = useAccount()
     const { execute } = useStarknetExecute({ 
@@ -41,8 +39,34 @@ export default function Carousel({ signatures }: Props) {
     }
 
     useEffect(() => {
-        execute()
+        execute().then(transaction => {
+            const transactionHash = transaction.transaction_hash;
+            setCurrentTransactionHash(transactionHash);
+        })
     }, [signature, badgeType]);
+
+    useEffect(() => {
+        if (currentTransactionHash) {
+            checkTransactionStatus();
+            const interval = setInterval(() => {
+                checkTransactionStatus();
+            }, 3000)
+            function checkTransactionStatus() {
+                fetch("https://alpha4.starknet.io/feeder_gateway/get_transaction_receipt?transactionHash=" + currentTransactionHash).then(async (response) => {
+                    const data = await response.json();
+                    if (data.status === 'ACCEPTED_ON_L2' || data.status === 'ACCEPTED_ON_L1') {
+                        setMenu(<SuccessMessage strong="Success." text="Your badge has been minted!" action={() => setMenu(null)} />);
+                        setCurrentTransactionHash('');
+                    }
+                    else {
+                        setMenu(<SuccessMessage strong={data.status} text="Waiting for the transaction to be accepted. This may take a few minutes." buttonText="Please wait..." />);
+                    }
+                })
+            }
+            return () => clearInterval(interval);
+        }
+    }, [currentTransactionHash]);
+
 
     let slidz: any;
 
@@ -121,10 +145,13 @@ export default function Carousel({ signatures }: Props) {
                                 <div className="grid grid-flow-row  h-full items-stretch">
                                     <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
-                                    <BadgeMint className=" place-self-center self-end w-28" onClick={() => {
+                                    <BadgeMint className=" place-self-center self-end w-28" onClick={async () => {
+                                        setMenu(<LoadingScreen />)
                                         if (account) {
-                                            if (signatures[index]) {
-                                                const signature: Signature = signatures[index];
+                                            const res = await fetch(`quest/sign/${account.address}/${index}`)
+                                            const signature: Signature = await res.json();
+                                            if (signature.low && signature.high) {
+                                                setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
                                                 setSignature(signature);
                                                 setBadgeType(index);
                                             }
