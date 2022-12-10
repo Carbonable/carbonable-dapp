@@ -116,19 +116,22 @@ export default function Carousel() {
             name: 'project1.png',
             title: 'Community Badge lvl-1',
             subtitle: 'Become a Carbonable OG',
-            mintable: true
+            mintable: true,
+            token_id: 2
         },
         {
             name: 'project2.png',
             title: '???',
             subtitle: '?',
-            mintable: false
+            mintable: false,
+            token_id: 0
         },
         {
             name: 'project3.png',
             title: '???',
             subtitle: '?',
-            mintable: false
+            mintable: false,
+            token_id: 1
         }
     ];
     
@@ -148,12 +151,12 @@ export default function Carousel() {
                                     <BadgeMint className=" place-self-center self-end w-28" onClick={async () => {
                                         setMenu(<LoadingScreen />)
                                         if (account) {
-                                            const res = await fetch(`quest/sign/${account.address}/${index}`)
+                                            const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
                                             const signature: Signature = await res.json();
                                             if (signature.low && signature.high) {
                                                 setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
                                                 setSignature(signature);
-                                                setBadgeType(index);
+                                                setBadgeType(image.token_id);
                                             }
                                             else {
                                                 setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
