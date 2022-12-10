@@ -34,5 +34,5 @@ export async function loader({ params }: LoaderArgs) {
 
 function simplifyAddress(hex: string) {
     // Remove the firsts zeros and the 0x
-    return hex.replace(/^0x0*/, '');
+    return hex.replace(/^0x0*/, '').toLocaleLowerCase();
 }
