@@ -2,11 +2,19 @@ import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 
 async function seed() {
-  await Promise.all(
+await Promise.all(
     getProjects().map((project) => {
       return db.projects.create({ data: project });
     })
+  ); 
+
+  await Promise.all(
+    getBadges().map((badge) => {
+      return db.badges.create({ data: badge });
+    })
   );
+
+
 
   getConfig().map((config) => {
     return db.simulatorConfig.create({ data: config });
@@ -103,4 +111,31 @@ function getProjects() {
              contentReady: false
           }
     ]
+}
+
+
+function getBadges() {
+    return [
+        {
+            name: 'project1.png',
+            title: 'Community Badge lvl-1',
+            subtitle: 'Become a Carbonable OG',
+            mintable: true,
+            token_id: 2
+        },
+        {
+            name: 'project2.png',
+            title: '???',
+            subtitle: '?',
+            mintable: false,
+            token_id: 0
+        },
+        {
+            name: 'project3.png',
+            title: '???',
+            subtitle: '?',
+            mintable: false,
+            token_id: 1
+        }
+    ];
 }

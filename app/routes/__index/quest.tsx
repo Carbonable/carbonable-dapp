@@ -2,8 +2,11 @@ import PlusIconWhite from "~/components/Icons/PlusIcon";
 import { LinkFooter } from "~/components/Buttons/LinkButton";
 import Carousel from "~/components/Quest/Carousel";
 
-export default function Launchpad() {
 
+
+export default function quest() {
+
+  
     return (
         <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-20 ">
             
@@ -32,7 +35,7 @@ export default function Launchpad() {
                             <div className="font-trash font-bold text-lg mx-60">MINT YOUR BADGES</div>
                             <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                         </div>
-            <Carousel></Carousel>
+            <Carousel ></Carousel>
             </div>
         </div>
     )

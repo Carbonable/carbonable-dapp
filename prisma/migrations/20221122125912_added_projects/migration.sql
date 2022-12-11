@@ -6,7 +6,6 @@ CREATE TABLE "SimulatorConfig" (
     "id" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "config" JSONB NOT NULL,
-
     CONSTRAINT "SimulatorConfig_pkey" PRIMARY KEY ("id")
 );
 
@@ -34,8 +33,25 @@ CREATE TABLE "Projects" (
     CONSTRAINT "Projects_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Badges" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "subtitle" TEXT NOT NULL,
+    "mintable" BOOLEAN NOT NULL DEFAULT false,
+    "token_id" INTEGER NOT NULL,
+
+    CONSTRAINT "Badges_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "SimulatorConfig_type_key" ON "SimulatorConfig"("type");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Projects_slug_key" ON "Projects"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Badge_tokenid_key" ON "Badges"("token_id");
+
