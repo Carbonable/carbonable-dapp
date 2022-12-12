@@ -35,21 +35,6 @@ npm install
 npm run dev
 ```
 
-### 🌡️ Deploy for preview
-
-```bash
-# Push changes on github
-git add .
-git commit -m "commit message"
-git push
-
-# Your branch will be deployed automatically on Fly.io
-```
-
-### 🚀 Deployment for prod
-
-Merge your branch into main, it will deploy automatically to production
-
 ### 💾 Database
 
 #### Dev
@@ -67,14 +52,20 @@ Connection with pgAdmin: localhost:5432 postgres/[password]
 
 ##### Build database
 ```bash
+# Push database schema locally
 npx prisma db push
+
+# Seed database
+npx ts-node prisma/seed.ts
+
+# Create migration file
 npx prisma migrate dev --name [name of the migration]
 ```
 
 If your database gets messed up, you can always delete the prisma/dev.db file and run npx prisma db push again. 
 Remember to also restart your dev server with npm run dev.
 
-#### Prod
+#### Distant database
 
 ##### Connection
 

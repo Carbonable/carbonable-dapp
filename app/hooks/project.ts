@@ -1,9 +1,9 @@
 import { useContract, useStarknetCall } from '@starknet-react/core';
 import type { Abi } from 'starknet';
 
-import ProjectAbiTestnet from '../abi/testnet2/CarbonableProject_abi.json';
+import ProjectAbiTestnet from '../abi/testnet/CarbonableProject_abi.json';
 import ProjectAbiTestnet2 from '../abi/testnet2/CarbonableProject_abi.json';
-import ProjectAbiMainnet from '../abi/testnet2/CarbonableProject_abi.json';
+import ProjectAbiMainnet from '../abi/mainnet/CarbonableProject_abi.json';
 
 export function useProjectContract(contractAddress: string | undefined, network: string) {
   let abi = ProjectAbiMainnet;
