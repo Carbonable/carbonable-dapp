@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import Slider from "react-slick";
 import LinkButton, {  LinkOutsideButton } from "~/components/Buttons/LinkButton";
 import PlusIconWhite from "~/components/Icons/PlusIcon";
@@ -9,26 +9,10 @@ import { BadgeMint } from "../Buttons/ActionButton";
 import { useStarknetExecute, useConnectors, useAccount } from '@starknet-react/core'
 import WalletMenu from "./WalletMenu";
 import ErrorMessage from "./ErrorMessage";
-import { json } from "@remix-run/node";
 import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
-import { db } from "~/utils/db.server";
-import { useLoaderData } from "@remix-run/react";
 
 
-
-
-
-export async function loader() {
-    const allProjects = await db.badges.findMany({
-        orderBy: [
-          {
-            createdAt: 'desc',
-          }
-        ]});
-  
-    return json(allProjects);
-};
 
 
 interface Signature {
@@ -38,7 +22,7 @@ interface Signature {
 
 
 
-export default function Carousel() {
+export default function Carousel(badges: any) {
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
     const [menu, setMenu] = useState(null);
@@ -134,8 +118,8 @@ export default function Carousel() {
      
     
     //const slides2 = useLoaderData();
-    const badges = useLoaderData();
-    console.log(badges);
+
+    
     const slides = [
         {
             name: 'project1.png',
@@ -159,13 +143,15 @@ export default function Carousel() {
             token_id: 1
         }
     ];
+    console.log(badges);
+    console.log(slides);
 
     return (
         
         <div className=" preventOverflow mb-20">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                     <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
-                    {slides.map((image  , index) => (
+                    {slides.map((image, index) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
                             <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110  w-full h-40 z-0 " : "rounded-lg brightness-50 w-full h-40 z-0"}   />
                             { (image.mintable && index === activeSlide )   &&
