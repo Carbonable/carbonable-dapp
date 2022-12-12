@@ -22,7 +22,7 @@ interface Signature {
 
 
 
-export default function Carousel(badges: any) {
+export default function Carousel({badges}: any) {
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
     const [menu, setMenu] = useState(null);
@@ -151,7 +151,7 @@ export default function Carousel(badges: any) {
         <div className=" preventOverflow mb-20">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                     <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
-                    {slides.map((image, index) => (
+                    {badges.map((image, index) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
                             <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110  w-full h-40 z-0 " : "rounded-lg brightness-50 w-full h-40 z-0"}   />
                             { (image.mintable && index === activeSlide )   &&
@@ -192,20 +192,20 @@ export default function Carousel(badges: any) {
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
-                        {slides.map((image, index) => (
+                        {badges.map((image, index) => (
                             <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
                         ))}
                     </div>
                         <div className="w-full hidden lg:block lg:ml-1">
-                            {slides[activeSlide].subtitle}
+                            {badges[activeSlide].subtitle}
                         </div>
                     </div>
                     
                     <div className="w-full flex items-center justify-center font-inter text-3xl line-through mt-4 lg:w-4/12 lg:justify-end lg:text-right lg:min-h-[96px] md:text-4xl lg:text-5xl">
-                        {slides[activeSlide].title}
+                        {badges[activeSlide].title}
                     </div>
                     <div className="w-full lg:hidden min-h-[52px]">
-                        {slides[activeSlide].subtitle}
+                        {badges[activeSlide].subtitle}
                     </div>
                 </div>
             </div>

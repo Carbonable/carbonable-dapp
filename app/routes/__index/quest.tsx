@@ -12,7 +12,7 @@ export async function loader() {
     const allProjects = await db.badges.findMany({
         orderBy: [
           {
-            createdAt: 'desc',
+            token_id: 'desc',
           }
         ]});
   
@@ -20,7 +20,7 @@ export async function loader() {
 };
 
 
-export default function quest() {
+export default function Quest() {
     const badges = useLoaderData();
   
     return (
@@ -51,7 +51,7 @@ export default function quest() {
                             <div className="font-trash font-bold text-lg mx-60">MINT YOUR BADGES</div>
                             <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
                         </div>
-            <Carousel {...badges}></Carousel>
+            <Carousel badges={badges}></Carousel>
             </div>
         </div>
     )
