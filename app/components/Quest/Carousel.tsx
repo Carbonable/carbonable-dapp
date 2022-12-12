@@ -1,5 +1,5 @@
 import {  useEffect, useState } from "react";
-import Slider from "react-slick";
+// import Slider from "react-slick"; to be dev
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
@@ -71,76 +71,8 @@ export default function Carousel({badges}: any) {
 
     let slidz: any;
 
-    const settings = {
-        infinite: false,
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        arrows: true,
-        autoplay: true,
-        centerMode: true,
-        beforeChange: (current: number, next: number) => { 
-            setActiveSlide(next); 
-        },
-        responsive: [
-            {
-                breakpoint: 1280,
-                settings: {
-                    slidesToShow: 3
-                }
-            },
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 3,
-                }
-            },
-            {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: 1,
-                    className: "center",
-                    centerMode: true,
-                }
-            }
-        ]
-    };
      
     
-    //const slides2 = useLoaderData();
-
-    
-    const slides = [
-        {
-            name: 'project1.png',
-            title: 'Community Badge lvl-1',
-            subtitle: 'Become a Carbonable OG',
-            mintable: true,
-            token_id: 2
-        },
-        {
-            name: 'project2.png',
-            title: '???',
-            subtitle: '?',
-            mintable: false,
-            token_id: 0
-        },
-        {
-            name: 'project3.png',
-            title: '???',
-            subtitle: '?',
-            mintable: false,
-            token_id: 1
-        }
-    ];
-    console.log(badges);
-    console.log(slides);
 
     return (
         
@@ -188,7 +120,7 @@ export default function Carousel({badges}: any) {
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
-                        {badges.map(( index: number) => (
+                        {badges.map(( image, index) => (
                             <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
                         ))}
                     </div>
