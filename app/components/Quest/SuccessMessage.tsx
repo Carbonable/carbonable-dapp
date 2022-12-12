@@ -4,7 +4,7 @@ interface Props {
     action: Function,
     strong: string,
     text: string,
-    buttonText: string
+    buttonText?: string 
 }
 
 export default function SuccessMessage({ action, strong, text, buttonText='Close' }: Props) {

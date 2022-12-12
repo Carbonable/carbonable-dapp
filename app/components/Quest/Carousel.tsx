@@ -1,12 +1,9 @@
-import { SetStateAction, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Slider from "react-slick";
-import LinkButton, {  LinkOutsideButton } from "~/components/Buttons/LinkButton";
-import PlusIconWhite from "~/components/Icons/PlusIcon";
-import { MEDIUM_LINK } from "~/utils/links";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute, useConnectors, useAccount } from '@starknet-react/core'
+import { useStarknetExecute,  useAccount } from '@starknet-react/core'
 import WalletMenu from "./WalletMenu";
 import ErrorMessage from "./ErrorMessage";
 import LoadingScreen from "./LoadingScreen";
@@ -27,8 +24,7 @@ export default function Carousel({badges}: any) {
     const [badgeType, setBadgeType] = useState(0);
     const [menu, setMenu] = useState(null);
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
-    const { connect, connectors } = useConnectors()
-    const { account, address, status } = useAccount()
+    const { account, } = useAccount()
     const { execute } = useStarknetExecute({ 
         calls: {
             contractAddress: "0x0690d1ef5edc7ad74ad5fc55664a0e751043fa5621324c1f37903162a20006b7",
@@ -47,7 +43,7 @@ export default function Carousel({badges}: any) {
             const transactionHash = transaction.transaction_hash;
             setCurrentTransactionHash(transactionHash);
         })
-    }, [signature, badgeType]);
+    }, [signature, badgeType, execute]);
 
     useEffect(() => {
         if (currentTransactionHash) {
@@ -192,7 +188,7 @@ export default function Carousel({badges}: any) {
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                     <div className="flex w-full items-center justify-center lg:justify-start">
-                        {badges.map((image, index) => (
+                        {badges.map(( index: number) => (
                             <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
                         ))}
                     </div>
