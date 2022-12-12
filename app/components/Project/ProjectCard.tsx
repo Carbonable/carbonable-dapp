@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePublicSaleOpen, useSoldout, useWhitelistedSaleOpen } from "~/hooks/minter";
 import { PlusIconBlack } from "../Icons/PlusIcon";
 
-export default function LaunchpadCard({slug, saleDate, minterContract, networkId}: Project) {
+export default function LaunchpadCard({slug, saleDate, minterContract, networkId, imageIpfs}: Project) {
     const { whitelistedSaleOpen } = useWhitelistedSaleOpen(minterContract, networkId);
     const { publicSaleOpen } = usePublicSaleOpen(minterContract, networkId);
     const { soldout } = useSoldout(minterContract, networkId);
@@ -17,15 +17,15 @@ export default function LaunchpadCard({slug, saleDate, minterContract, networkId
 
     return (
         <div className="relative">
-            <img src={`/assets/images/projects/${slug}/image.png`} alt={`${slug}  NFT card`} className="w-full" />
+            <img src={`https://ipfs.io/ipfs/${imageIpfs}`} alt={`${slug}  NFT card`} className="w-full rounded-[8.8%]" />
             { (soldout || saleIsOpen === false) && 
-                <div className="absolute top-[2.3%] left-[2.3%] bg-beaige/50 w-[95.5%] h-[48.8%] rounded-[18px]"></div>
+                <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[10%]"></div>
             }
             { soldout && 
-                <div className="absolute uppercase font-inter font-bold bg-beaige text-black top-3 left-3 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Soldout</div>
+                <div className="absolute uppercase font-inter font-bold bg-beaige text-black top-[6%] left-[6%] py-1 px-2 text-[8px] md:text-xs lg:px-3 rounded-lg">Soldout</div>
             }
             { saleIsOpen === false && moment(saleDate).isAfter(moment(new Date()))  && 
-                <div className="absolute flex items-center uppercase font-inter font-bold bg-green-blue text-black top-3 left-3 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">
+                <div className="absolute flex items-center uppercase font-inter font-bold bg-green-blue text-black top-[6%] left-[6%] py-1 px-2 text-[8px] md:text-xs lg:px-3 rounded-lg">
                     <span>Coming soon</span>&nbsp;<PlusIconBlack className="w-2"></PlusIconBlack>&nbsp;<span>{moment(saleDate).format("MM.DD.YYYY").toString()}</span>
                 </div>
             }

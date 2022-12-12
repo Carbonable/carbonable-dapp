@@ -1,0 +1,436 @@
+[
+    {
+        "members": [
+            {
+                "name": "low",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "high",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Uint256",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "beneficiary",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "cliff",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "start",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "duration",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "slice_period_seconds",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "revocable",
+                "offset": 5,
+                "type": "felt"
+            },
+            {
+                "name": "amount_total",
+                "offset": 6,
+                "type": "Uint256"
+            },
+            {
+                "name": "released",
+                "offset": 8,
+                "type": "Uint256"
+            },
+            {
+                "name": "revoked",
+                "offset": 10,
+                "type": "felt"
+            }
+        ],
+        "name": "Vesting",
+        "size": 11,
+        "type": "struct"
+    },
+    {
+        "data": [
+            {
+                "name": "previousOwner",
+                "type": "felt"
+            },
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "implementation",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousAdmin",
+                "type": "felt"
+            },
+            {
+                "name": "newAdmin",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AdminChanged",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "beneficiary",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "VestingCreated",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "VestingRevoked",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "TokensReleased",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "erc20_address",
+        "outputs": [
+            {
+                "name": "erc20_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vestings_total_amount",
+        "outputs": [
+            {
+                "name": "vestings_total_amount",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "account",
+                "type": "felt"
+            }
+        ],
+        "name": "vesting_count",
+        "outputs": [
+            {
+                "name": "vesting_count",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "name": "vestings",
+        "outputs": [
+            {
+                "name": "vesting",
+                "type": "Vesting"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "withdrawable_amount",
+        "outputs": [
+            {
+                "name": "withdrawable_amount",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_contract_balance",
+        "outputs": [
+            {
+                "name": "balance",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "name": "releasable_amount",
+        "outputs": [
+            {
+                "name": "releasable_amount",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "beneficiary",
+                "type": "felt"
+            },
+            {
+                "name": "cliff_delta",
+                "type": "felt"
+            },
+            {
+                "name": "start",
+                "type": "felt"
+            },
+            {
+                "name": "duration",
+                "type": "felt"
+            },
+            {
+                "name": "slice_period_seconds",
+                "type": "felt"
+            },
+            {
+                "name": "revocable",
+                "type": "felt"
+            },
+            {
+                "name": "amount_total",
+                "type": "Uint256"
+            }
+        ],
+        "name": "create_vesting",
+        "outputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "name": "revoke",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "release",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "erc20_address",
+                "type": "felt"
+            },
+            {
+                "name": "owner",
+                "type": "felt"
+            },
+            {
+                "name": "proxy_admin",
+                "type": "felt"
+            }
+        ],
+        "name": "initializer",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "account",
+                "type": "felt"
+            },
+            {
+                "name": "vesting_index",
+                "type": "felt"
+            }
+        ],
+        "name": "get_vesting_id",
+        "outputs": [
+            {
+                "name": "vesting_id",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getImplementationHash",
+        "outputs": [
+            {
+                "name": "implementation",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAdmin",
+        "outputs": [
+            {
+                "name": "admin",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_implementation",
+                "type": "felt"
+            }
+        ],
+        "name": "upgrade",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_admin",
+                "type": "felt"
+            }
+        ],
+        "name": "setAdmin",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "type": "function"
+    }
+]

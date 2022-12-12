@@ -3,9 +3,9 @@ import type { Abi } from 'starknet';
 import { decodeShortString } from "starknet/dist/utils/shortString";
 import { toHex } from "starknet/utils/number";
 
-import PaymentTokenAbiTestnet from '../abi/testnet2/eth_abi.json';
-import PaymentTokenAbiTestnet2 from '../abi/testnet2/eth_abi.json';
-import PaymentTokenAbiMainnet from '../abi/testnet2/eth_abi.json';
+import PaymentTokenAbiTestnet from '../abi/testnet/erc20_abi.json';
+import PaymentTokenAbiTestnet2 from '../abi/testnet2/erc20_abi.json';
+import PaymentTokenAbiMainnet from '../abi/mainnet/erc20_abi.json';
 
 export function usePaymentTokenContract(contractAddress: string | undefined, network: string) {
   let abi = PaymentTokenAbiMainnet;

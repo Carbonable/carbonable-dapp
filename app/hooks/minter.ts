@@ -2,9 +2,9 @@ import { useContract, useStarknetCall } from '@starknet-react/core';
 import type { Abi } from 'starknet';
 import { toHex } from "starknet/utils/number";
 
-import MinterAbiTestnet from '../abi/testnet2/CarbonableMinter_abi.json';
+import MinterAbiTestnet from '../abi/testnet/CarbonableMinter_abi.json';
 import MinterAbiTestnet2 from '../abi/testnet2/CarbonableMinter_abi.json';
-import MinterAbiMainnet from '../abi/testnet2/CarbonableMinter_abi.json';
+import MinterAbiMainnet from '../abi/mainnet/CarbonableMinter_abi.json';
 
 export function useMinterContract(contractAddress: string | undefined, network: string) {
     let abi = MinterAbiMainnet;

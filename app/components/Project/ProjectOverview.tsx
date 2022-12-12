@@ -48,7 +48,7 @@ export default function ProjectOverview({project}: {project: Project}) {
     return (
         <div className="bg-black bg-navigation rounded-3xl flex flex-wrap p-6 md:p-8 2xl:max-w-6xl mx-auto">
             <div className="w-full md:w-1/2 xl:w-5/12">
-                <img src={`/assets/images/projects/${project.slug}/image.png`} alt={`${project.slug}  NFT card`} className="w-full md:w-11/12 xl:w-full" />
+                <img src={`https://ipfs.io/ipfs/${project.imageIpfs}`} alt={`${project.slug}  NFT card`} className="w-full rounded-[8.8%] md:w-11/12 xl:w-full" />
             </div>
             <div className="w-full mt-6 p-2 md:w-1/2 md:-mt-0 flex flex-wrap justify-between items-center xl:w-7/12 xl:items-left xl:pl-12 2xl:w-7/12 2xl:pl-16 2xl:pr-0 select-none">
                 <div className="w-full">

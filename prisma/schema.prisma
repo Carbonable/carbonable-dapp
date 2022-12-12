@@ -16,6 +16,7 @@ model Project {
   estimatedAPR    String
   minterContract  String @unique
   isDisplay       Boolean  @default(false)
+  imageIpfs       String
   network         Network @relation(fields: [networkId], references: [id])
   networkId       String 
 
