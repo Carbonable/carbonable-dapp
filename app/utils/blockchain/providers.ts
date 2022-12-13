@@ -11,7 +11,7 @@ export const providers = {
         address: "0x1a6c655258e924feb84c0503bacf72feaf8a2438b649aa2349ed06b2d602bd1",
         baseUrl: "https://alpha4-2.starknet.io",
         nodeUrl: "https://alpha4-2.starknet.io",
-        chainId: "0x534e5f474f45524c49",
+        chainId: "0x534e5f474f45524c4932",
         feederGatewayUrl:"https://alpha4-2.starknet.io/feeder_gateway",
         gatewayUrl: "https://alpha4-2.starknet.io/gateway"
     },
