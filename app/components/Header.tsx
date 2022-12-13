@@ -1,12 +1,34 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
+import { useEffect } from "react";
+import { providers } from "~/utils/blockchain/providers";
+
 import WalletButton from "./Buttons/ActionButton";
 import Select from "./Select/Select";
+
 
 export default function Header({toggleMenu, menuOpen, addressToDisplay, networksList, selectedNetwork}: any) {
     const { status } = useAccount();
     const { connect, available, disconnect } = useConnectors();
+    const { library } = useStarknet();
+    
+    const asArray = Object.entries(providers);
+    const filtered = asArray.filter(([key, value]) => key === selectedNetwork.id);
 
+    // TODO: Remove as soon as possible
+    useEffect(() => {
+        if(library.provider) {
+            library.provider.baseUrl = filtered[0][1].baseUrl;
+            library.provider.feederGatewayUrl = filtered[0][1].feederGatewayUrl;
+            library.provider.gatewayUrlseUrl = filtered[0][1].gatewayUrl;
+            library.provider.chainId = filtered[0][1].chainId;
+        } else {
+            library.baseUrl = filtered[0][1].baseUrl;
+            library.feederGatewayUrl = filtered[0][1].feederGatewayUrl;
+            library.gatewayUrlseUrl = filtered[0][1].gatewayUrl;
+            library.chainId = filtered[0][1].chainId;
+        }
+    }, [status]);
     return (
         <>
             <div className="flex items-center justify-center mx-auto w-11/12 lg:w-full lg:px-4">

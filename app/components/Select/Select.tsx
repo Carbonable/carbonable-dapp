@@ -19,7 +19,13 @@ export default function Select({values, selectedValue, action}: any) {
       data.append("selectedValue", event.id);
 
       select.submit(data, { method: "post", action: action});
-      
+
+      // TODO: Check later if this hack can be remove. Use to ensure that Starknet React uses the correct provider
+      if (action === "/network/preference"){
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      }
     }
 
     return (
