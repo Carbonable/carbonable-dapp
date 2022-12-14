@@ -6,7 +6,6 @@ import { PlusIconBlack } from "../Icons/PlusIcon";
 import moment from "moment";
 
 import type { Project } from "@prisma/client";
-import { useMaxBuyPerTx } from "~/hooks/minter";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
@@ -38,9 +37,8 @@ export function SimularorComponent() {
     )
 }
 
-export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, selectedNetwork, updateProgress}: any) {
+export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, maxBuyPerTx, updateProgress}: any) {
     const [amount, setAmount] = useState(1);
-    const { maxBuyPerTx } = useMaxBuyPerTx(minterContract, selectedNetwork);
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     const [txHash, setTxHash] = useState("");
@@ -51,7 +49,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         {
             contractAddress: paymentTokenAddress,
             entrypoint: 'approve',
-            calldata: [toFelt(minterContract), (amount * price * Math.pow(10, parseInt(paymentTokenDecimals))), '0']  
+            calldata: [toFelt(minterContract), (amount * (price * Math.pow(10, parseInt(paymentTokenDecimals)))).toString(), 0]  
         },
         {
             contractAddress: minterContract,
@@ -70,7 +68,6 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         if (status === 'disconnected') {
             connect(available[0]);
         }
-
         execute();
     }
 
@@ -167,7 +164,7 @@ export function ComingSoonComponent({saleDate, estimatedAPR}: Project) {
                     action="/newsletter/subscribe"
                     >
                     <div className={state === 'error' ? 'bg-white mt-4 rounded-full w-full pl-4 pr-2 py-1 mx-auto flex border-2 border-red-400 2xl:max-w-[400px] 2xl:ml-0' : 'bg-white mt-4 rounded-full w-full pl-4 pr-2 py-1 mx-auto flex lg:w-full border-2 2xl:max-w-[400px] 2xl:ml-0'}>
-                        <input type="email" className="text-sm text-slate-500 outline-0 w-full" name="email" ref={ref} placeholder="Enter your email" aria-label="Email address" aria-describedby="error-message" />
+                        <input type="email" className="text-sm text-slate-500 outline-0 w-full bg-white" name="email" ref={ref} placeholder="Enter your email" aria-label="Email address" aria-describedby="error-message" />
                         <WhitelistButton className="bg-green flex items-center text-xs w-min text-right" onClick={newsletter.submit}>
                             <PaperAirplaneIcon className={state === 'submitting' ? 'lg:hidden w-4 h-4 text-white animate-pulse' : 'lg:hidden w-4 h-4 text-white'} />
                             <div className="hidden uppercase lg:block min-w-max">Be reminded</div>

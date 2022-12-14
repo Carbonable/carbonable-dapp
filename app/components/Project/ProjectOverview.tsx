@@ -1,24 +1,15 @@
 import type { Project } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useMaxSupplyForMint, usePaymentTokenAddress, useProjectNftAddress, usePublicSaleOpen, useSoldout, useUnitPrice, useWhitelistedSaleOpen } from "~/hooks/minter";
-import { usePaymentTokenDecimals, usePaymentTokenSymbol } from "~/hooks/paymentToken";
+import { useSoldout } from "~/hooks/minter";
 import { useProjectTotalSupply } from "~/hooks/project";
 import { TxStatus } from "~/utils/blockchain/status";
 import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
 import { ProgressComponent } from "./TransactionComponents";
 
 export default function ProjectOverview({project}: {project: Project}) {
-    const { whitelistedSaleOpen } = useWhitelistedSaleOpen(project.minterContract, project.networkId);
-    const { publicSaleOpen } = usePublicSaleOpen(project.minterContract, project.networkId);
     const { soldout } = useSoldout(project.minterContract, project.networkId);
-    const { projectNftAddress } = useProjectNftAddress(project.minterContract, project.networkId);
-    const { paymentTokenAddress } = usePaymentTokenAddress(project.minterContract, project.networkId);
-    const { maxSupplyForMint } = useMaxSupplyForMint(project.minterContract, project.networkId);
-    const { unitPrice } = useUnitPrice(project.minterContract, project.networkId);
-    const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(projectNftAddress, project.networkId);
-    const { paymentTokenDecimals } = usePaymentTokenDecimals(paymentTokenAddress, project.networkId);
-    const { paymentTokenSymbol } = usePaymentTokenSymbol(paymentTokenAddress, project.networkId);
+    const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(project.projectContract, project.networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
     const [supplyLeft, setSupplyLeft] = useState(0);
     const [priceToDisplay, setPriceToDisplay] = useState(0);
@@ -30,20 +21,20 @@ export default function ProjectOverview({project}: {project: Project}) {
       };
 
     useEffect(() => {
-        setSaleIsOpen((publicSaleOpen || whitelistedSaleOpen) ? true : false);
-    }, [whitelistedSaleOpen, publicSaleOpen]);
+        setSaleIsOpen((project.publicSaleOpen || project.whitelistedSaleOpen) ? true : false);
+    }, [project.whitelistedSaleOpen, project.publicSaleOpen]);
 
     useEffect(() => {
-        if (maxSupplyForMint === undefined || projectTotalSupply === undefined) { return; }
+        if (project.maxSupplyForMint === undefined || projectTotalSupply === undefined) { return; }
 
-        setSupplyLeft(parseInt(maxSupplyForMint) - parseInt(projectTotalSupply));
-    }, [maxSupplyForMint, projectTotalSupply]);
+        setSupplyLeft(project.maxSupplyForMint - parseInt(projectTotalSupply));
+    }, [project.maxSupplyForMint, projectTotalSupply]);
 
     useEffect(() => {
-        if (paymentTokenDecimals === undefined || unitPrice === undefined) { return; }
+        if (project.paymentTokenDecimals === undefined || project.unitPrice === undefined) { return; }
 
-        setPriceToDisplay(parseFloat(unitPrice) / Math.pow(10, parseInt(paymentTokenDecimals)));
-    }, [paymentTokenDecimals, unitPrice]);
+        setPriceToDisplay(project.unitPrice / Math.pow(10, project.paymentTokenDecimals));
+    }, [project.paymentTokenDecimals, project.unitPrice]);
 
     return (
         <div className="bg-black bg-navigation rounded-3xl flex flex-wrap p-6 md:p-8 2xl:max-w-6xl mx-auto">
@@ -54,7 +45,7 @@ export default function ProjectOverview({project}: {project: Project}) {
                 <div className="w-full">
                     { (saleIsOpen || soldout) && 
                         <>
-                            <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{priceToDisplay.toFixed(2)} {paymentTokenSymbol} <span className="font-americana font-thin text-lg text-beaige xl:text-xl 2xl:text-2xl">/ NFT</span></div>
+                            <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{priceToDisplay.toFixed(2)} {project.paymentTokenSymbol} <span className="font-americana font-thin text-lg text-beaige xl:text-xl 2xl:text-2xl">/ NFT</span></div>
                             <div className="font-inter text-beaige text-xs xl:text-base">
                                 { !soldout && <span>{supplyLeft} NFTs left</span>}
                                 { soldout && <span>{projectTotalSupply} NFTs</span>}
@@ -66,13 +57,13 @@ export default function ProjectOverview({project}: {project: Project}) {
                 <div className="mt-8 w-full md:mt-5 xl:mt-4">
                     { saleIsOpen && !soldout && <MintComponent estimatedAPR={project.estimatedAPR}
                                                                price={priceToDisplay}
-                                                               paymentTokenSymbol={paymentTokenSymbol}
+                                                               paymentTokenSymbol={project.paymentTokenSymbol}
                                                                minterContract={project.minterContract}
-                                                               paymentTokenAddress={paymentTokenAddress}
-                                                               publicSaleOpen={publicSaleOpen}
-                                                               paymentTokenDecimals={paymentTokenDecimals}
+                                                               paymentTokenAddress={project.paymentContract}
+                                                               publicSaleOpen={project.publicSaleOpen}
+                                                               paymentTokenDecimals={project.paymentTokenDecimals}
                                                                refreshProjectTotalSupply={refreshProjectTotalSupply}
-                                                               selectedNetwork={project.networkId}
+                                                               maxBuyPerTx={project.maxBuyPerTx}
                                                                updateProgress={updateProgress}
                                                  /> }
                     { soldout && <SoldoutComponent {...project} />}

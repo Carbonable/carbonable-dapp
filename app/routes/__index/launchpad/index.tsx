@@ -31,15 +31,15 @@ export const loader: LoaderFunction = async ({
                 saleDate: 'desc',
               }
             ]});
-      
         return json(allProjects);
-    } catch {
+    } catch (e) {
+        console.log(e)
         return json([]);
     }
 };
 
 export default function Launchpad() {
-    const projects = useLoaderData();
+    const projects = useLoaderData<unknown>() as Project[];
 
     return (
         <div className="mx-auto mt-4 md:mt-12 lg:mt-6">
@@ -62,7 +62,7 @@ export default function Launchpad() {
                     {projects.map((project: Project) => (     
                         <div key={project.slug} className="w-11/12 m-2 md:w-[45%] xl:w-[32%] 2xl:w-[22%]">
                             { project.contentReady && 
-                                <NavLink to={`/projects/${project.slug}`}>
+                                <NavLink to={`/launchpad/${project.slug}`}>
                                     <LaunchpadCard {...project} />
                                 </NavLink>
                             }
