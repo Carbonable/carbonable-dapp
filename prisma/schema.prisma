@@ -8,17 +8,29 @@ datasource db {
 }
 
 model Project {
-  id              String   @id @default(uuid())
-  createdAt       DateTime @default(now())
-  slug            String   @unique
-  saleDate        DateTime
-  contentReady    Boolean  @default(false)
-  estimatedAPR    String
-  minterContract  String @unique
-  isDisplay       Boolean  @default(false)
-  imageIpfs       String
-  network         Network @relation(fields: [networkId], references: [id])
-  networkId       String 
+  id                    String   @id @default(uuid())
+  createdAt             DateTime @default(now())
+  slug                  String   @unique
+  saleDate              DateTime
+  contentReady          Boolean  @default(false)
+  estimatedAPR          String
+  minterContract        String
+  projectContract       String
+  yielderContract       String
+  offseterContract      String
+  vesterContract        String
+  paymentContract       String
+  paymentTokenDecimals  Int
+  paymentTokenSymbol    String
+  unitPrice             Float
+  maxBuyPerTx           Int
+  maxSupplyForMint      Int
+  isDisplay             Boolean  @default(false)
+  imageIpfs             String
+  network               Network  @relation(fields: [networkId], references: [id])
+  networkId             String 
+  whitelistedSaleOpen   Boolean  @default(false)
+  publicSaleOpen        Boolean  @default(false)
 
 }
 

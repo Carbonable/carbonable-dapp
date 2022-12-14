@@ -6,8 +6,8 @@ export const links = [
         outsideLink: false
     },
     {
-        href: '/projects',
-        label: 'Projects',
+        href: '/launchpad',
+        label: 'Launchpad',
         isOpen: true,
         outsideLink: false
     },

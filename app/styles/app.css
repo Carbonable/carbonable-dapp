@@ -1798,16 +1798,12 @@ input::-webkit-inner-spin-button {
     width: 11rem;
   }
 
-  .xl\:w-9\/12 {
-    width: 75%;
-  }
-
-  .xl\:w-\[30\%\] {
-    width: 30%;
-  }
-
   .xl\:w-10\/12 {
     width: 83.333333%;
+  }
+
+  .xl\:w-9\/12 {
+    width: 75%;
   }
 
   .xl\:w-\[32\%\] {
@@ -1885,12 +1881,12 @@ input::-webkit-inner-spin-button {
     width: 58.333333%;
   }
 
-  .\32xl\:w-\[22\%\] {
-    width: 22%;
-  }
-
   .\32xl\:w-9\/12 {
     width: 75%;
+  }
+
+  .\32xl\:w-\[22\%\] {
+    width: 22%;
   }
 
   .\32xl\:min-w-\[220px\] {
