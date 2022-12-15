@@ -47,11 +47,11 @@ module.exports = {
         'primary': 'linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%)',
         'blue': 'linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%)',
         'brand': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%)',
+        'launchpad-header': 'linear-gradient(50.39deg, #0B0D13 15.27%, #13151C 46.91%, #1F2128 91.42%);',
         'light-5': 'rgba(208, 209, 214, 0.05)',
         'green-blue': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%);',
         'navigation': 'linear-gradient(90.2deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.13) 0.01%, rgba(255, 255, 255, 0.2) 0.02%, rgba(255, 255, 255, 0.1) 43.23%, rgba(255, 255, 255, 0) 70.83%, rgba(255, 255, 255, 0.24) 100%);',
         'nav-selected': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%);',
-        'launchpad': "url('/assets/images/backgrounds/launchpad.png')",
         'header': 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);'
       },
       animation: {

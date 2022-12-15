@@ -48,7 +48,7 @@ export default function ProjectOverview({project}: {project: Project}) {
                             <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{priceToDisplay.toFixed(2)} {project.paymentTokenSymbol} <span className="font-americana font-thin text-lg text-beaige xl:text-xl 2xl:text-2xl">/ NFT</span></div>
                             <div className="font-inter text-beaige text-xs xl:text-base">
                                 { !soldout && <span>{supplyLeft} NFTs left</span>}
-                                { soldout && <span>{projectTotalSupply} NFTs</span>}
+                                { soldout && <span>{project.maxSupplyForMint} NFTs</span>}
                             </div>
                         </>
                 }
