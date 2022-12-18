@@ -3,7 +3,6 @@ import moment from "moment";
 import { PlusIconBlack } from "../Icons/PlusIcon";
 
 export default function BadgeCard({name, slug, isSoldOut, saleIsOpen, saleDate}: Projects) {
-
     return (
         <div className="relative">
             <img src={`/assets/images/projects/${slug}/image.png`} alt={`${name}  NFT card`} className="w-full" />
@@ -21,4 +20,3 @@ export default function BadgeCard({name, slug, isSoldOut, saleIsOpen, saleDate}:
         </div>
     )
 }
-    
