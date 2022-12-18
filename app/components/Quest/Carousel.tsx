@@ -5,7 +5,7 @@ import { MEDIUM_LINK } from "~/utils/links";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute, useConnectors, useAccount } from '@starknet-react/core'
+import { useStarknetExecute, useStarknetCall, useConnectors, useAccount } from '@starknet-react/core'
 import WalletMenu from "./WalletMenu";
 import ErrorMessage from "./ErrorMessage";
 import { json } from "@remix-run/node";
@@ -17,6 +17,10 @@ interface Signature {
     high: string
 }
 
+interface Token {
+    id: string
+}
+
 export default function Carousel() {
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
@@ -24,13 +28,15 @@ export default function Carousel() {
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
     const { connect, connectors } = useConnectors()
     const { account, address, status } = useAccount()
+    const [tokens, setTokens] = useState<Token[]>();
     const { execute } = useStarknetExecute({ 
         calls: {
-            contractAddress: "0x0690d1ef5edc7ad74ad5fc55664a0e751043fa5621324c1f37903162a20006b7",
-            entrypoint: 'mintBadge',
+            contractAddress: "0x049a1d26d2626bf79bf87127e26eb224146d052ec00e11d133b196bc67b4f356",
+            entrypoint: 'claim',
             calldata: [signature.low, signature.high, badgeType]
         }
     })
+        
     const [activeSlide, setActiveSlide] = useState(2);
     const handleClick = (index: number) => {
         setActiveSlide(index);
@@ -43,6 +49,10 @@ export default function Carousel() {
             setCurrentTransactionHash(transactionHash);
         })
     }, [signature, badgeType]);
+
+    useEffect(() => {
+        slides
+    }, [account]);
 
     useEffect(() => {
         if (currentTransactionHash) {
