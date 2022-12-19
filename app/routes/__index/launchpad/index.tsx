@@ -41,7 +41,7 @@ export default function Launchpad() {
     const projects = useLoaderData<unknown>() as Project[];
 
     return (
-        <div className="mx-auto md:mt-12 lg:mt-6">
+        <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-launchpad-header rounded-3xl p-4 flex items-center justify-center flex-wrap md:px-10">
                 <div className="w-2/12">
                     <img src="/assets/images/common/logo-green.svg" alt="Carbonable logo green" className="w-full md:w-9/12" />
@@ -53,11 +53,11 @@ export default function Launchpad() {
                 </h1>
                 <img src="/assets/images/backgrounds/launchpad.svg" alt="world map" className="w-10/12 mx-auto mt-4 md:w-4/12" />
             </div>
-            <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
+            <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12 md:pl-6">
                 <div className="uppercase font-inter text-bold text-lg text-center md:text-left md:pl-1 2xl:text-xl">Projects to finance</div>
-                <div className="flex flex-wrap items-start justify-center mt-2">
+                <div className="flex flex-wrap items-start justify-center mt-2 md:justify-start">
                     {projects.map((project: Project) => (     
-                        <div key={project.slug} className="w-full my-2 ml-0 mr-4 md:w-[31%] lg:w-[31.5%] 2xl:w-[23%]">
+                        <div key={project.slug} className="w-full my-2 mx-2 md:ml-0 md:mr-4 md:w-[31%] lg:w-[31%] 2xl:w-[23%]">
                             { project.contentReady && 
                                 <NavLink to={`/launchpad/${project.slug}`}>
                                     <LaunchpadCard {...project} />

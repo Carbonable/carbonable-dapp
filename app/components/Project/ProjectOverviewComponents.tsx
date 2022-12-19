@@ -10,6 +10,7 @@ import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } 
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
 import { MintingComponent } from "./TransactionComponents";
+import { ConnectDialog } from "../Buttons/ConnectButton";
 
 function EstimatedAPR({estimatedAPR}: {estimatedAPR: string}) {
     return (
@@ -44,6 +45,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
     const [txHash, setTxHash] = useState("");
     const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
     const [isMinting, setIsMinting] = useState(false);
+    let [isOpen, setIsOpen] = useState(false);
 
     const calls = [
         {
@@ -65,10 +67,18 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         } });
 
     const connectAndExecute = () => {
-        if (status === 'disconnected') {
+        if (status === "connected") { 
+            execute();
+            return;
+         }
+
+        if (available.length === 1) {
             connect(available[0]);
+            execute();
+            return;
         }
-        execute();
+
+        setIsOpen(true);
     }
 
     useEffect(() => {
@@ -117,6 +127,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
                     <MintingComponent />
                 </div>}
             </div>
+            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
     )
 }

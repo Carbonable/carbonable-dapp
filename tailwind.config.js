@@ -37,6 +37,8 @@ module.exports = {
         opacityLight: {
           5: 'rgba(208, 209, 214, 0.05)'
         },
+        undeposited: '#DA7575',
+        undepositedBorder: 'rgba(218, 117, 117, 0.3)',
         beaige: '#EFECEA',
         green: "#0AF2AD",
         lightblue: "#AAC6FD",
@@ -48,11 +50,16 @@ module.exports = {
         'blue': 'linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%)',
         'brand': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%)',
         'launchpad-header': 'linear-gradient(50.39deg, #0B0D13 15.27%, #13151C 46.91%, #1F2128 91.42%);',
-        'light-5': 'rgba(208, 209, 214, 0.05)',
+        'brand-background': "url('/assets/images/common/brand-background.jpeg')",
         'green-blue': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%);',
         'navigation': 'linear-gradient(90.2deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.13) 0.01%, rgba(255, 255, 255, 0.2) 0.02%, rgba(255, 255, 255, 0.1) 43.23%, rgba(255, 255, 255, 0) 70.83%, rgba(255, 255, 255, 0.24) 100%);',
         'nav-selected': 'linear-gradient(270deg, #A8C4EF 39.58%, #0AF2AD 100%);',
         'header': 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);'
+      },
+      backgroundColor: {
+        'light-5': 'rgba(208, 209, 214, 0.05);',
+        'light-80': 'rgba(11, 13, 19, 0.8);',
+        'undeposited': '#292A2B',
       },
       animation: {
         'blur-1': 'blur-text 1.4s 0.2s infinite linear alternate',
