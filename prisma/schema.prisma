@@ -10,6 +10,7 @@ datasource db {
 model Project {
   id                    String   @id @default(uuid())
   createdAt             DateTime @default(now())
+  name                  String   @default("")
   slug                  String   @unique
   saleDate              DateTime
   contentReady          Boolean  @default(false)
@@ -31,7 +32,6 @@ model Project {
   networkId             String 
   whitelistedSaleOpen   Boolean  @default(false)
   publicSaleOpen        Boolean  @default(false)
-
 }
 
 model Network {
@@ -43,3 +43,9 @@ model Network {
   order     Int
   projects  Project[]
 }
+
+model Snapshot {
+  id            String   @id @default(uuid())
+  snapshotDate  DateTime
+} 
+

@@ -3,7 +3,7 @@ import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/
 import { LinkFooter } from "../Buttons/LinkButton";
 import NavLinkInside from "./NavLinkInside";
 import NavLinkOutside from "./NavLinkOutside";
-import Select from "../Select/Select";
+import Select from "../Filters/Select";
 
 export default function NavMenu({addressToDisplay, closeMenu, networksList, selectedNetwork}: any) {
 

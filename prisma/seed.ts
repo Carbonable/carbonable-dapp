@@ -21,6 +21,7 @@ function getProjects() {
     return [
         {
            slug: "orang-starktest-indonesia-testnet",
+           name: "Orange Starktest",
            saleDate: new Date(),
            contentReady: true,
            estimatedAPR: "32%",
@@ -47,6 +48,7 @@ function getProjects() {
         },
         {
           slug: "sea-starktest-kenya-testnet",
+          name: "Sea Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "22%",
@@ -73,6 +75,7 @@ function getProjects() {
         },
         {
           slug: "sunset-starktest-philippines-testnet",
+          name: "Sunset Starktest",
           saleDate: new Date('2023-01-01T10:00:00.000Z'),
           contentReady: true,
           estimatedAPR: "26%",
@@ -99,6 +102,7 @@ function getProjects() {
         },
         {
           slug: "island-starktest-myanmar-testnet",
+          name: "Island Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "30%",
@@ -125,6 +129,7 @@ function getProjects() {
         },
         {
           slug: "swamp-starktest-france-testnet",
+          name: "Swamp Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "28%",
@@ -151,6 +156,7 @@ function getProjects() {
         },
         {
           slug: "croco-starktest-uganda-testnet",
+          name: "Croco Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "25%",
@@ -177,6 +183,7 @@ function getProjects() {
         },
         {
           slug: "jaguar-starktest-guatemala-testnet",
+          name: "Jaguar Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "32%",
@@ -203,6 +210,7 @@ function getProjects() {
         },
         {
           slug: "orang-starktest-indonesia-testnet2",
+          name: "Orange Starktest",
           saleDate: new Date(),
           contentReady: true,
           estimatedAPR: "32%",
@@ -229,6 +237,7 @@ function getProjects() {
        },
        {
          slug: "sea-starktest-kenya-testnet2",
+         name: "Sea Starktest",
          saleDate: new Date(),
          contentReady: true,
          estimatedAPR: "22%",
@@ -255,6 +264,7 @@ function getProjects() {
        },
        {
          slug: "sunset-starktest-philippines-testnet2",
+         name: "Sunset Starktest",
          saleDate: new Date('2023-01-01T10:00:00.000Z'),
          contentReady: true,
          estimatedAPR: "26%",
@@ -281,6 +291,7 @@ function getProjects() {
        },
        {
          slug: "island-starktest-myanmar-testnet2",
+         name: "Island Starktest",
          saleDate: new Date(),
          contentReady: true,
          estimatedAPR: "30%",
@@ -307,6 +318,7 @@ function getProjects() {
        },
        {
          slug: "swamp-starktest-france-testnet2",
+         name: "Swamp Starktest",
          saleDate: new Date(),
          contentReady: true,
          estimatedAPR: "28%",
@@ -333,6 +345,7 @@ function getProjects() {
        },
        {
          slug: "croco-starktest-uganda-testnet2",
+         name: "Croco Starktest",
          saleDate: new Date(),
          contentReady: true,
          estimatedAPR: "25%",
@@ -359,6 +372,7 @@ function getProjects() {
        },
        {
          slug: "jaguar-starktest-guatemala-testnet2",
+         name: "Jaguar Starktest",
          saleDate: new Date(),
          contentReady: true,
          estimatedAPR: "32%",
