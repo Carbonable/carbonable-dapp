@@ -16,7 +16,7 @@ interface CountdownItemInterface {
 function CountdownItem({textTop, textBottom}: CountdownItemInterface) {
     return (
         <div className="text-center min-w-[56px] lg:min-w-[62px]">
-            <div className="font-trash text-3xl uppercase mt-4 text-transparent bg-clip-text bg-blue lg:text-4xl">
+            <div className="font-trash text-3xl uppercase mt-4 text-transparent bg-clip-text bg-primary lg:text-4xl">
                 {parseInt(textTop) < 10 ? "0" + textTop : textTop}
             </div>
             <div className="font-inter text-neutral-400">
@@ -32,7 +32,7 @@ function CountdownItem({textTop, textBottom}: CountdownItemInterface) {
 function CountdownSeparator() {
     return (
         <div className="text-center">
-            <div className="font-trash text-3xl uppercase mt-4 text-transparent bg-clip-text bg-blue px-2 lg:text-4xl">
+            <div className="font-trash text-3xl uppercase mt-4 text-transparent bg-clip-text bg-primary px-2 lg:text-4xl">
                 :
             </div>
             <div className="font-inter text-neutral-400"></div>
