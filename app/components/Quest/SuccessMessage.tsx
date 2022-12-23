@@ -1,7 +1,7 @@
 import Loading from "./Loading"
 
 interface Props {
-    action: Function,
+    action?: Function,
     strong: string,
     text: string,
     buttonText?: string 

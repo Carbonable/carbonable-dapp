@@ -9,7 +9,7 @@ import type { LoaderArgs } from "@remix-run/node";
 export async function loader({ params }: LoaderArgs) {
     const user = params.user
     const privateKey = process.env.QUEST_SIGNER_PRIVATE_KEY;
-    const starkKeyPair = ec.getKeyPair(privateKey);
+    const starkKeyPair = ec.getKeyPair(privateKey || '0x0');
     const res = {
         low: '',
         high: ''

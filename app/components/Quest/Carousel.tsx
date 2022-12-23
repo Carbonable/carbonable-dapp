@@ -1,13 +1,14 @@
-import {  useEffect, useState } from "react";
+import {  ReactElement, useEffect, useState } from "react";
 // import Slider from "react-slick"; to be dev
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute,  useAccount } from '@starknet-react/core'
+import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core'
 import WalletMenu from "./WalletMenu";
 import ErrorMessage from "./ErrorMessage";
 import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
+import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 
 
 
@@ -20,17 +21,24 @@ interface Signature {
 
 
 export default function Carousel({badges}: any) {
+    const minterContractAddress = '0x03ffeb896f1a6cddde4f13269e2639ba25326f6752695e10efb7833fa78794f2'
+    const badgeContractAddress = '0x073b3700c5e4851892e907e782a3ab8efd103a06cd89ff052d91307d18f0649d'
+
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
-    const [menu, setMenu] = useState(null);
+    const [menu, setMenu] = useState<ReactElement | Element | null>(null);
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
-    const { account, } = useAccount()
+    const { account, address } = useAccount()
     const { execute } = useStarknetExecute({ 
         calls: {
-            contractAddress: "0x0690d1ef5edc7ad74ad5fc55664a0e751043fa5621324c1f37903162a20006b7",
-            entrypoint: 'mintBadge',
+            contractAddress: minterContractAddress,
+            entrypoint: 'claim',
             calldata: [signature.low, signature.high, badgeType]
         }
+    })
+    const { contract:badgeContract } = useContract({
+        address: badgeContractAddress,
+        abi: CarbonableBadgeABI
     })
     const [activeSlide, setActiveSlide] = useState(2);
     const handleClick = (index: number) => {
@@ -90,21 +98,23 @@ export default function Carousel({badges}: any) {
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
                                     <BadgeMint className=" place-self-center self-end w-28" onClick={async () => {
                                         setMenu(<LoadingScreen />)
-                                        if (account) {
-                                            const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
-                                            const signature: Signature = await res.json();
-                                            if (signature.low && signature.high) {
-                                                setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
-                                                setSignature(signature);
-                                                setBadgeType(image.token_id);
-                                            }
-                                            else {
-                                                setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
-                                            }
-                                        }
-                                        else {
-                                            setMenu(<WalletMenu action={() => setMenu(null)} />);
-                                        }
+
+                                        if (!badgeContract) return;
+                                        if (!account) return setMenu(<WalletMenu action={() => setMenu(null)} />);
+
+                                        // Check if the user has already minted the badge
+                                        const balance = parseInt((await badgeContract.functions.balanceOf(address, [image.token_id, 0])).balance.low);
+                                        if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
+                                        
+                                        // Check if the user is whitelisted
+                                        const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
+                                        const signature: Signature = await res.json();
+                                        if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
+                                        
+                                        // Mint the badge
+                                        setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
+                                        setSignature(signature);
+                                        setBadgeType(image.token_id);
                                     }}> Mint SBT</BadgeMint>
                                 </div> 
                             </div>
