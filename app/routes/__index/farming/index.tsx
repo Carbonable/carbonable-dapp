@@ -60,7 +60,7 @@ export default function FarmingIndex() {
 
     const { status } = useAccount();
     let now = moment();
-    const snapshotDate = moment(snapshot.snapshotDate);
+    const snapshotDate = moment(snapshot?.snapshotDate || now);
     const[countdown, setCountdown] = useState(moment.duration(snapshotDate.diff(now)));
 
     const filterButtons = [
