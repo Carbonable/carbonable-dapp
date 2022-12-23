@@ -49,3 +49,13 @@ model Snapshot {
   snapshotDate  DateTime
 } 
 
+model Badges {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  name         String
+  title        String 
+  subtitle     String  
+  mintable     Boolean  @default(false)
+  token_id     Int      @unique
+}
+
