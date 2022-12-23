@@ -3,22 +3,28 @@ import type { LoaderFunction} from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import ProjectOverview from "~/components/Project/ProjectOverview";
+import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
 import type { Project } from "@prisma/client";
 import { userPrefs } from "~/cookie";
+import { client } from "~/utils/sanity/client";
+import ContentContainer from "~/components/Project/Content/ContentWrapper";
+import type { SanityContent } from "~/utils/sanity/types";
 
 export const loader: LoaderFunction = async ({
     params, request
   }) => {
     try {
       const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
+      const cookie = (await userPrefs.parse(cookieHeader)) || {};
 
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
+      // If the user has selected a network, use that. Otherwise, use the default network.
+      const selectedNetwork = await db.network.findFirst({
+          where: {
+            ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+          }
+      });
+
+      // Find the project by slug and network.
       const project = await db.project.findFirst({
         where: {
           slug: params.slug,
@@ -26,22 +32,35 @@ export const loader: LoaderFunction = async ({
         },  
       });
 
+      // If the project is not found, or is not display, throw a 404.
       if (project === null || project.isDisplay === false){
         throw new Response("Not Found", {status: 404})
       }
-  
-      return json<Project>(project);
 
-    } catch {
+      const content = await client.fetch(
+        `*[_type == "project" && slug.current == $slug]`,
+        { slug: params.slug }
+      );
+  
+      return json({project, content});
+
+    } catch (e) {
+      console.log(e)
       throw new Response("Not Found", {status: 404})
     }
 };
 
 export default function ProjectPage() {
-  const project = useLoaderData<unknown>() as Project;
+  const data = useLoaderData();
+  const project: Project = data.project;
+  const content: SanityContent = data.content[0];
     return (
-        <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12">
+        <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
           <ProjectOverview project={project} />
+          <div className="mt-20 w-11/12 mx-auto">
+            { content !== undefined && <ContentContainer content={content} /> }
+          </div>
         </div>
+        
     )
 }

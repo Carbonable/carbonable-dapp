@@ -47,13 +47,13 @@ export default function Select({values, selectedValue, action}: any) {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-neutral-800 py-0 text-base shadow-lg focus:outline-none top-10 px-0 border border-neutral-400">
+              <Listbox.Options className="absolute mt-1 max-h-60 w-[120px] overflow-auto rounded-md bg-neutral-800 py-0 text-base shadow-lg focus:outline-none px-0 border border-neutral-400 top-100 p-6">
                 {values.map((value: ValueProps) => (
                   <Listbox.Option
                     key={value.id}
                     value={value}
                     className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 px-4 mb-0 ${
+                      `relative cursor-pointer select-none py-2 px-4 list-none ml-0 ${
                         active ? 'bg-opacityLight-5 text-neutral-200' : 'text-neutral-200'
                       }`
                     }

@@ -37,7 +37,7 @@ export default function ProjectOverview({project}: {project: Project}) {
     }, [project.paymentTokenDecimals, project.unitPrice]);
 
     return (
-        <div className="bg-black bg-navigation rounded-3xl flex flex-wrap p-6 md:p-8 2xl:max-w-6xl mx-auto">
+        <div className="border border-neutral-800 bg-launchpad-header rounded-3xl flex flex-wrap p-6 md:p-8 mx-auto">
             <div className="w-full md:w-1/2 xl:w-5/12">
                 <img src={`https://ipfs.io/ipfs/${project.imageIpfs}`} alt={`${project.slug}  NFT card`} className="w-full rounded-[8.8%] md:w-11/12 xl:w-full" />
             </div>
