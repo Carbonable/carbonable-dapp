@@ -66,6 +66,8 @@ export default function App() {
       <head>
         <Meta />
         <Links />
+        <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" /> 
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
         <StarknetConfig defaultProvider={defaultProfider} connectors={connectors}>
@@ -94,7 +96,7 @@ export function CatchBoundary() {
             <div className="text-9xl font-trash w-full text-center">{caught.status}</div>
             <div className="text-7xl font-americana w-full text-center">{caught.statusText}</div>
             <div className="text-center mt-4">
-              <Link to={"/projects"} className="text-green text-center">Go to launchpad</Link>
+              <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
             </div>
           </div>
         </div>

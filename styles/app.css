@@ -56,27 +56,17 @@ html {
     position: absolute;
     border-radius: 50%;
     background: transparent;
-  }
-
-  ul,
-li {
-  margin: 0;
-  padding: 0;
 }
 
-ul {
-  padding: 25px;
-  position: absolute;
-  top: 100px;
-  width: 230px;
+::-webkit-scrollbar {
+  display: none;
 }
 
 li {
-  list-style: none;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+    list-style: circle;
+    margin-left: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .icon-placeholder {
@@ -101,4 +91,76 @@ input[type='number'] {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+
+/**
+ * Carousel overflow
+ */
+ .preventOverflow {
+  position: relative;
+  overflow: hidden;
+}
+
+.preventOverflow .slick-list {
+  overflow: visible;
+  position: relative;
+  height: 310px;
+}
+
+.preventOverflow .slick-track {
+  position: absolute;
+  top:0;
+  left: 0;
+}
+
+.preventOverflow::before,
+.preventOverflow::after {
+  position: absolute;
+  top: -1px;
+  bottom: 0;
+  z-index: 1;
+  content: '';
+}
+
+.preventOverflow::before {
+  left: -1px;
+  background: linear-gradient(90deg, #13151C 51.85%, rgba(0, 0, 0, 0) 100%);
+  width: 15%;
+}
+
+.preventOverflow::after {
+  right: -1px;
+  background: linear-gradient(90deg, #13151C 51.85%, rgba(0, 0, 0, 0) 100%);
+  transform: rotate(180deg);
+  width: 10%;
+}
+
+@media screen and (min-width: 360px) {
+  .preventOverflow .slick-list {
+    height: 100px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .preventOverflow .slick-list {
+    height: 250px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .preventOverflow .slick-list {
+    height: 280px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .preventOverflow .slick-list {
+    height: 275px;
+  }
+}
+
+@media screen and (min-width: 1536px) {
+  .preventOverflow .slick-list {
+    height: 300px;
+  }
 }

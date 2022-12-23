@@ -3,8 +3,9 @@ import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { Project } from "@prisma/client";
-import LaunchpadCard from "~/components/Project/ProjectCard";
+
 import { userPrefs } from "~/cookie";
+import LaunchpadCard from "~/components/Project/Overview/ProjectCard";
 
 
 export const loader: LoaderFunction = async ({

@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">Carbonable Homepage</h1>
+  <h1 align="center">Carbonable dApp</h1>
   <p align="center">
     <a href="https://discord.gg/zUy9UvB7cd">
         <img src="https://img.shields.io/badge/Discord-6666FF?style=for-the-badge&logo=discord&logoColor=white">
@@ -8,7 +8,7 @@
         <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white">
     </a>       
   </p>
-  <h3 align="center">Carbonable homepage written in React with Remix</h3>
+  <h3 align="center">Carbonable dApp written in React with Remix</h3>
 </div>
 
 ## Usage

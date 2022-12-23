@@ -1,8 +1,8 @@
 import type { Project } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { PlusIconBlack } from "~/components/Icons/PlusIcon";
 import { useSoldout } from "~/hooks/minter";
-import { PlusIconBlack } from "../Icons/PlusIcon";
 
 export default function LaunchpadCard({slug, saleDate, minterContract, networkId, imageIpfs, whitelistedSaleOpen, publicSaleOpen}: Project) {
     const { soldout } = useSoldout(minterContract, networkId);
