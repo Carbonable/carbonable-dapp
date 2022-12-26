@@ -37,7 +37,7 @@ export const links = [
     },
     {
         href: '/quest',
-        label: 'quest',
+        label: 'Quest',
         isOpen: true,
         outsideLink: false
     }

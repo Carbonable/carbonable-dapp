@@ -437,7 +437,7 @@ function getNetworks() {
 function getBadges() {
   return [
       {
-          name: 'project1.png',
+          name: 'project1.gif',
           title: 'Community Badge lvl-1',
           subtitle: 'Become a Carbonable OG',
           mintable: true,

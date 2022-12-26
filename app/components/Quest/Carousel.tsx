@@ -1,7 +1,8 @@
-import {  ReactElement, useEffect, useState } from "react";
+import type {  ReactElement} from "react";
+import { useEffect, useState } from "react";
 // import Slider from "react-slick"; to be dev
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
+// import "slick-carousel/slick/slick.css"; 
+// import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
 import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core'
 import WalletMenu from "./WalletMenu";
@@ -12,7 +13,7 @@ import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 
 
 
-
+ 
 interface Signature {
     low: string,
     high: string
@@ -89,7 +90,7 @@ export default function Carousel({badges}: any) {
                     <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
                     {badges.map((image, index) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-110  w-full h-40 z-0 " : "rounded-lg brightness-50 w-full h-40 z-0"}   />
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50  w-full h-40 z-0 " : "rounded-lg  w-full h-40 z-0"}   />
                             { (image.mintable && index === activeSlide )   &&
 
                             <div className="absolute  h-full bg-green z-20 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 "> 

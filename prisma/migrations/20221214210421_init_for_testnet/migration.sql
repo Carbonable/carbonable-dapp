@@ -63,6 +63,12 @@ CREATE UNIQUE INDEX "Network_chainId_key" ON "Network"("chainId");
 -- CreateIndex
 CREATE UNIQUE INDEX "Network_nodeUrl_key" ON "Network"("nodeUrl");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Badges_tokenid_key" ON "Badges"("token_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Badges_name_key" ON "Badges"("name");
+
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_networkId_fkey" FOREIGN KEY ("networkId") REFERENCES "Network"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
