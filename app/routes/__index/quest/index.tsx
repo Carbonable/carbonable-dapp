@@ -4,6 +4,7 @@ import Carousel from "~/components/Quest/Carousel";
 import { db } from "~/utils/db.server";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
+import { Badges } from "@prisma/client";
 
 
 
@@ -21,7 +22,8 @@ export async function loader() {
 
 
 export default function Quest() {
-    const badges = useLoaderData();
+    // tag badge from prisma
+    const badges  = useLoaderData();
 
     return (
         <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-20 ">

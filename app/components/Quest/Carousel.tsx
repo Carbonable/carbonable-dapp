@@ -81,8 +81,6 @@ export default function Carousel({badges}: any) {
     let slidz: any;
 
 
-
-
     return (
 
         <div className=" preventOverflow mb-20">
@@ -97,7 +95,8 @@ export default function Carousel({badges}: any) {
                                 <div className="grid grid-flow-row  h-full items-stretch">
                                     <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
-                                    <BadgeMint className=" place-self-center self-end w-28" onClick={async () => {
+                                    <BadgeMint className=" place-self-center self-end w-28" 
+                                    onClick={async () => {
                                         setMenu(<LoadingScreen />)
 
                                         if (!badgeContract) return;
@@ -116,7 +115,9 @@ export default function Carousel({badges}: any) {
                                         setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
                                         setSignature(signature);
                                         setBadgeType(image.token_id);
-                                    }}> Mint SBT</BadgeMint>
+                                    }}>
+                                    Mint SBT
+                                    </BadgeMint>
                                 </div> 
                             </div>
                             }

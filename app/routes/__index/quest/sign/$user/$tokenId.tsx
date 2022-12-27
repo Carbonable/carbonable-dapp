@@ -19,7 +19,7 @@ export async function loader({ params }: LoaderArgs) {
             const token = eligibleUsers[index];
             const whitelistedUser = token.user;
             const tokenId = token.token_id;
-            if (tokenId.toString() == params.tokenId) {
+            if (tokenId.toString() === params.tokenId) {
                 if (simplifyAddress(whitelistedUser) == simplifyAddress(user)) {
                     const message = pedersen([user.toLowerCase(), tokenId]);
                     const signature = sign(starkKeyPair, message)
