@@ -573,14 +573,6 @@ video {
   left: 6%;
 }
 
-.top-\[2\.3\%\] {
-  top: 2.3%;
-}
-
-.left-\[2\.3\%\] {
-  left: 2.3%;
-}
-
 .top-2 {
   top: 0.5rem;
 }
@@ -673,6 +665,11 @@ video {
   margin-bottom: 0.5rem;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -681,11 +678,6 @@ video {
 .mx-60 {
   margin-left: 15rem;
   margin-right: 15rem;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
 }
 
 .mt-4 {
@@ -828,10 +820,6 @@ video {
   height: 1rem;
 }
 
-.h-\[48\.8\%\] {
-  height: 48.8%;
-}
-
 .h-40 {
   height: 10rem;
 }
@@ -968,10 +956,6 @@ video {
 .w-min {
   width: -moz-min-content;
   width: min-content;
-}
-
-.w-\[95\.5\%\] {
-  width: 95.5%;
 }
 
 .w-60 {
@@ -1325,10 +1309,6 @@ video {
   border-radius: 10%;
 }
 
-.rounded-\[18px\] {
-  border-radius: 18px;
-}
-
 .rounded {
   border-radius: 0.25rem;
 }
@@ -1434,10 +1414,6 @@ video {
 .bg-grey {
   --tw-bg-opacity: 1;
   background-color: rgb(120 118 117 / var(--tw-bg-opacity));
-}
-
-.bg-beaige\/50 {
-  background-color: rgb(239 236 234 / 0.5);
 }
 
 .bg-white\/70 {
@@ -2154,10 +2130,6 @@ input::-webkit-inner-spin-button {
     margin-top: 3rem;
   }
 
-  .md\:mt-2 {
-    margin-top: 0.5rem;
-  }
-
   .md\:mt-0 {
     margin-top: 0px;
   }
@@ -2168,6 +2140,10 @@ input::-webkit-inner-spin-button {
 
   .md\:mr-4 {
     margin-right: 1rem;
+  }
+
+  .md\:mt-2 {
+    margin-top: 0.5rem;
   }
 
   .md\:block {
@@ -2465,6 +2441,11 @@ input::-webkit-inner-spin-button {
     line-height: 1;
   }
 
+  .lg\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
   .lg\:text-\[3vw\] {
     font-size: 3vw;
   }
@@ -2472,24 +2453,19 @@ input::-webkit-inner-spin-button {
   .lg\:text-\[2\.6vw\] {
     font-size: 2.6vw;
   }
-
-  .lg\:text-xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
 }
 
 @media (min-width: 1280px) {
+  .xl\:right-20 {
+    right: 5rem;
+  }
+
   .xl\:top-16 {
     top: 4rem;
   }
 
   .xl\:left-16 {
     left: 4rem;
-  }
-
-  .xl\:right-20 {
-    right: 5rem;
   }
 
   .xl\:mx-auto {
@@ -2533,12 +2509,12 @@ input::-webkit-inner-spin-button {
     width: 11rem;
   }
 
-  .xl\:w-9\/12 {
-    width: 75%;
-  }
-
   .xl\:w-10\/12 {
     width: 83.333333%;
+  }
+
+  .xl\:w-9\/12 {
+    width: 75%;
   }
 
   .xl\:justify-start {

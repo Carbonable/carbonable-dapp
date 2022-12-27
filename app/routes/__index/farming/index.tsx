@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({
             console.log("load")
         return json([nextSnapshot[0], allProjects]);
     } catch (e) {
-        console.log(e)
+        
         return json({});
     }
 };
@@ -61,10 +61,10 @@ export default function FarmingIndex() {
 
     const { status } = useAccount();
     let now = moment();
-    console.log(now);
+    
 
     const snapshotDate = moment(snapshot.snapshotDate);
-    console.log(snapshotDate);
+   
     const[countdown, setCountdown] = useState(moment.duration(snapshotDate.diff(now)));
 
     const filterButtons = [
