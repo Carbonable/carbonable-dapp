@@ -80,6 +80,27 @@ export default function Carousel({badges}: any) {
 
     let slidz: any;
 
+    const handleMint = async (image) => {
+        setMenu(<LoadingScreen />)
+
+        if (!badgeContract) return;
+        if (!account) return setMenu(<WalletMenu action={() => setMenu(null)} />);
+
+        // Check if the user has already minted the badge
+        const balance = parseInt((await badgeContract.functions.balanceOf(address, [image.token_id, 0])).balance.low);
+        if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
+
+        // Check if the user is whitelisted
+        const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
+        const signature: Signature = await res.json();
+        if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
+
+        // Mint the badge
+        setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
+        setSignature(signature);
+        setBadgeType(image.token_id);
+    }
+
 
     return (
 
@@ -96,26 +117,7 @@ export default function Carousel({badges}: any) {
                                     <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
                                     <BadgeMint className=" place-self-center self-end w-28" 
-                                    onClick={async () => {
-                                        setMenu(<LoadingScreen />)
-
-                                        if (!badgeContract) return;
-                                        if (!account) return setMenu(<WalletMenu action={() => setMenu(null)} />);
-
-                                        // Check if the user has already minted the badge
-                                        const balance = parseInt((await badgeContract.functions.balanceOf(address, [image.token_id, 0])).balance.low);
-                                        if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
-
-                                        // Check if the user is whitelisted
-                                        const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
-                                        const signature: Signature = await res.json();
-                                        if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
-
-                                        // Mint the badge
-                                        setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
-                                        setSignature(signature);
-                                        setBadgeType(image.token_id);
-                                    }}>
+                                    onClick={() => handleMint(image)}>
                                     Mint SBT
                                     </BadgeMint>
                                 </div> 
