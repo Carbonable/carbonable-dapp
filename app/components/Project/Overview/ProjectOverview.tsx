@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSoldout } from "~/hooks/minter";
 import { useProjectTotalSupply } from "~/hooks/project";
 import { TxStatus } from "~/utils/blockchain/status";
+import { IPFS_GATEWAY } from "~/utils/links";
 import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
 import { ProgressComponent } from "./TransactionComponents";
 
@@ -37,9 +38,9 @@ export default function ProjectOverview({project}: {project: Project}) {
     }, [project.paymentTokenDecimals, project.unitPrice]);
 
     return (
-        <div className="bg-black bg-navigation rounded-3xl flex flex-wrap p-6 md:p-8 2xl:max-w-6xl mx-auto">
+        <div className="border border-neutral-800 bg-launchpad-header rounded-3xl flex flex-wrap p-6 md:p-8 mx-auto">
             <div className="w-full md:w-1/2 xl:w-5/12">
-                <img src={`https://ipfs.io/ipfs/${project.imageIpfs}`} alt={`${project.slug}  NFT card`} className="w-full rounded-[8.8%] md:w-11/12 xl:w-full" />
+                <img src={IPFS_GATEWAY + project.imageIpfs} alt={`${project.slug}  NFT card`} className="w-full rounded-[8.8%] md:w-11/12 xl:w-full" />
             </div>
             <div className="w-full mt-6 p-2 md:w-1/2 md:-mt-0 flex flex-wrap justify-between items-center xl:w-7/12 xl:items-left xl:pl-12 2xl:w-7/12 2xl:pl-16 2xl:pr-0 select-none">
                 <div className="w-full">

@@ -2,6 +2,11 @@ import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 
 async function seed() {
+  await Promise.all(
+    getSnapshots().map((snapshot) => {
+      return db.snapshot.create({ data: snapshot });
+    })
+  );
 
   await Promise.all(
     getNetworks().map((network) => {
@@ -21,6 +26,15 @@ async function seed() {
 }
 
 seed();
+
+function getSnapshots() {
+  return [
+    {
+      snapshotDate: new Date('2023-01-01T10:00:00.000Z'),
+    }
+  ];
+}
+
 
 function getProjects() {
     return [

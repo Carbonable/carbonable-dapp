@@ -3,7 +3,7 @@ import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
 import { useEffect } from "react";
 import { providers } from "~/utils/blockchain/providers";
 
-import WalletButton from "./Buttons/ActionButton";
+import SecondaryButton from "./Buttons/ActionButton";
 import ConnectButton from "./Buttons/ConnectButton";
 import Select from "./Filters/Select";
 
@@ -44,7 +44,7 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
                     {status === 'connected' && 
                         <>
                             <span className="mr-12 font-trash hidden lg:block">{addressToDisplay}</span>
-                            <WalletButton onClick={() => disconnect()}>Disconnect</WalletButton>
+                            <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>
                     }
                 </div>

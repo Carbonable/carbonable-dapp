@@ -3,6 +3,7 @@ import Undeposited from "./Undeposited";
 import { sample } from 'lodash';
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
+import { IPFS_GATEWAY } from "~/utils/links";
 
 export default function FarmingCard({project}: {project: Project}) {
     // TODO: Replace with real data
@@ -21,7 +22,7 @@ export default function FarmingCard({project}: {project: Project}) {
             <div className={`hover:before:rounded-3xl hover:before:bg-brand-background hover:before:opacity-10 hover:before:bg-cover hover:before:absolute hover:before:top-0 hover:before:left-0 hover:before:right-0 hover:before:bottom-0 hover:before:content-['']`}>
                 <div className="flex items-center justify-start w-full">
                     <div className="w-2/12">
-                        <img src={`https://ipfs.io/ipfs/${project.imageIpfs}`} alt={`${project.slug} NFT card`} className="w-12 rounded-[8.8%] lg:w-16 xl:w-18" />
+                        <img src={IPFS_GATEWAY + project.imageIpfs} alt={`${project.slug} NFT card`} className="w-12 rounded-[8.8%] lg:w-16 xl:w-18" />
                     </div>
                     <div className="px-4 font-inter text-neutral-100 text-base lg:text-lg font-normal w-6/12">{project.name}</div>
                     <div className="w-4/12 flex justify-end">

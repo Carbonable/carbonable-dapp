@@ -1,8 +1,6 @@
 import { ArrowTopRightOnSquareIcon, MinusIcon, PaperAirplaneIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useFetcher, useTransition } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
-import { MintButton, WhitelistButton } from "../Buttons/ActionButton";
-import { PlusIconBlack } from "../Icons/PlusIcon";
 import moment from "moment";
 
 import type { Project } from "@prisma/client";
@@ -10,7 +8,9 @@ import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } 
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
 import { MintingComponent } from "./TransactionComponents";
-import { ConnectDialog } from "../Buttons/ConnectButton";
+import { MintButton, WhitelistButton } from "~/components/Buttons/ActionButton";
+import { ConnectDialog } from "~/components/Buttons/ConnectButton";
+import { PlusIconBlack } from "~/components/Icons/PlusIcon";
 
 function EstimatedAPR({estimatedAPR}: {estimatedAPR: string}) {
     return (
