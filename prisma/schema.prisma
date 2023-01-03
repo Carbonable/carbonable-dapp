@@ -49,7 +49,7 @@ model Snapshot {
   snapshotDate  DateTime
 } 
 
-model Badges {
+model Badge {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
   name         String
@@ -59,3 +59,7 @@ model Badges {
   token_id     Int      @unique
 }
 
+model BadgeWhitelist {
+  id           String   @id @default(uuid())
+  whitelist    Json     @unique
+} 

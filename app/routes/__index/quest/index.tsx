@@ -4,13 +4,10 @@ import Carousel from "~/components/Quest/Carousel";
 import { db } from "~/utils/db.server";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import type { Badges } from "@prisma/client";
-
-
-
+import type { Badge } from "@prisma/client";
 
 export async function loader() {
-    const allBadges = await db.badges.findMany({
+    const allBadges = await db.badge.findMany({
         orderBy: [
           {
             token_id: 'desc',
@@ -20,17 +17,14 @@ export async function loader() {
     return json(allBadges);
 };
 
-
 export default function Quest() {
     // tag badge from prisma client
-    const badges  = useLoaderData<Badges[]>();
+    const badges  = useLoaderData<Badge[]>();
 
     return (
         <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-20 ">
-
             <div className=" w-full mt-12 lg:mt-12 xl:mt-16 flex items-center justify-center">
                 <div className="w-full md:w-full xl:w-9/12 mx-auto flex items-center justify-center">
-
                     <div className=" w-full">
                         <div className="  uppercase text-center leading-none md:top-14 md:left-16 lg:top:6 lg:left-10 xl:top-16 xl:left-16 2xl:top-14 2xl:left-64">
                             <div className="font-trash font-bold text-[4.4vw] lg:text-[3vw] 2xl:text-[2.8vw]">ANTI GREENWASHING</div>
@@ -38,7 +32,6 @@ export default function Quest() {
                             <div className="font-trash font-bold text-green text-[4.4vw] mt-1 md:mt-2 lg:text-[3vw] 2xl:text-[2.8vw]">SPREAD THE WORD</div>
                         </div>
                     </div>
-
                 </div>
 
             </div>
@@ -49,11 +42,11 @@ export default function Quest() {
 
             <div>
             <div className=" flex items-center justify-center uppercase text-center leading-none md:top-14 md:left-16 lg:top:6 lg:left-10 xl:top-16 xl:left-16 2xl:top-14 2xl:left-64 my-4">
-                        <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
-                            <div className="font-trash font-bold text-lg mx-60">MINT YOUR BADGES</div>
-                            <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
-                        </div>
-            <Carousel badges={badges}></Carousel>
+                <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
+                    <div className="font-trash font-bold text-lg mx-60">MINT YOUR BADGES</div>
+                    <PlusIconWhite className="w-8 md:w-12"></PlusIconWhite>
+                </div>
+                { badges.length > 0 && <Carousel badges={badges}></Carousel> }
             </div>
         </div>
     )

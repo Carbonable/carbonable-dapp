@@ -15,7 +15,7 @@ async function seed() {
   );
   await Promise.all(
     getBadges().map((badge) => {
-      return db.badges.create({ data: badge });
+      return db.badge.create({ data: badge });
     })
   );
 }

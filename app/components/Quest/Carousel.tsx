@@ -1,25 +1,18 @@
-import type {  ReactElement} from "react";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-// import Slider from "react-slick"; to be dev
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core'
-import WalletMenu from "./WalletMenu";
+import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core';
 import ErrorMessage from "./ErrorMessage";
 import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
 import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
+import type { Abi } from "starknet";
+import { ConnectDialog } from "../Buttons/ConnectButton";
 
-
-
- 
 interface Signature {
     low: string,
     high: string
 }
-
-
 
 export default function Carousel({badges}: any) {
     const minterContractAddress = '0x03ffeb896f1a6cddde4f13269e2639ba25326f6752695e10efb7833fa78794f2'
@@ -27,9 +20,11 @@ export default function Carousel({badges}: any) {
 
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
-    const [menu, setMenu] = useState<ReactElement | Element | null>(null);
+    const [menu, setMenu] = useState<ReactNode | null>(null);
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
-    const { account, address } = useAccount()
+    const { account, address } = useAccount();
+    let [isOpen, setIsOpen] = useState(false);
+
     const { execute } = useStarknetExecute({ 
         calls: {
             contractAddress: minterContractAddress,
@@ -39,12 +34,12 @@ export default function Carousel({badges}: any) {
     })
     const { contract:badgeContract } = useContract({
         address: badgeContractAddress,
-        abi: CarbonableBadgeABI
+        abi: CarbonableBadgeABI as Abi
     })
     const [activeSlide, setActiveSlide] = useState(2);
+
     const handleClick = (index: number) => {
         setActiveSlide(index);
-        slidz.slickGoTo(index);
     }
 
     useEffect(() => {
@@ -76,16 +71,14 @@ export default function Carousel({badges}: any) {
         }
     }, [currentTransactionHash]);
 
-
-
-    let slidz: any;
-
-    const handleMint = async (image) => {
+    const handleMint = async (image: any) => {
         setMenu(<LoadingScreen />)
 
         if (!badgeContract) return;
-        if (!account) return setMenu(<WalletMenu action={() => setMenu(null)} />);
-
+        if (!account) {
+           setIsOpen(true);
+           return setMenu(null);
+        }
         // Check if the user has already minted the badge
         const balance = parseInt((await badgeContract.functions.balanceOf(address, [image.token_id, 0])).balance.low);
         if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
@@ -101,18 +94,16 @@ export default function Carousel({badges}: any) {
         setBadgeType(image.token_id);
     }
 
-
     return (
-
-        <div className=" preventOverflow mb-20">
+        <div className="preventOverflow mb-20 mt-8">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
-                    <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center  gap-x-8">
-                    {badges.map((image, index) => (
+                <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center gap-x-8">
+                    {badges.map((image: any, index: number) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50  w-full h-40 z-0 " : "rounded-lg  w-full h-40 z-0"}   />
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50  w-full h-40 z-0 " : "rounded-lg w-full h-40 z-0"}   />
                             { (image.mintable && index === activeSlide )   &&
 
-                            <div className="absolute  h-full bg-green z-20 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 "> 
+                            <div className="absolute h-full bg-green z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
                                 <div className="grid grid-flow-row  h-full items-stretch">
                                     <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
                                     <p className="font-americana font-thin text-2xl self-start">pioneer</p>
@@ -124,20 +115,20 @@ export default function Carousel({badges}: any) {
                             </div>
                             }
                             { (!image.mintable && index === activeSlide )   &&
-                                <div className="absolute  h-full  bg-white/70  z-10 uppercase font-inter font-bold  text-black  w-11/12 py-2 px-2 top-0  text-[8px] md:text-xs  lg:px-3 ">
-                                    <div className=" absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
+                                <div className="absolute h-full bg-white/70 z-10 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg">
+                                    <div className="absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
                                 </div>
                             }
                         </div>
                     ))}
-                    </div>
+                </div>
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
-                    <div className="flex w-full items-center justify-center lg:justify-start">
-                        {badges.map(( image, index) => (
-                            <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
-                        ))}
-                    </div>
+                        <div className="flex w-full items-center justify-center lg:justify-start">
+                            {badges.map((image: any, index: number) => (
+                                <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
+                            ))}
+                        </div>
                         <div className="w-full hidden lg:block lg:ml-1">
                             {badges[activeSlide].subtitle}
                         </div>
@@ -152,6 +143,7 @@ export default function Carousel({badges}: any) {
                 </div>
             </div>
             {menu}
+            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
     )
 }

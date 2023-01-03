@@ -46,7 +46,6 @@ export const loader: LoaderFunction = async ({
                 saleDate: 'desc',
               }
             ]});
-            console.log("load")
         return json([nextSnapshot[0], allProjects]);
     } catch (e) {
         

@@ -2,8 +2,8 @@ import { ec } from "starknet";
 import { pedersen } from "starknet/dist/utils/hash";
 import { sign } from "starknet/dist/utils/ellipticCurve";
 
-import eligibleUsers from "../../../../../../public/eligibleUsers.json";
 import type { LoaderArgs } from "@remix-run/node";
+import { db } from "~/utils/db.server";
 
 
 export async function loader({ params }: LoaderArgs) {
@@ -14,13 +14,21 @@ export async function loader({ params }: LoaderArgs) {
         low: '',
         high: ''
     };
+
+    const whitelist = await db.badgeWhitelist.findFirst();
+    let eligibleUsers: any[] = [];
+
+    if (whitelist?.whitelist) {
+        eligibleUsers = whitelist.whitelist as Array<{ user: string, token_id: number }>;
+    }
+
     if (user) {
         for (let index = 0; index < eligibleUsers.length; index++) {
             const token = eligibleUsers[index];
             const whitelistedUser = token.user;
             const tokenId = token.token_id;
             if (tokenId.toString() === params.tokenId) {
-                if (simplifyAddress(whitelistedUser) == simplifyAddress(user)) {
+                if (simplifyAddress(whitelistedUser) === simplifyAddress(user)) {
                     const message = pedersen([user.toLowerCase(), tokenId]);
                     const signature = sign(starkKeyPair, message)
                     res.low = signature[0];

@@ -760,14 +760,6 @@ video {
   margin-left: 0.25rem;
 }
 
-.mr-1 {
-  margin-right: 0.25rem;
-}
-
-.mt-3 {
-  margin-top: 0.75rem;
-}
-
 .mb-12 {
   margin-bottom: 3rem;
 }
@@ -1813,10 +1805,6 @@ video {
   color: rgb(235 236 240 / 0.8);
 }
 
-.text-black\/40 {
-  color: rgb(3 3 5 / 0.4);
-}
-
 .line-through {
   text-decoration-line: line-through;
 }
@@ -2315,10 +2303,6 @@ input::-webkit-inner-spin-button {
 
   .lg\:block {
     display: block;
-  }
-
-  .lg\:flex {
-    display: flex;
   }
 
   .lg\:hidden {
