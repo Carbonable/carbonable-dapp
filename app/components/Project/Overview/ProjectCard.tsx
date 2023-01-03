@@ -3,6 +3,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { PlusIconBlack } from "~/components/Icons/PlusIcon";
 import { useSoldout } from "~/hooks/minter";
+import { IPFS_GATEWAY } from "~/utils/links";
 
 export default function LaunchpadCard({slug, saleDate, minterContract, networkId, imageIpfs, whitelistedSaleOpen, publicSaleOpen}: Project) {
     const { soldout } = useSoldout(minterContract, networkId);
@@ -14,7 +15,7 @@ export default function LaunchpadCard({slug, saleDate, minterContract, networkId
 
     return (
         <div className="relative">
-            <img src={`https://ipfs.io/ipfs/${imageIpfs}`} alt={`${slug}  NFT card`} className="w-full rounded-[8.8%]" />
+            <img src={IPFS_GATEWAY + imageIpfs} alt={`${slug}  NFT card`} className="w-full rounded-[8.8%]" />
             { (soldout || saleIsOpen === false) && 
                 <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[10%]"></div>
             }

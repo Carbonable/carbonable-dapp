@@ -1,5 +1,5 @@
 import BN from "bn.js";
-import { STARKNET_ID_INDEXER } from "./links";
+import { STARKNET_ID_INDEXER_MAINNET, STARKNET_ID_INDEXER_TESTNET } from "./links";
 
 /**
  * Fetch starknet ID from wallet address
@@ -7,20 +7,29 @@ import { STARKNET_ID_INDEXER } from "./links";
  * @param { string } address
  * @returns { Promise<UserAdresses> } User addresses
  */
-export async function getStarknetId(address: string | undefined): Promise<string | undefined> {
+export async function getStarknetId(address: string | undefined, network: any): Promise<string | undefined> {
     // If no wallet is connected
     if (address === undefined) {
         return undefined;
     }
 
-    // Transform address to felt
+    // Transform address to BN
     const feltAddr = new BN(address.slice(2), 16).toString(10);
 
-    // Call indexer
-    const res = await fetch(STARKNET_ID_INDEXER + "/addr_to_domains?addr=" + feltAddr);
+    // Select indexer
+    const indexer = network.id === "mainnet" ? STARKNET_ID_INDEXER_MAINNET : STARKNET_ID_INDEXER_TESTNET;  
+   
+    // Call inddexer and check if there is a prefered domain
+    const domain = await fetch(indexer + "/addr_to_domain?addr=" + feltAddr);
+    const domainJSON = await domain.json();
 
-    // Format the answer
-    const domain = await res.json();
+    if (domainJSON.domain) {
+        return domainJSON.domain;
+    }
 
-    return domain.domains ? domain.domains[0] : "";
+    // If no prefered domain, check if there are non prefered domains
+    const domains = await fetch(indexer + "/addr_to_full_ids?addr=" + feltAddr);
+    const domainsJSON = await domains.json();
+
+    return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0];
 }

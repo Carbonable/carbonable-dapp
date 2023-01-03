@@ -24,17 +24,45 @@ export interface Certifier {
     link: string;
 }
 
+export interface SEO {
+    title: string;
+    description: string;
+    image: any;
+    keywords: string;
+    ogurl: string;
+    ogtype: string;
+    ogtitle: string;
+    ogdescription: string;
+    ogimage: any;
+    ogarticlepublishedtime: string;
+    ogarticletag: string;
+    ogarticlesection: string;
+    ogarticleauthor: string;
+    twitterdomain: string;
+    twittercard: string;
+    twittertitle: string;
+    twitterdescription: string;
+    twitterimage: any;
+    twitterurl: string;
+}
+
+export interface Slug {
+    _type: string;
+    current: string;
+}
+
 export interface SanityContent {
     _id: string;
     _type: string;
     _createdAt: string;
     _updatedAt: string;
     title: string;
-    slug: string;
+    slug: Slug;
     mediumArticle: string;
     dueDiligence: string;
     projectOverview: SanitySections,
     imagesGallery: any[],
     reports: Report[],
-    certifier: Certifier
+    certifier: Certifier,
+    seo: SEO
 }

@@ -10,7 +10,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
 
-function minifyAddressOrStarknetId(address: string | undefined, starknetId: string |undefined) {
+function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
     const input = starknetId !== undefined ? starknetId : address;
     if (input === undefined) { return ""; }
 
@@ -53,7 +53,7 @@ export default function Index() {
    
 
     async function getStarnetId() {
-        const id = await getStarknetId(address);
+        const id = await getStarknetId(address, networks.defautlNetwork);
         setAddressToDisplay(minifyAddressOrStarknetId(address, id));
     }
 

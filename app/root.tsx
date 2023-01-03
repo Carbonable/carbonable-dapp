@@ -19,8 +19,6 @@ import { db } from "./utils/db.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Carbonable - Web3 powered end-to-end carbon offset platform",
-  description: "The simplest and smartest way to reach carbon neutrality. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently.",
   viewport: "width=device-width,initial-scale=1",
 });
 
