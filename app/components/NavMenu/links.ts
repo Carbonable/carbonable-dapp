@@ -34,5 +34,11 @@ export const links = [
         label: 'Impact',
         isOpen: false,
         outsideLink: false
+    },
+    {
+        href: '/quest',
+        label: 'Quest',
+        isOpen: true,
+        outsideLink: false
     }
 ]

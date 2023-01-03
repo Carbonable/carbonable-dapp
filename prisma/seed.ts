@@ -18,6 +18,11 @@ async function seed() {
       return db.project.create({ data: project });
     })
   );
+  await Promise.all(
+    getBadges().map((badge) => {
+      return db.badge.create({ data: badge });
+    })
+  );
 }
 
 seed();
@@ -441,4 +446,30 @@ function getNetworks() {
         order: 3
       }
   ]
+}
+
+function getBadges() {
+  return [
+      {
+          name: 'project1.gif',
+          title: 'Community Badge lvl-1',
+          subtitle: 'Become a Carbonable OG',
+          mintable: true,
+          token_id: 2
+      },
+      {
+          name: 'project2.png',
+          title: '???',
+          subtitle: '?',
+          mintable: false,
+          token_id: 0
+      },
+      {
+          name: 'project3.png',
+          title: '???',
+          subtitle: '?',
+          mintable: false,
+          token_id: 1
+      }
+  ];
 }

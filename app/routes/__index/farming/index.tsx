@@ -48,7 +48,7 @@ export const loader: LoaderFunction = async ({
             ]});
         return json([nextSnapshot[0], allProjects]);
     } catch (e) {
-        console.log(e)
+        
         return json({});
     }
 };
@@ -60,6 +60,7 @@ export default function FarmingIndex() {
 
     const { status } = useAccount();
     let now = moment();
+
     const snapshotDate = moment(snapshot?.snapshotDate || now);
     const[countdown, setCountdown] = useState(moment.duration(snapshotDate.diff(now)));
 
