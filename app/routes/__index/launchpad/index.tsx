@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
@@ -37,6 +37,25 @@ export const loader: LoaderFunction = async ({
         return json([]);
     }
 };
+
+export const meta: MetaFunction = () => ({
+    charset: "utf-8",
+    title: "Carbonable - Web3 powered end-to-end carbon removal platform",
+    description: "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently.",
+    image: "https://carbonable.io/assets/images/social/social.jpg",
+    viewport: "width=device-width,initial-scale=1",
+    'og:url': "https://app.carbonable.io",
+    'og:type': "website",
+    'og:title': "Carbonable - Web3 powered end-to-end carbon removal platform",
+    'og:description': "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently.",
+    'og:image': "https://carbonable.io/assets/images/social/social.jpg",
+    'twitter:domain': "carbonable.io",
+    'twitter:url': "https://app.carbonable.io",
+    'twitter:title': "Carbonable - Web3 powered end-to-end carbon removal platform",
+    'twitter:description': "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently.",
+    'twitter:card': "summary_large_image",
+    'twitter:image': "https://carbonable.io/assets/images/social/social.jpg",
+});
 
 export default function Launchpad() {
     const projects = useLoaderData<unknown>() as Project[];
