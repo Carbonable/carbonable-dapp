@@ -10,4 +10,4 @@ export const LEGACY_LAUNCHPAD_LINK="https://legacy.carbonable.io/launchpad/";
 export const STARKNET_ID_INDEXER_TESTNET="https://goerli.indexer.starknet.id";
 export const STARKNET_ID_INDEXER_MAINNET="https://app.starknet.id/api/indexer";
 export const ASPECT_LINK="https://testnet.aspect.co/"
-export const IPFS_GATEWAY="https://aspect-testnet.infura-ipfs.io/ipfs/";
+export const IPFS_GATEWAY="https://carbonable.infura-ipfs.io/ipfs/";

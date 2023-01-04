@@ -100,19 +100,18 @@ export default function Carousel({badges}: any) {
                 <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center gap-x-8">
                     {badges.map((image: any, index: number) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50  w-full h-40 z-0 " : "rounded-lg w-full h-40 z-0"}   />
-                            { (image.mintable && index === activeSlide )   &&
-
-                            <div className="absolute h-full bg-green z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
-                                <div className="grid grid-flow-row  h-full items-stretch">
-                                    <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
-                                    <p className="font-americana font-thin text-2xl self-start">pioneer</p>
-                                    <BadgeMint className=" place-self-center self-end w-28" 
-                                    onClick={() => handleMint(image)}>
-                                    Mint SBT
-                                    </BadgeMint>
-                                </div> 
-                            </div>
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
+                            { (image.mintable && index === activeSlide ) &&
+                                <div className="absolute h-full bg-green z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
+                                    <div className="grid grid-flow-row  h-full items-stretch">
+                                        <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
+                                        <p className="font-americana font-thin text-2xl self-start">pioneer</p>
+                                        <BadgeMint className=" place-self-center self-end w-28" 
+                                        onClick={() => handleMint(image)}>
+                                        Mint SBT
+                                        </BadgeMint>
+                                    </div> 
+                                </div>
                             }
                             { (!image.mintable && index === activeSlide )   &&
                                 <div className="absolute h-full bg-white/70 z-10 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg">

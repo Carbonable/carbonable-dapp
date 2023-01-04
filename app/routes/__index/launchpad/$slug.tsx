@@ -93,7 +93,7 @@ export default function ProjectPage() {
   const data = useLoaderData();
   const project: Project = data.project;
   const content: SanityContent = data.content[0];
-  const whitelist: ProjectWhitelist = data.whitelist.whitelist;
+  const whitelist: ProjectWhitelist = data.whitelist?.whitelist;
   return (
       <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
         <ProjectOverview project={project} whitelist={whitelist} />
