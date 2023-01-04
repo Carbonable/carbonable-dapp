@@ -4,6 +4,7 @@ import { sign } from "starknet/dist/utils/ellipticCurve";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { db } from "~/utils/db.server";
+import { simplifyAddress } from "~/utils/utils";
 
 
 export async function loader({ params }: LoaderArgs) {
@@ -27,20 +28,13 @@ export async function loader({ params }: LoaderArgs) {
             const token = eligibleUsers[index];
             const whitelistedUser = token.user;
             const tokenId = token.token_id;
-            if (tokenId.toString() === params.tokenId) {
-                if (simplifyAddress(whitelistedUser) === simplifyAddress(user)) {
-                    const message = pedersen([user.toLowerCase(), tokenId]);
-                    const signature = sign(starkKeyPair, message)
-                    res.low = signature[0];
-                    res.high = signature[1];
-                }
+            if (tokenId.toString() === params.tokenId && simplifyAddress(whitelistedUser) === simplifyAddress(user)) {
+                const message = pedersen([user.toLowerCase(), tokenId]);
+                const signature = sign(starkKeyPair, message)
+                res.low = signature[0];
+                res.high = signature[1];
             }
         }
         return res;
     }
 };
-
-function simplifyAddress(hex: string) {
-    // Remove the firsts zeros and the 0x
-    return hex.replace(/^0x0*/, '').toLowerCase();
-}

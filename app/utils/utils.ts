@@ -28,3 +28,10 @@ export function shortenNumber(number: number): string {
         maximumFractionDigits: 2
       }).format(number);
 }
+
+
+export function simplifyAddress(hex: string | undefined): string {
+    if (undefined === hex) { return ''; }
+    // Remove the firsts zeros and the 0x
+    return hex.replace(/^0x0*/, '').toLowerCase();
+}
