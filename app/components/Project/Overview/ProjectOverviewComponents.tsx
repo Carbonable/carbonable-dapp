@@ -8,9 +8,10 @@ import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } 
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
 import { MintingComponent } from "./TransactionComponents";
-import { MintButton, WhitelistButton } from "~/components/Buttons/ActionButton";
+import { MintButton, WaitinglistButton } from "~/components/Buttons/ActionButton";
 import { ConnectDialog } from "~/components/Buttons/ConnectButton";
 import { PlusIconBlack } from "~/components/Icons/PlusIcon";
+import { simplifyAddress } from "~/utils/utils";
 
 function EstimatedAPR({estimatedAPR}: {estimatedAPR: string}) {
     return (
@@ -38,14 +39,35 @@ export function SimularorComponent() {
     )
 }
 
-export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, maxBuyPerTx, updateProgress}: any) {
+/**
+ * 
+ * @param whitelistInfo 
+ * @param amount 
+ * @returns Array of arguments to be passed to the mint function
+ */
+function buildWhitelistCallArgs(whitelistInfo: any, amount: number) {
+    if(!whitelistInfo) return [];
+    const args = [];
+    args.push(toFelt(whitelistInfo.quantity));
+    args.push(toFelt(whitelistInfo.proof.length));
+    whitelistInfo.proof.forEach((proof: any) => {
+        args.push(toFelt(proof));
+    });
+    args.push(toFelt(amount))
+    return args;
+}
+
+export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterContract, paymentTokenAddress, publicSaleOpen, paymentTokenDecimals, refreshProjectTotalSupply, maxBuyPerTx, updateProgress, whitelist}: any) {
     const [amount, setAmount] = useState(1);
     const { connect, available } = useConnectors();
+    const { address } = useAccount();
     const { status } = useAccount();
     const [txHash, setTxHash] = useState("");
     const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
     const [isMinting, setIsMinting] = useState(false);
     let [isOpen, setIsOpen] = useState(false);
+    const whitelistInfo = whitelist.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
+    const isWhitelisted = !publicSaleOpen && whitelistInfo ? true : false;
 
     const calls = [
         {
@@ -56,7 +78,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         {
             contractAddress: minterContract,
             entrypoint: publicSaleOpen ? 'public_buy' : 'whitelist_buy',
-            calldata: [toFelt(amount)]  
+            calldata: publicSaleOpen ? [toFelt(amount)] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
 
@@ -85,10 +107,12 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
         if (amount < 1){
             setAmount(1);
         }
-        if (amount > parseInt(maxBuyPerTx)) {
-            setAmount(maxBuyPerTx);
+
+        const max = isWhitelisted ? whitelistInfo.quantity : maxBuyPerTx;
+        if (amount > parseInt(max)) {
+            setAmount(max);
         }
-    }, [amount, maxBuyPerTx]);
+    }, [amount, maxBuyPerTx, whitelistInfo, isWhitelisted]);
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
@@ -118,7 +142,8 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
                 </div>
                 {!isMinting && 
                     <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
-                        <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton>
+                        {isWhitelisted && <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
+                        {!isWhitelisted && <MintButton className="min-h-[42px] 2xl:min-w-[220px] bg-green/50 cursor-not-allowed hover:bg-gradient-to-r from-green/50 to-green/50 hover:opacity-70" onClick={() => {}}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
                         <input hidden type="number" value={(amount * price)} readOnly name="price" aria-label="Price" />
                         <div className="mt-2 xl:w-full xl:text-left xl:pl-7 2xl:pl-12"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
                     </div>
@@ -176,10 +201,10 @@ export function ComingSoonComponent({saleDate, estimatedAPR}: Project) {
                     >
                     <div className={state === 'error' ? 'bg-white mt-4 rounded-full w-full pl-4 pr-2 py-1 mx-auto flex border-2 border-red-400 2xl:max-w-[400px] 2xl:ml-0' : 'bg-white mt-4 rounded-full w-full pl-4 pr-2 py-1 mx-auto flex lg:w-full border-2 2xl:max-w-[400px] 2xl:ml-0'}>
                         <input type="email" className="text-sm text-slate-500 outline-0 w-full bg-white" name="email" ref={ref} placeholder="Enter your email" aria-label="Email address" aria-describedby="error-message" />
-                        <WhitelistButton className="bg-green flex items-center text-xs w-min text-right" onClick={newsletter.submit}>
+                        <WaitinglistButton className="bg-green flex items-center text-xs w-min text-right" onClick={newsletter.submit}>
                             <PaperAirplaneIcon className={state === 'submitting' ? 'lg:hidden w-4 h-4 text-white animate-pulse' : 'lg:hidden w-4 h-4 text-white'} />
                             <div className="hidden uppercase lg:block min-w-max">Be reminded</div>
-                        </WhitelistButton>
+                        </WaitinglistButton>
                     </div>
                     <div id="error-message" className={state === "success" ? 'text-green text-sm mt-1 mx-auto w-full lg:w-6/12 lg:pl-6 text-left ml-2' : "text-red-600 mt-1 mx-auto w-full text-sm lg:w-6/12 text-left lg:pl-6 ml-2"}>{state === "error" ? newsletter?.data?.error : newsletter?.data?.message}</div>
                 </newsletter.Form>

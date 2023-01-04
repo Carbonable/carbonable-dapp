@@ -4,7 +4,7 @@ import { Response } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
-import type { Project } from "@prisma/client";
+import type { Project, ProjectWhitelist } from "@prisma/client";
 import { userPrefs } from "~/cookie";
 import { client } from "~/utils/sanity/client";
 import ContentContainer from "~/components/Project/Content/ContentWrapper";
@@ -38,12 +38,22 @@ export const loader: LoaderFunction = async ({
         throw new Response("Not Found", {status: 404})
       }
 
+      // Find the whitelist for the project.
+      const whitelist = await db.projectWhitelist.findFirst({
+        select: {
+          whitelist: true,
+        },
+        where: {
+          projectId: project.id,
+        },
+      });
+
       const content = await client.fetch(
         `*[_type == "project" && slug.current == $slug]`,
         { slug: params.slug }
       );
   
-      return json({project, content});
+      return json({project, content, whitelist});
 
     } catch (e) {
       throw new Response("Not Found", {status: 404})
@@ -83,13 +93,13 @@ export default function ProjectPage() {
   const data = useLoaderData();
   const project: Project = data.project;
   const content: SanityContent = data.content[0];
-    return (
-        <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
-          <ProjectOverview project={project} />
-          <div className="mt-20 w-11/12 mx-auto">
-            { content !== undefined && <ContentContainer content={content} /> }
-          </div>
+  const whitelist: ProjectWhitelist = data.whitelist.whitelist;
+  return (
+      <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
+        <ProjectOverview project={project} whitelist={whitelist} />
+        <div className="mt-20 w-11/12 mx-auto">
+          { content !== undefined && <ContentContainer content={content} /> }
         </div>
-        
-    )
+      </div>
+  )
 }

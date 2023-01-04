@@ -32,6 +32,15 @@ model Project {
   networkId             String 
   whitelistedSaleOpen   Boolean  @default(false)
   publicSaleOpen        Boolean  @default(false)
+  whitelist             ProjectWhitelist?
+}
+
+// Whitelist is retrived from https://bal7hazar.github.io/whitelist-starknet/
+model ProjectWhitelist {
+  id           String   @id @default(uuid())
+  whitelist    Json
+  Project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String   @unique
 }
 
 model Network {

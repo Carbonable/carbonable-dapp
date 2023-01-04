@@ -1,4 +1,4 @@
-import type { Project } from "@prisma/client";
+import type { Project, ProjectWhitelist } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSoldout } from "~/hooks/minter";
@@ -8,7 +8,7 @@ import { IPFS_GATEWAY } from "~/utils/links";
 import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
 import { ProgressComponent } from "./TransactionComponents";
 
-export default function ProjectOverview({project}: {project: Project}) {
+export default function ProjectOverview({project, whitelist}: {project: Project, whitelist: ProjectWhitelist}) {
     const { soldout } = useSoldout(project.minterContract, project.networkId);
     const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(project.projectContract, project.networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
@@ -66,6 +66,7 @@ export default function ProjectOverview({project}: {project: Project}) {
                                                                refreshProjectTotalSupply={refreshProjectTotalSupply}
                                                                maxBuyPerTx={project.maxBuyPerTx}
                                                                updateProgress={updateProgress}
+                                                               whitelist={whitelist}
                                                  /> }
                     { soldout && <SoldoutComponent {...project} />}
                     { moment(project.saleDate).isAfter(moment(new Date())) && !saleIsOpen && <ComingSoonComponent {...project} /> }

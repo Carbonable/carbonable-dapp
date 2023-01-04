@@ -14,7 +14,7 @@ export default function SecondaryButton({ children, className, onClick }: Button
 }
 
 
-export function WhitelistButton({ children, className, onClick }: ButtonProps) {
+export function WaitinglistButton({ children, className, onClick }: ButtonProps) {
     return <button className={whitelistCssClass + className} onClick = {() => { onClick(true); }}>{children}</button>;
 }
 
