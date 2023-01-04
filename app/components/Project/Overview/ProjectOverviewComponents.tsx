@@ -66,7 +66,7 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
     const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
     const [isMinting, setIsMinting] = useState(false);
     let [isOpen, setIsOpen] = useState(false);
-    const whitelistInfo = whitelist.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
+    const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
     const isWhitelisted = !publicSaleOpen && whitelistInfo ? true : false;
 
     const calls = [
