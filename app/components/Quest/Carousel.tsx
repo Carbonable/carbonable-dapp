@@ -8,15 +8,17 @@ import SuccessMessage from "./SuccessMessage";
 import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 import type { Abi } from "starknet";
 import { ConnectDialog } from "../Buttons/ConnectButton";
+import type { Badge, BadgeContract } from "@prisma/client";
+import { IPFS_GATEWAY } from "~/utils/links";
 
 interface Signature {
     low: string,
     high: string
 }
 
-export default function Carousel({badges}: any) {
-    const minterContractAddress = '0x03ffeb896f1a6cddde4f13269e2639ba25326f6752695e10efb7833fa78794f2'
-    const badgeContractAddress = '0x073b3700c5e4851892e907e782a3ab8efd103a06cd89ff052d91307d18f0649d'
+export default function Carousel({badges, contract}: {badges: Badge[], contract: BadgeContract}) {
+    const minterContractAddress = contract?.minter;
+    const badgeContractAddress = contract?.badge;
 
     const [signature, setSignature] = useState({ low: '0', high: '0' });
     const [badgeType, setBadgeType] = useState(0);
@@ -36,7 +38,7 @@ export default function Carousel({badges}: any) {
         address: badgeContractAddress,
         abi: CarbonableBadgeABI as Abi
     })
-    const [activeSlide, setActiveSlide] = useState(2);
+    const [activeSlide, setActiveSlide] = useState(0);
 
     const handleClick = (index: number) => {
         setActiveSlide(index);
@@ -71,49 +73,50 @@ export default function Carousel({badges}: any) {
         }
     }, [currentTransactionHash]);
 
-    const handleMint = async (image: any) => {
+    const handleMint = async (badge: any) => {
         setMenu(<LoadingScreen />)
 
-        if (!badgeContract) return;
+        if (!badgeContract){
+            return setMenu(null);
+        }
         if (!account) {
            setIsOpen(true);
            return setMenu(null);
         }
         // Check if the user has already minted the badge
-        const balance = parseInt((await badgeContract.functions.balanceOf(address, [image.token_id, 0])).balance.low);
+        const balance = parseInt((await badgeContract.functions.balanceOf(address, [badge.token_id, 0])).balance.low);
         if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
 
         // Check if the user is whitelisted
-        const res = await fetch(`quest/sign/${account.address}/${image.token_id}`)
+        const res = await fetch(`quest/sign/${account.address}/${badge.token_id}`)
         const signature: Signature = await res.json();
         if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
 
         // Mint the badge
         setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
         setSignature(signature);
-        setBadgeType(image.token_id);
+        setBadgeType(badge.token_id);
     }
 
     return (
-        <div className="preventOverflow mb-20 mt-8">
+        <div className="mb-20 mt-8">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
-                <div className=" w-60 md:w-full max-w-2xl grid grid-cols-1 md:grid-cols-3 place-content-center justify-items-center gap-x-8">
-                    {badges.map((image: any, index: number) => (
+                <div className="w-60 md:w-full max-w-2xl grid grid-cols-1 place-content-center justify-items-center gap-x-8">
+                    {badges.map((badge: Badge, index: number) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={`/assets/images/quest/${image.name}`} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
-                            { (image.mintable && index === activeSlide ) &&
-                                <div className="absolute h-full bg-green z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
+                            { (badge.mintable && index === activeSlide ) &&
+                                <div className="absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
                                     <div className="grid grid-flow-row  h-full items-stretch">
-                                        <p className="font-trash font-bold text-3xl self-start">green <br /></p> 
-                                        <p className="font-americana font-thin text-2xl self-start">pioneer</p>
-                                        <BadgeMint className=" place-self-center self-end w-28" 
-                                        onClick={() => handleMint(image)}>
-                                        Mint SBT
+                                        <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p> 
+                                        <p className="font-americana font-thin text-2xl self-start">{badge.name2}</p>
+                                        <BadgeMint className=" place-self-center self-end w-28" onClick={() => handleMint(badge)}>
+                                            Mint SBT
                                         </BadgeMint>
                                     </div> 
                                 </div>
                             }
-                            { (!image.mintable && index === activeSlide )   &&
+                            { (!badge.mintable && index === activeSlide )   &&
                                 <div className="absolute h-full bg-white/70 z-10 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg">
                                     <div className="absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
                                 </div>
@@ -124,7 +127,7 @@ export default function Carousel({badges}: any) {
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                         <div className="flex w-full items-center justify-center lg:justify-start">
-                            {badges.map((image: any, index: number) => (
+                            {badges.map((badge: Badge, index: number) => (
                                 <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
                             ))}
                         </div>
