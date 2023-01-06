@@ -88,7 +88,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
         if (balance > 0) return setMenu(<ErrorMessage strong="You already have minted this badge." text="You can only mint each badge one time." action={() => setMenu(null)} />);
 
         // Check if the user is whitelisted
-        const res = await fetch(`quest/sign/${account.address}/${badge.token_id}`)
+        const res = await fetch(`odyssey/sign/${account.address}/${badge.token_id}`)
         const signature: Signature = await res.json();
         if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
 

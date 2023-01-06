@@ -1,6 +1,6 @@
 import PlusIconWhite from "~/components/Icons/PlusIcon";
 import { LinkFooter } from "~/components/Buttons/LinkButton";
-import Carousel from "~/components/Quest/Carousel";
+import Carousel from "~/components/Odyssey/Carousel";
 import { db } from "~/utils/db.server";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
@@ -55,7 +55,7 @@ export default function Quest() {
             </div>
             <div className="grid grid-col-1 md:grid-cols-6 m-auto w-11/12 xl:w-7/12 justify-items-center place-content-center">
                 <div className="md:col-span-2 flex items-center justify-center uppercase font-bold">
-                    <LinkFooter className="rounded-full" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"}>Start The Quest</LinkFooter>
+                    <LinkFooter className="rounded-full" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"}>Start the Odyssey</LinkFooter>
                 </div>
                 <div className="text-center mt-1 md:text-left md:mt-0 md:col-span-4 flex items-center justify-center">Be part of the change you want to see. <br /> Complete quest to get elligible to SBTs mint.</div>
             </div>

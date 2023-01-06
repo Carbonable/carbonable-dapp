@@ -36,8 +36,8 @@ export const links = [
         outsideLink: false
     },
     {
-        href: '/quest',
-        label: 'Quest',
+        href: '/odyssey',
+        label: 'Odyssey',
         isOpen: true,
         outsideLink: false
     }
