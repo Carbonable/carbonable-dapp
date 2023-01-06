@@ -12,8 +12,11 @@ export async function action({ request }: ActionArgs) {
     const selectedNetwork = formData.get("selectedValue");
 
     cookie.selected_network = selectedNetwork;
+    
+    const pathArray = request.headers.get("referer")?.split( '/' );
+    const redirectPath = pathArray?.length === 0 || pathArray === undefined ? '/' : pathArray[0] + "//" + pathArray[2] + "/" + pathArray[3];
   
-    return redirect(request.headers.get("referer") || '/', {
+    return redirect(redirectPath, {
       headers: {
         "Set-Cookie": await userPrefs.serialize(cookie),
       },
