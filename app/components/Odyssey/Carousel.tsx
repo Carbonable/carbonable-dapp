@@ -104,10 +104,10 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                 <div className="w-60 md:w-full max-w-2xl grid grid-cols-1 place-content-center justify-items-center gap-x-8">
                     {badges.map((badge: Badge, index: number) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
+                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
                             { (badge.mintable && index === activeSlide ) &&
-                                <div className="absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
-                                    <div className="grid grid-flow-row  h-full items-stretch">
+                                <div className="opacity-0 hover:opacity-100 absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
+                                    <div className="grid grid-flow-row h-full items-stretch">
                                         <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p> 
                                         <p className="font-americana font-thin text-2xl self-start">{badge.name2}</p>
                                         <BadgeMint className=" place-self-center self-end w-28" onClick={() => handleMint(badge)}>
