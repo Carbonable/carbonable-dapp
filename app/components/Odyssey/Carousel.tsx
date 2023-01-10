@@ -101,7 +101,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     return (
         <div className="mb-20 mt-8">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
-                <div className="w-60 md:w-full max-w-2xl grid grid-cols-1 place-content-center justify-items-center gap-x-8">
+                <div className="w-60 md:w-full max-w-2xl grid grid-cols-3 place-content-center justify-items-center gap-x-8">
                     {badges.map((badge: Badge, index: number) => (
                         <div key={`badge_${index}`} className="text-center">
                             <div className="relative px-2 flex justify-center items-center outline-0 my-2">
@@ -122,6 +122,27 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                         </div>
                     ))}
                 </div>
+
+                <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
+                    <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
+                        <div className="flex w-full items-center justify-center lg:justify-start">
+                            {badges.map((badge: Badge, index: number) => (
+                                <SliderButton key={`button_${index + 1}`} selected={index === activeSlide} onClick={() => handleClick(index)}>0{index + 1}</SliderButton>
+                            ))}
+                        </div>
+                        <div className="w-full hidden lg:block lg:ml-1">
+                            {badges[activeSlide].subtitle}
+                        </div>
+                    </div>
+
+                    <div className="w-full flex items-center justify-center font-inter text-3xl line-through mt-4 lg:w-4/12 lg:justify-end lg:text-right lg:min-h-[96px] md:text-4xl lg:text-5xl">
+                        {/* {badges[activeSlide].title} */}
+                    </div>
+                    <div className="w-full lg:hidden min-h-[52px]">
+                        {badges[activeSlide].subtitle}
+                    </div>
+                </div>
+
             </div>
             {menu}
             <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
