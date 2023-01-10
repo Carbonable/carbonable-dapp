@@ -458,13 +458,31 @@ function getBadges() {
   return [
       {
           image: 'bafybeiboertrn4wqt3kthn57xlefeydga22uhg2xk4m7oakaf725lnclae/team.jpg',
-          title: 'Community Badge lvl-1',
-          subtitle: 'Become a Carbonable OG',
+          title: '1',
+          subtitle: 'Green Pioneer',
           mintable: true,
           token_id: 2,
           name1: 'green',
           name2: 'pioneer',
-      }
+      },
+      {
+        image: 'bafybeiboertrn4wqt3kthn57xlefeydga22uhg2xk4m7oakaf725lnclae/team.jpg',
+        title: '2',
+        subtitle: '???',
+        mintable: false,
+        token_id: 3,
+        name1: '',
+        name2: '',
+    },
+    {
+      image: 'bafybeiboertrn4wqt3kthn57xlefeydga22uhg2xk4m7oakaf725lnclae/team.jpg',
+      title: '3',
+      subtitle: '???',
+      mintable: false,
+      token_id: 4,
+      name1: '',
+      name2: '',
+  }
   ];
 }
 
