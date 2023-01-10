@@ -47,7 +47,7 @@ export default function Quest() {
     const contract: BadgeContract = data.contract;
 
     return (
-        <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-20 ">
+        <div className="grid grid-cols-1 mx-auto mt-4 md:mt-12 lg:mt-6 gap-y-12 md:gap-y-20">
             <div className="w-full xl:w-9/12 mx-auto mt-12 xl:mt-16 flex items-center justify-center uppercase leading-none flex-wrap text-center">
                 <div className="w-full font-trash font-bold text-[4.4vw] lg:text-[3vw] 2xl:text-[2.8vw]">ANTI GREENWASHING</div>
                 <div className="w-full font-americana font-thin text-[3.8vw] lg:text-[2.6vw] 2xl:text-[2.2vw]">ODYSSEY</div>
@@ -55,14 +55,14 @@ export default function Quest() {
             </div>
             <div className="grid grid-col-1 md:grid-cols-6 m-auto w-11/12 xl:w-7/12 justify-items-center place-content-center">
                 <div className="md:col-span-2 flex items-center justify-center uppercase font-bold">
-                    <LinkFooter className="rounded-full" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"}>Start the Odyssey</LinkFooter>
+                    <LinkFooter className="rounded-full px-4" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"}>Start the Odyssey</LinkFooter>
                 </div>
-                <div className="text-center mt-1 md:text-left md:mt-0 md:col-span-4 flex items-center justify-center">Be part of the change you want to see. <br /> Complete quest to get elligible to SBTs mint.</div>
+                <div className="text-center mt-4 md:text-left md:mt-0 md:col-span-4 flex items-center justify-center">Be part of the change you want to see. <br/>Become a Green Pioneer. <br/>Complete the quest to earn your badge.</div>
             </div>
             <div>
                 <div className="flex items-center justify-center uppercase text-center leading-none my-4 w-full px-4 lg:w-9/12 mx-auto">
                     <div className="w-1/12"><PlusIconWhite className="w-8 md:w-12"></PlusIconWhite></div>
-                    <div className="w-10/12 font-trash font-bold text-lg lg:text-2xl">MINT YOUR BADGES</div>
+                    <div className="w-10/12 font-trash font-bold text-lg lg:text-2xl">MINT YOUR BADGE</div>
                     <div className="w-1/12"><PlusIconWhite className="w-8 md:w-12"></PlusIconWhite></div>
                 </div>
                 { badges.length > 0 && <Carousel badges={badges} contract={contract}></Carousel> }

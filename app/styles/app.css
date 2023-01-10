@@ -1280,6 +1280,10 @@ video {
   row-gap: 5rem;
 }
 
+.gap-y-12 {
+  row-gap: 3rem;
+}
+
 .place-self-center {
   place-self: center;
 }
@@ -1809,6 +1813,10 @@ video {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
 .italic {
@@ -2417,6 +2425,10 @@ input::-webkit-inner-spin-button {
 
   .md\:justify-between {
     justify-content: space-between;
+  }
+
+  .md\:gap-y-20 {
+    row-gap: 5rem;
   }
 
   .md\:p-8 {
