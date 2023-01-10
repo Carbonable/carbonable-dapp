@@ -101,7 +101,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     return (
         <div className="mb-20 mt-8">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
-                <div className="w-60 md:w-full max-w-2xl grid grid-cols-1 place-content-center justify-items-center gap-x-8">
+                <div className="w-60 md:w-full max-w-2xl grid grid-cols-3 place-content-center justify-items-center gap-x-8">
                     {badges.map((badge: Badge, index: number) => (
                         <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
                             <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
@@ -137,7 +137,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                     </div>
 
                     <div className="w-full flex items-center justify-center font-inter text-3xl line-through mt-4 lg:w-4/12 lg:justify-end lg:text-right lg:min-h-[96px] md:text-4xl lg:text-5xl">
-                        {badges[activeSlide].title}
+                        {/* {badges[activeSlide].title} */}
                     </div>
                     <div className="w-full lg:hidden min-h-[52px]">
                         {badges[activeSlide].subtitle}
