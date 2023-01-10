@@ -1284,6 +1284,10 @@ video {
   row-gap: 5rem;
 }
 
+.gap-y-12 {
+  row-gap: 3rem;
+}
+
 .place-self-center {
   place-self: center;
 }
@@ -1815,6 +1819,10 @@ video {
   text-transform: uppercase;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .italic {
   font-style: italic;
 }
@@ -1968,6 +1976,11 @@ video {
 
 .brightness-\[0\.4\] {
   --tw-brightness: brightness(0.4);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.brightness-100 {
+  --tw-brightness: brightness(1);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
@@ -2189,6 +2202,10 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.hover\:block:hover {
+  display: block;
+}
+
 .hover\:border-neutral-400:hover {
   --tw-border-opacity: 1;
   border-color: rgb(85 88 97 / var(--tw-border-opacity));
@@ -2224,6 +2241,10 @@ input::-webkit-inner-spin-button {
 
 .hover\:opacity-70:hover {
   opacity: 0.7;
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
 }
 
 .hover\:before\:absolute:hover::before {
@@ -2408,6 +2429,10 @@ input::-webkit-inner-spin-button {
 
   .md\:justify-between {
     justify-content: space-between;
+  }
+
+  .md\:gap-y-20 {
+    row-gap: 5rem;
   }
 
   .md\:p-8 {

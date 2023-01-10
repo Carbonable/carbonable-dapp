@@ -103,27 +103,26 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                 <div className="w-60 md:w-full max-w-2xl grid grid-cols-3 place-content-center justify-items-center gap-x-8">
                     {badges.map((badge: Badge, index: number) => (
-                        <div key={`image_${index}`} className="relative px-2 flex justify-center items-center outline-0 my-2">
-                            <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg brightness-50 w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
-                            { (badge.mintable && index === activeSlide ) &&
-                                <div className="absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
-                                    <div className="grid grid-flow-row  h-full items-stretch">
-                                        <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p> 
-                                        <p className="font-americana font-thin text-2xl self-start">{badge.name2}</p>
-                                        <BadgeMint className=" place-self-center self-end w-28" onClick={() => handleMint(badge)}>
-                                            Mint SBT
-                                        </BadgeMint>
-                                    </div> 
-                                </div>
-                            }
-                            { (!badge.mintable && index === activeSlide )   &&
-                                <div className="absolute h-full bg-white/70 z-10 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg">
-                                    <div className="absolute z-20 uppercase font-inter font-bold bg-beaige text-black top-2 left-2 py-1 px-2 text-[8px] md:text-xs md:top-4 md:left-4 lg:px-3 rounded-lg">Locked</div>
-                                </div>
-                            }
+                        <div key={`badge_${index}`} className="text-center">
+                            <div className="relative px-2 flex justify-center items-center outline-0 my-2">
+                                <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
+                                { (badge.mintable && index === activeSlide ) &&
+                                    <div className="opacity-0 hover:opacity-100 absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
+                                        <div className="grid grid-flow-row h-full items-stretch">
+                                            <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p> 
+                                            <p className="font-americana font-thin text-2xl self-start">{badge.name2}</p>
+                                            <BadgeMint className=" place-self-center self-end w-28" onClick={() => handleMint(badge)}>
+                                                Mint SBT
+                                            </BadgeMint>
+                                        </div> 
+                                    </div>
+                                }
+                            </div>
+                            <div className="capitalize font-inter text-xl mt-4">{badge.name1} {badge.name2}</div>
                         </div>
                     ))}
                 </div>
+
                 <div className="max-w-2xl flex flex-wrap mt-8 text-center lg:text-left lg:w-10/12 lg:mx-auto lg:flex-nowrap">
                     <div className="flex w-full items-center justify-center lg:w-9/12 lg:justify-start lg:flex-wrap">
                         <div className="flex w-full items-center justify-center lg:justify-start">
@@ -143,34 +142,10 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                         {badges[activeSlide].subtitle}
                     </div>
                 </div>
+
             </div>
             {menu}
             <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
-    )
-}
-
-interface ButtonProps {
-    children: React.ReactNode;
-    selected: boolean;
-    onClick: any;
-}
-
-function SliderButton({ children, selected, onClick }: ButtonProps) {
-    if (selected) {
-        return (
-            <>
-                <div className="relative w-[48px] h-[48px] p-1 bg-carousel-button-border rounded-full z-0 lg:px-3">
-                    <div className="absolute z-1 m-[2px] top-0 left-0 font-inter text-beaige bg-[#000000] w-[44px] h-[44px] rounded-full">
-                        <div className="bg-carousel-button w-[44px] h-[44px] rounded-full flex items-center justify-center">
-                            { children }
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
-    return (
-        <div onClick = {() => { onClick(); }} className="font-inter px-3 text-[#272727] cursor-pointer lg:px-6">{ children }</div>
     )
 }
