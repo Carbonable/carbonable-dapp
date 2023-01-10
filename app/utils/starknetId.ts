@@ -31,5 +31,5 @@ export async function getStarknetId(address: string | undefined, network: any): 
     const domains = await fetch(indexer + "/addr_to_full_ids?addr=" + feltAddr);
     const domainsJSON = await domains.json();
 
-    return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0];
+    return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0].domain;
 }
