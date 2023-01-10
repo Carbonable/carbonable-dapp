@@ -58,7 +58,8 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                 checkTransactionStatus();
             }, 3000)
             function checkTransactionStatus() {
-                fetch("https://alpha4.starknet.io/feeder_gateway/get_transaction_receipt?transactionHash=" + currentTransactionHash).then(async (response) => {
+                const url = contract?.networkId === "mainnet" ? "https://alpha-mainnet.starknet.io/feeder_gateway/get_transaction_receipt?transactionHash=" : "https://alpha4.starknet.io/feeder_gateway/get_transaction_receipt?transactionHash=";
+                fetch(url + currentTransactionHash).then(async (response) => {
                     const data = await response.json();
                     if (data.status === 'ACCEPTED_ON_L2' || data.status === 'ACCEPTED_ON_L1') {
                         setMenu(<SuccessMessage strong="Success." text="Your badge has been minted!" action={() => setMenu(null)} />);
@@ -102,7 +103,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
         <div className="mb-20 mt-8">
             <div id="assets" className="grid justify-items-center place-items-center w-11/12 max-w-screen-2xl scroll-mt-12 mx-auto ">
                 <div className="w-60 md:w-full max-w-2xl grid grid-cols-1 place-content-center justify-items-center gap-x-8">
-                    {badges.map((badge: Badge, index: number) => (
+                    {minterContractAddress && badges.map((badge: Badge, index: number) => (
                         <div key={`badge_${index}`} className="text-center">
                             <div className="relative px-2 flex justify-center items-center outline-0 my-2">
                                 <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
