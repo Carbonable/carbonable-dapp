@@ -53,10 +53,11 @@ export default function Index() {
    
 
     async function getStarnetId() {
-        const id = await getStarknetId(address, networks.defautlNetwork);
+        const id = undefined
+        // const id = await getStarknetId(address, networks.defautlNetwork);
         setAddressToDisplay(minifyAddressOrStarknetId(address, id));
     }
-
+    
     useEffect(() => {
         getStarnetId();
         
