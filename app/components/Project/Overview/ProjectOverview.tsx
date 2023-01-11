@@ -38,8 +38,9 @@ export default function ProjectOverview({project, whitelist, selectedNetwork}: {
 
     useEffect(() => {
         if (project.paymentTokenDecimals === undefined || project.unitPrice === undefined) { return; }
+        const price = project.unitPrice / Math.pow(10, project.paymentTokenDecimals);
 
-        setPriceToDisplay(project.unitPrice / Math.pow(10, project.paymentTokenDecimals));
+        setPriceToDisplay(Math.round(price) !== price ? parseFloat(price.toFixed(2)) : price);
     }, [project.paymentTokenDecimals, project.unitPrice]);
 
     return (
@@ -49,12 +50,12 @@ export default function ProjectOverview({project, whitelist, selectedNetwork}: {
             </div>
             <div className="w-full mt-6 p-2 md:w-1/2 md:-mt-0 flex flex-wrap justify-between items-center xl:w-7/12 xl:items-left xl:pl-12 2xl:w-7/12 2xl:pl-16 2xl:pr-0 select-none">
                 <div className="w-full">
-                    { (saleIsOpen || soldout) && 
+                    { (saleIsOpen || isSoldout) && 
                         <>
-                            <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{priceToDisplay.toFixed(2)} {project.paymentTokenSymbol} <span className="font-americana font-thin text-lg text-beaige xl:text-xl 2xl:text-2xl">/ NFT</span></div>
+                            <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{priceToDisplay} {project.paymentTokenSymbol} <span className="font-americana font-thin text-lg text-beaige xl:text-xl 2xl:text-2xl">/ NFT</span></div>
                             <div className="font-inter text-beaige text-xs xl:text-base">
-                                { !soldout && <span>{supplyLeft} NFTs left</span>}
-                                { soldout && <span>{project.maxSupplyForMint} NFTs</span>}
+                                { !isSoldout && <span>{supplyLeft} NFTs left</span>}
+                                { isSoldout && <span>{project.maxSupplyForMint} NFTs</span>}
                             </div>
                         </>
                 }

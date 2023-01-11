@@ -5,9 +5,14 @@ import { PlusIconBlack } from "~/components/Icons/PlusIcon";
 import { useSoldout } from "~/hooks/minter";
 import { IPFS_GATEWAY } from "~/utils/links";
 
-export default function LaunchpadCard({slug, saleDate, minterContract, networkId, imageIpfs, whitelistedSaleOpen, publicSaleOpen}: Project) {
+export default function LaunchpadCard({slug, saleDate, minterContract, networkId, imageIpfs, whitelistedSaleOpen, publicSaleOpen, isSoldout}: Project) {
     const { soldout } = useSoldout(minterContract, networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
+    const [projectIsSoldout, setProjectIsSoldout] = useState(false);
+
+    useEffect(() => {
+        setProjectIsSoldout(soldout || isSoldout);
+    }, [soldout, isSoldout]);
 
     useEffect(() => {
         setSaleIsOpen((publicSaleOpen || whitelistedSaleOpen) ? true : false);
@@ -16,10 +21,10 @@ export default function LaunchpadCard({slug, saleDate, minterContract, networkId
     return (
         <div className="relative">
             <img src={IPFS_GATEWAY + imageIpfs} alt={`${slug}  NFT card`} className="w-full rounded-[8.8%]" />
-            { (soldout || saleIsOpen === false) && 
+            { (projectIsSoldout || saleIsOpen === false) && 
                 <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[10%]"></div>
             }
-            { soldout && 
+            { projectIsSoldout && 
                 <div className="absolute uppercase font-inter font-bold bg-beaige text-black top-[6%] left-[6%] py-1 px-2 text-[8px] md:text-xs lg:px-3 rounded-lg">Soldout</div>
             }
             { saleIsOpen === false && moment(saleDate).isAfter(moment(new Date()))  && 
