@@ -58,6 +58,103 @@
         "type": "event"
     },
     {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "PreSaleOpen",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "PreSaleClose",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "PublicSaleOpen",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "PublicSaleClose",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "SoldOut",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "address",
+                "type": "felt"
+            },
+            {
+                "name": "quantity",
+                "type": "felt"
+            },
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Airdrop",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "address",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "quantity",
+                "type": "felt"
+            },
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Buy",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "name": "carbonable_project_address",
@@ -89,10 +186,6 @@
             },
             {
                 "name": "owner",
-                "type": "felt"
-            },
-            {
-                "name": "proxy_admin",
                 "type": "felt"
             }
         ],
@@ -148,7 +241,36 @@
     },
     {
         "inputs": [],
-        "name": "carbonable_project_address",
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "owner",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCarbonableProjectAddress",
         "outputs": [
             {
                 "name": "carbonable_project_address",
@@ -160,7 +282,7 @@
     },
     {
         "inputs": [],
-        "name": "payment_token_address",
+        "name": "getPaymentTokenAddress",
         "outputs": [
             {
                 "name": "payment_token_address",
@@ -172,10 +294,10 @@
     },
     {
         "inputs": [],
-        "name": "whitelisted_sale_open",
+        "name": "isPreSaleOpen",
         "outputs": [
             {
-                "name": "whitelisted_sale_open",
+                "name": "pre_sale_open",
                 "type": "felt"
             }
         ],
@@ -184,7 +306,7 @@
     },
     {
         "inputs": [],
-        "name": "public_sale_open",
+        "name": "isPublicSaleOpen",
         "outputs": [
             {
                 "name": "public_sale_open",
@@ -196,7 +318,7 @@
     },
     {
         "inputs": [],
-        "name": "max_buy_per_tx",
+        "name": "getMaxBuyPerTx",
         "outputs": [
             {
                 "name": "max_buy_per_tx",
@@ -208,7 +330,7 @@
     },
     {
         "inputs": [],
-        "name": "unit_price",
+        "name": "getUnitPrice",
         "outputs": [
             {
                 "name": "unit_price",
@@ -220,7 +342,7 @@
     },
     {
         "inputs": [],
-        "name": "reserved_supply_for_mint",
+        "name": "getReservedSupplyForMint",
         "outputs": [
             {
                 "name": "reserved_supply_for_mint",
@@ -232,7 +354,7 @@
     },
     {
         "inputs": [],
-        "name": "max_supply_for_mint",
+        "name": "getMaxSupplyForMint",
         "outputs": [
             {
                 "name": "max_supply_for_mint",
@@ -244,7 +366,7 @@
     },
     {
         "inputs": [],
-        "name": "whitelist_merkle_root",
+        "name": "getWhitelistMerkleRoot",
         "outputs": [
             {
                 "name": "whitelist_merkle_root",
@@ -273,7 +395,7 @@
                 "type": "felt*"
             }
         ],
-        "name": "whitelisted_slots",
+        "name": "getWhitelistedSlots",
         "outputs": [
             {
                 "name": "slots",
@@ -290,7 +412,7 @@
                 "type": "felt"
             }
         ],
-        "name": "claimed_slots",
+        "name": "getClaimedSlots",
         "outputs": [
             {
                 "name": "slots",
@@ -302,11 +424,23 @@
     },
     {
         "inputs": [],
-        "name": "sold_out",
+        "name": "isSoldOut",
         "outputs": [
             {
                 "name": "status",
                 "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTotalValue",
+        "outputs": [
+            {
+                "name": "total_value",
+                "type": "Uint256"
             }
         ],
         "stateMutability": "view",
@@ -319,7 +453,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_whitelist_merkle_root",
+        "name": "setWhitelistMerkleRoot",
         "outputs": [],
         "type": "function"
     },
@@ -330,7 +464,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_public_sale_open",
+        "name": "setPublicSaleOpen",
         "outputs": [],
         "type": "function"
     },
@@ -341,7 +475,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_max_buy_per_tx",
+        "name": "setMaxBuyPerTx",
         "outputs": [],
         "type": "function"
     },
@@ -352,7 +486,7 @@
                 "type": "Uint256"
             }
         ],
-        "name": "set_unit_price",
+        "name": "setUnitPrice",
         "outputs": [],
         "type": "function"
     },
@@ -363,7 +497,7 @@
                 "type": "Uint256"
             }
         ],
-        "name": "decrease_reserved_supply_for_mint",
+        "name": "decreaseReservedSupplyForMint",
         "outputs": [],
         "type": "function"
     },
@@ -441,7 +575,7 @@
                 "type": "felt"
             }
         ],
-        "name": "whitelist_buy",
+        "name": "preBuy",
         "outputs": [
             {
                 "name": "success",
@@ -457,7 +591,7 @@
                 "type": "felt"
             }
         ],
-        "name": "public_buy",
+        "name": "publicBuy",
         "outputs": [
             {
                 "name": "success",

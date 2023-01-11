@@ -52,7 +52,7 @@ export function useWhitelistedSaleOpen(contractAddress: string, network: string)
  */
  export function useSoldout(contractAddress: string, network: string): any {
     const { contract: minter } = useMinterContract(contractAddress, network);
-    const { data, loading, error, refresh } = useStarknetCall({ contract: minter, method: 'sold_out', args: [] });
+    const { data, loading, error, refresh } = useStarknetCall({ contract: minter, method: network === 'mainnet' ? 'isSoldOut' : 'sold_out', args: [] });
     
     return { soldout:  data?.toString() === "1" ? true : false, errorSoldout: error, loadingSoldout: loading, refreshSoldout: refresh }; 
 }
