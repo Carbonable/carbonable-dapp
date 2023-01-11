@@ -4,7 +4,7 @@ import type { Report } from "~/utils/sanity/types";
 export default function Reports({reports}: {reports: Report[]}) {
     return (
         <>
-            <div className="mt-4 flex w-full font-inter text-neutral-300 uppercase text-xs md:text-sm">
+            <div id="impactreports" className="mt-4 flex w-full font-inter text-neutral-300 uppercase text-xs md:text-sm">
                 <div className="w-5/12 px-1">Report name</div>
                 <div className="w-4/12 px-1">Last update</div>
                 <div className="w-3/12"></div>

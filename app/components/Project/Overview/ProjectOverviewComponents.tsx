@@ -24,7 +24,7 @@ export function ReportComponent() {
         <>
             <div className="font-trash font-bold text-xl uppercase 2xl:text-2xl">Follow the progress</div>
             <div className="font-americana font-light text-lg uppercase 2xl:text-xl">of the project</div>
-            <div className="mt-6"><a href="/" target="_blank" className="bg-green-blue font-inter uppercase text-black/50 px-8 py-4 rounded-full text-sm font-semibold">Impact report</a></div>
+            <div className="mt-6"><a href="#impactreports" className="bg-green-blue font-inter uppercase text-black/50 px-8 py-4 rounded-full text-sm font-semibold">Impact report</a></div>
         </>
     )
 }
