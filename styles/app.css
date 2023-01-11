@@ -143,24 +143,24 @@ input::-webkit-inner-spin-button {
 
 @media screen and (min-width: 768px) {
   .preventOverflow .slick-list {
-    height: 250px;
+    height: 232px;
   }
 }
 
 @media screen and (min-width: 1024px) {
   .preventOverflow .slick-list {
-    height: 280px;
+    height: 232px;
   }
 }
 
 @media screen and (min-width: 1280px) {
   .preventOverflow .slick-list {
-    height: 275px;
+    height: 252px;
   }
 }
 
 @media screen and (min-width: 1536px) {
   .preventOverflow .slick-list {
-    height: 300px;
+    height: 292px;
   }
 }

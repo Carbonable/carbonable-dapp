@@ -28,14 +28,14 @@ export default function ImageGallery({gallery}: {gallery: any[]}) {
       
     return (
         <div className="preventOverflow mb-12">
-            <Slider ref={slider => (slidz = slider)} {...settings} className="flex max-h-[292px] overflow-hidden">
+            <Slider ref={slider => (slidz = slider)} {...settings} className="flex  overflow-hidden">
                 {gallery.map((image, index) => (
                     <div key={`image_${index}`} className="pr-1 ml-12 md:ml-32 xl:ml-40 2xl:ml-48 outline-none">
-                        <img src={urlFor(image).width(500).url()} alt={`image_${index}`} className={`w-full h-full object-cover outline-none ${index === activeSlide ? "brightness-110" : "brightness-[0.4] cursor-pointer"}` } onClick={() => handleClick(index)} />
+                        <img src={urlFor(image).width(500).url()} alt={`image_${index}`} className={`w-full max-h-[98px] md:max-h-[196px] lg:max-h-[194px] xl:max-h-[214px] 2xl:max-h-[239px] object-cover outline-none ${index === activeSlide ? "brightness-110" : "brightness-[0.4] cursor-pointer"}` } onClick={() => handleClick(index)} />
                     </div>
                 ))}
             </Slider>
-            <div className="flex flex-nowrap w-10/12 mx-auto border-b border-neutral-500 ml-8 md:w-9/12 md:ml-20 lg:ml-28 xl:ml-32 2xl:ml-36 mt-2 2xl:mt-6 items-end justify-between min-h-[70px]">
+            <div className="flex flex-nowrap w-10/12 mx-auto border-b border-neutral-500 ml-8 md:w-9/12 md:ml-20 lg:ml-28 xl:ml-32 2xl:ml-36 items-end justify-between min-h-[70px]">
                 {gallery.map((image, index) => {
                     if (index === activeSlide) {
                         return (
