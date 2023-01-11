@@ -142,8 +142,8 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
                 </div>
                 {!isMinting && 
                     <div className="w-8/12 flex flex-wrap items-center justify-center pl-4 xl:w-8/12 xl:justify-start xl:pl-6">
-                        {isWhitelisted && <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
-                        {!isWhitelisted && <MintButton className="min-h-[42px] 2xl:min-w-[220px] bg-green/50 cursor-not-allowed hover:bg-gradient-to-r from-green/50 to-green/50 hover:opacity-70" onClick={() => {}}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
+                        {(publicSaleOpen || isWhitelisted) && <MintButton className="min-h-[42px] 2xl:min-w-[220px]" onClick={connectAndExecute}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
+                        {(!publicSaleOpen && !isWhitelisted) && <MintButton className="min-h-[42px] 2xl:min-w-[220px] bg-green/50 cursor-not-allowed hover:bg-gradient-to-r from-green/50 to-green/50 hover:opacity-70" onClick={() => {}}>Buy now - {(amount * price).toFixed(2)}&nbsp;{paymentTokenSymbol}</MintButton> }
                         <input hidden type="number" value={(amount * price)} readOnly name="price" aria-label="Price" />
                         <div className="mt-2 xl:w-full xl:text-left xl:pl-7 2xl:pl-12"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
                     </div>
