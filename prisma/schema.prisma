@@ -33,6 +33,7 @@ model Project {
   whitelistedSaleOpen   Boolean  @default(false)
   publicSaleOpen        Boolean  @default(false)
   whitelist             ProjectWhitelist?
+  isSoldout             Boolean  @default(false)
 }
 
 // Whitelist is retrived from https://bal7hazar.github.io/whitelist-starknet/
@@ -73,7 +74,7 @@ model Badge {
 
 model BadgeWhitelist {
   id           String   @id @default(uuid())
-  whitelist    Json     @unique
+  whitelist    Json
 }
 
 model BadgeContract {
