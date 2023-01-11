@@ -172,6 +172,17 @@
         "type": "event"
     },
     {
+        "data": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AbsorptionUpdate",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "name": "name",
@@ -183,10 +194,6 @@
             },
             {
                 "name": "owner",
-                "type": "felt"
-            },
-            {
-                "name": "proxy_admin",
                 "type": "felt"
             }
         ],
@@ -237,6 +244,35 @@
             }
         ],
         "name": "setAdmin",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "owner",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
         "outputs": [],
         "type": "function"
     },
@@ -441,29 +477,6 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "owner",
-        "outputs": [
-            {
-                "name": "owner",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "minter",
-                "type": "felt"
-            }
-        ],
-        "name": "set_minter",
-        "outputs": [],
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "name": "to",
@@ -568,21 +581,6 @@
     {
         "inputs": [
             {
-                "name": "tokenId",
-                "type": "Uint256"
-            },
-            {
-                "name": "tokenURI",
-                "type": "felt"
-            }
-        ],
-        "name": "setTokenURI",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "name": "uri_len",
                 "type": "felt"
             },
@@ -596,19 +594,161 @@
         "type": "function"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "getStartTime",
+        "outputs": [
             {
-                "name": "newOwner",
+                "name": "time",
                 "type": "felt"
             }
         ],
-        "name": "transferOwnership",
-        "outputs": [],
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "renounceOwnership",
+        "name": "getFinalTime",
+        "outputs": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTimes",
+        "outputs": [
+            {
+                "name": "times_len",
+                "type": "felt"
+            },
+            {
+                "name": "times",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAbsorptions",
+        "outputs": [
+            {
+                "name": "absorptions_len",
+                "type": "felt"
+            },
+            {
+                "name": "absorptions",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "name": "getAbsorption",
+        "outputs": [
+            {
+                "name": "absorption",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCurrentAbsorption",
+        "outputs": [
+            {
+                "name": "absorption",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getFinalAbsorption",
+        "outputs": [
+            {
+                "name": "absorption",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTonEquivalent",
+        "outputs": [
+            {
+                "name": "ton_equivalent",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "isSetup",
+        "outputs": [
+            {
+                "name": "status",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "minter",
+                "type": "felt"
+            }
+        ],
+        "name": "addMinter",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "times_len",
+                "type": "felt"
+            },
+            {
+                "name": "times",
+                "type": "felt*"
+            },
+            {
+                "name": "absorptions_len",
+                "type": "felt"
+            },
+            {
+                "name": "absorptions",
+                "type": "felt*"
+            },
+            {
+                "name": "ton_equivalent",
+                "type": "felt"
+            }
+        ],
+        "name": "setAbsorptions",
         "outputs": [],
         "type": "function"
     }
