@@ -1,4 +1,4 @@
-import type { Project, ProjectWhitelist } from "@prisma/client";
+import type { Network, Project, ProjectWhitelist } from "@prisma/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSoldout } from "~/hooks/minter";
@@ -8,18 +8,23 @@ import { IPFS_GATEWAY } from "~/utils/links";
 import { ComingSoonComponent, MintComponent, ReportComponent, SimularorComponent, SoldoutComponent } from "./ProjectOverviewComponents";
 import { ProgressComponent } from "./TransactionComponents";
 
-export default function ProjectOverview({project, whitelist}: {project: Project, whitelist: ProjectWhitelist}) {
+export default function ProjectOverview({project, whitelist, selectedNetwork}: {project: Project, whitelist: ProjectWhitelist, selectedNetwork: Network}) {
     const { soldout } = useSoldout(project.minterContract, project.networkId);
     const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(project.projectContract, project.networkId);
     const [saleIsOpen, setSaleIsOpen] = useState(false);
     const [supplyLeft, setSupplyLeft] = useState(0);
     const [priceToDisplay, setPriceToDisplay] = useState(0);
+    const [isSoldout, setIsSoldout] = useState(false);
 
     const [progress, setProgress] = useState("NOT_RECEIVED");
 
     const updateProgress = (step: string) => {
         setProgress(step);
-      };
+    };
+
+    useEffect(() => {
+        setIsSoldout(soldout || project.isSoldout);
+    }, [soldout, project.isSoldout]);
 
     useEffect(() => {
         setSaleIsOpen((project.publicSaleOpen || project.whitelistedSaleOpen) ? true : false);
@@ -56,7 +61,7 @@ export default function ProjectOverview({project, whitelist}: {project: Project,
                     { moment(project.saleDate).isAfter(moment(new Date())) && !saleIsOpen && <div className="font-trash text-4xl text-white xl:text-5xl 2xl:text-6xl">{supplyLeft} NFTs</div>}
                 </div>
                 <div className="mt-8 w-full md:mt-5 xl:mt-4">
-                    { saleIsOpen && !soldout && <MintComponent estimatedAPR={project.estimatedAPR}
+                    { saleIsOpen && !isSoldout && <MintComponent estimatedAPR={project.estimatedAPR}
                                                                price={priceToDisplay}
                                                                paymentTokenSymbol={project.paymentTokenSymbol}
                                                                minterContract={project.minterContract}
@@ -68,13 +73,13 @@ export default function ProjectOverview({project, whitelist}: {project: Project,
                                                                updateProgress={updateProgress}
                                                                whitelist={whitelist}
                                                  /> }
-                    { soldout && <SoldoutComponent {...project} />}
+                    { isSoldout && <SoldoutComponent project={project} selectedNetwork={selectedNetwork} />}
                     { moment(project.saleDate).isAfter(moment(new Date())) && !saleIsOpen && <ComingSoonComponent {...project} /> }
                 </div>
                 <div className="mt-10 w-full md:mt-6 xl:mt-5">
-                    { soldout && <ReportComponent />}
-                    { !soldout && progress === TxStatus.NOT_RECEIVED && <SimularorComponent />}
-                    { !soldout && progress !== TxStatus.NOT_RECEIVED && <ProgressComponent progress={progress} />}
+                    { isSoldout && <ReportComponent />}
+                    { !isSoldout && progress === TxStatus.NOT_RECEIVED && <SimularorComponent />}
+                    { !isSoldout && progress !== TxStatus.NOT_RECEIVED && <ProgressComponent progress={progress} />}
                 </div>
             </div>
         </div>

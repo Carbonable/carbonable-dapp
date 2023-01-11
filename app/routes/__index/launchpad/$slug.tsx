@@ -4,7 +4,7 @@ import { Response } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
-import type { Project, ProjectWhitelist } from "@prisma/client";
+import type { Network, Project, ProjectWhitelist } from "@prisma/client";
 import { userPrefs } from "~/cookie";
 import { client } from "~/utils/sanity/client";
 import ContentContainer from "~/components/Project/Content/ContentWrapper";
@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({
         { slug: params.slug }
       );
   
-      return json({project, content, whitelist});
+      return json({project, content, whitelist, selectedNetwork});
 
     } catch (e) {
       throw new Response("Not Found", {status: 404})
@@ -94,9 +94,11 @@ export default function ProjectPage() {
   const project: Project = data.project;
   const content: SanityContent = data.content[0];
   const whitelist: ProjectWhitelist = data.whitelist?.whitelist;
+  const selectedNetwork: Network = data.selectedNetwork;
+
   return (
       <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
-        <ProjectOverview project={project} whitelist={whitelist} />
+        <ProjectOverview project={project} whitelist={whitelist} selectedNetwork={selectedNetwork} />
         <div className="mt-20 w-11/12 mx-auto">
           { content !== undefined && <ContentContainer content={content} /> }
         </div>

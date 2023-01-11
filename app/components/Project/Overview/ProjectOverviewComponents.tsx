@@ -3,7 +3,7 @@ import { useFetcher, useTransition } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 
-import type { Project } from "@prisma/client";
+import type { Network, Project } from "@prisma/client";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
@@ -157,19 +157,21 @@ export function MintComponent({estimatedAPR, price, paymentTokenSymbol, minterCo
     )
 }
 
-export function SoldoutComponent({saleDate, estimatedAPR}: Project) {
+export function SoldoutComponent({project, selectedNetwork}: {project: Project, selectedNetwork: Network}) {
     return (
-        <div className="w-full flex items-center justify-center xl:justify-start">
-            <div className="w-7/12 xl:w-[11rem]">
-                <div className="flex items-center justify-start font-inter font-bold text-xs text-black bg-white rounded-md py-1 px-4 w-10/12 xl:w-full xl:text-sm">
-                    <div>Soldout</div>
-                    <PlusIconBlack className="w-2 mx-1"></PlusIconBlack>
-                    <div>{moment(saleDate).format("MM.DD.YYYY").toString()}</div>
+        <>
+            <div className="w-full flex items-center justify-center xl:justify-start">
+                <div className="w-7/12 xl:w-[11rem]">
+                    <div className="flex items-center justify-start font-inter font-bold text-xs text-black bg-white rounded-md py-1 px-4 w-10/12 xl:w-full xl:text-sm">
+                        <div>Soldout</div>
+                        <PlusIconBlack className="w-2 mx-1"></PlusIconBlack>
+                        <div>{moment(project.saleDate).format("MM.DD.YYYY").toString()}</div>
+                    </div>
                 </div>
+                <div className="w-5/12 text-center xl:text-left xl:pl-8"><EstimatedAPR estimatedAPR={project.estimatedAPR} /></div>
             </div>
-            
-            <div className="w-5/12 text-center xl:text-left xl:pl-8"><EstimatedAPR estimatedAPR={estimatedAPR} /></div>
-        </div>
+            {selectedNetwork.id === "mainnet" && <div className="mt-3 ml-1 font-inter text-sm text-neutral-300">Have some NFTs on JUNO? <a href="https://bridge.carbonable.io" target="_blank" rel="noreferrer" className="underline flex flex-nowrap hover:no-underline"> Bridge them to Starknet <ArrowTopRightOnSquareIcon className="w-4 ml-2" /></a></div>}
+        </>
     )
 }
 
