@@ -57,7 +57,7 @@ export default function Quest() {
                 <div className="md:col-span-2 flex items-center justify-center uppercase font-bold">
                     <LinkFooter className="rounded-full px-4" href={"https://carbonable.crew3.xyz/invite/KOfDWAD8_cdTadsz1ei83"}>Start the Odyssey</LinkFooter>
                 </div>
-                <div className="text-center mt-4 md:text-left md:mt-0 md:col-span-4 flex items-center justify-center">Be part of the change you want to see. <br/>Become a Green Pioneer. <br/>Complete the quest to earn your badge.</div>
+                <div className="text-center mt-4 md:text-left md:mt-0 md:col-span-4 flex items-center justify-center">Be part of the change you want to see. <br/>Become a Green Pioneer. <br/>Complete the quest before January 10th to earn your badge.</div>
             </div>
             <div>
                 <div className="flex items-center justify-center uppercase text-center leading-none my-4 w-full px-4 lg:w-9/12 mx-auto">
