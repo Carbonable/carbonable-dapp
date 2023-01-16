@@ -91,7 +91,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
         // Check if the user is whitelisted
         const res = await fetch(`odyssey/sign/${account.address}/${badge.token_id}`)
         const signature: Signature = await res.json();
-        if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="Complete the quests on Crew3, then wait a bit and you'll be added." action={() => setMenu(null)} />);
+        if (!signature.low || !signature.high) return setMenu(<ErrorMessage strong="You are currently not in the whitelist." text="To become a Green Pioneer you needed to complete the quest #GREEN PIONEER BADGE WL QUEST on Crew3 before January 10th. Stay tuned on discord and Twitter for next badges." action={() => setMenu(null)} />);
 
         // Mint the badge
         setMenu(<SuccessMessage strong="Success." text="Please approve the transaction" action={() => setMenu(null)} />)
