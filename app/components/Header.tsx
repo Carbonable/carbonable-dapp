@@ -1,4 +1,5 @@
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { useNavigate, useLocation } from "@remix-run/react";
 import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
 import { useEffect } from "react";
 import { providers } from "~/utils/blockchain/providers";
@@ -12,7 +13,9 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
     const { status } = useAccount();
     const { disconnect } = useConnectors();
     const { library } = useStarknet();
-    
+    const navigate = useNavigate();
+    const resolvedPath = useLocation();
+
     const asArray = Object.entries(providers);
     const filtered = asArray.filter(([key, value]) => key === selectedNetwork.id);
 
@@ -38,7 +41,10 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
                 </div>
                 <div className="w-7/12 text-left lg:hidden lg:w-0"><img className="w-8/12 md:w-5/12 md:py-2" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
-                    <div className="hidden lg:block mr-6">{networksList?.length > 0 && <Select values={networksList} selectedValue={selectedNetwork} action="/network/preference" />}</div>
+                    { resolvedPath.pathname.split( '/' ).length > 2 && <div className="items-center hidden lg:block"><span className="flex cursor-pointer text-neutral-200 hover:text-neutral-400" onClick={() => navigate(`/${resolvedPath.pathname.split( '/' )[1]}`)}><ArrowLeftIcon className="w-4 mr-2" /> Back</span></div>}
+                    <div className="lg:w-[48%] xl:w-[54%] 2xl:w-[64%] hidden lg:flex justify-end ">
+                        <div className="mr-6 w-fit">{networksList?.length > 0 && <Select values={networksList} selectedValue={selectedNetwork} action="/network/preference" />}</div>
+                    </div>
                     {status === 'disconnected' && <ConnectButton displayIcon={true} /> }
 
                     {status === 'connected' && 

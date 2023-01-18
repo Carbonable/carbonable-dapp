@@ -2183,6 +2183,11 @@ input::-webkit-inner-spin-button {
   color: rgb(168 171 179 / var(--tw-text-opacity));
 }
 
+.hover\:text-neutral-300:hover {
+  --tw-text-opacity: 1;
+  color: rgb(135 138 148 / var(--tw-text-opacity));
+}
+
 .hover\:no-underline:hover {
   text-decoration-line: none;
 }
@@ -2477,6 +2482,10 @@ input::-webkit-inner-spin-button {
     display: block;
   }
 
+  .lg\:flex {
+    display: flex;
+  }
+
   .lg\:hidden {
     display: none;
   }
@@ -2515,6 +2524,14 @@ input::-webkit-inner-spin-button {
 
   .lg\:w-9\/12 {
     width: 75%;
+  }
+
+  .lg\:w-7\/12 {
+    width: 58.333333%;
+  }
+
+  .lg\:w-\[48\%\] {
+    width: 48%;
   }
 
   .lg\:min-w-\[62px\] {
@@ -2648,6 +2665,18 @@ input::-webkit-inner-spin-button {
     width: 75%;
   }
 
+  .xl\:w-\[66\%\] {
+    width: 66%;
+  }
+
+  .xl\:w-\[62\%\] {
+    width: 62%;
+  }
+
+  .xl\:w-\[54\%\] {
+    width: 54%;
+  }
+
   .xl\:justify-start {
     justify-content: flex-start;
   }
@@ -2735,6 +2764,30 @@ input::-webkit-inner-spin-button {
 
   .\32xl\:w-\[23\%\] {
     width: 23%;
+  }
+
+  .\32xl\:w-8\/12 {
+    width: 66.666667%;
+  }
+
+  .\32xl\:w-\[75\%\] {
+    width: 75%;
+  }
+
+  .\32xl\:w-\[72\%\] {
+    width: 72%;
+  }
+
+  .\32xl\:w-\[70\%\] {
+    width: 70%;
+  }
+
+  .\32xl\:w-\[66\%\] {
+    width: 66%;
+  }
+
+  .\32xl\:w-\[64\%\] {
+    width: 64%;
   }
 
   .\32xl\:min-w-\[220px\] {
