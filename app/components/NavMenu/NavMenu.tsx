@@ -8,7 +8,7 @@ import Select from "../Filters/Select";
 export default function NavMenu({addressToDisplay, closeMenu, networksList, selectedNetwork}: any) {
 
     return (
-        <div className="bg-neutral-900 h-screen text-left pt-[44px]">
+        <div className="bg-neutral-900 h-screen text-left pt-[30px]">
             <div className="w-full text-left pl-[36px]">
                 <img className="w-8/12" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/>
             </div>
