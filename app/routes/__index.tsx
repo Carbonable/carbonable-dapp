@@ -80,7 +80,7 @@ export default function Index() {
             <div className="fixed z-50 top-0 left-0 lg:hidden">
                 <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
             </div>
-            <header className="py-2 fixed top-0 w-full z-10 bg-neutral-800">
+            <header className="py-7 fixed top-0 w-full z-10 bg-neutral-800">
                 <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
             </header>
             <nav className='hidden lg:block lg:w-[360px] z-20'>
@@ -88,7 +88,7 @@ export default function Index() {
                     <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
                 </div>
             </nav>
-            <main className='w-full mt-[80px]' id="page-wrap">
+            <main className='w-full mt-[110px]' id="page-wrap">
                 <Outlet />
             </main>
         </div>
