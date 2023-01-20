@@ -39,10 +39,12 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
                 <div className="w-2/12 overflow-hidden; lg:hidden lg:w-0">
                     {!menuOpen && <Bars3Icon className="w-10 border border-neutral-500 text-neutral-200 p-2 rounded-full md:w-12" onClick={toggleMenu} /> }
                 </div>
-                <div className="w-7/12 text-left lg:hidden lg:w-0"><img className="w-8/12 md:w-5/12 md:py-2" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/> </div>
+                <div className="w-7/12 text-left lg:hidden lg:w-0">
+                    <img className="w-8/12 md:w-5/12 md:py-2" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/>
+                </div>
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
                     { resolvedPath.pathname.split( '/' ).length > 2 && <div className="items-center hidden lg:block"><span className="flex cursor-pointer text-neutral-200 hover:text-neutral-400" onClick={() => navigate(`/${resolvedPath.pathname.split( '/' )[1]}`)}><ArrowLeftIcon className="w-4 mr-2" />Back</span></div>}
-                    <div className="lg:w-[48%] xl:w-[54%] 2xl:w-[64%] hidden lg:flex justify-end ">
+                    <div className="hidden lg:flex justify-end header-width">
                         <div className="mr-6 w-fit">{networksList?.length > 0 && <Select values={networksList} selectedValue={selectedNetwork} action="/network/preference" />}</div>
                     </div>
                     {status === 'disconnected' && <ConnectButton displayIcon={true} /> }

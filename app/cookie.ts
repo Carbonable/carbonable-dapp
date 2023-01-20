@@ -1,5 +1,5 @@
-import { createCookie } from "@remix-run/node"; // or cloudflare/deno
+import { createCookie } from "@remix-run/node";
 
 export const userPrefs = createCookie("user-prefs", {
-    maxAge: 604_800, // one week
+    maxAge: 3_600, // one week
   });

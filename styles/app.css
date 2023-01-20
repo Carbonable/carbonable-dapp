@@ -135,6 +135,10 @@ input::-webkit-inner-spin-button {
   width: 10%;
 }
 
+.header-width {
+  width: calc(100% - 560px);
+}
+
 @media screen and (min-width: 360px) {
   .preventOverflow .slick-list {
     height: 100px;

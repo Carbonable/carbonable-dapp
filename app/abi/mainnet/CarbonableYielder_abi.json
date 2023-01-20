@@ -172,41 +172,6 @@
     {
         "data": [
             {
-                "name": "address",
-                "type": "felt"
-            },
-            {
-                "name": "project",
-                "type": "felt"
-            },
-            {
-                "name": "previous_time",
-                "type": "felt"
-            },
-            {
-                "name": "previous_user_yielder_absorption",
-                "type": "felt"
-            },
-            {
-                "name": "current_time",
-                "type": "felt"
-            },
-            {
-                "name": "current_user_yielder_absorption",
-                "type": "felt"
-            },
-            {
-                "name": "period_user_yielder_absorption",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UserSnapshot",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
                 "name": "project",
                 "type": "felt"
             },
@@ -221,33 +186,6 @@
         ],
         "keys": [],
         "name": "Vesting",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "address",
-                "type": "felt"
-            },
-            {
-                "name": "project",
-                "type": "felt"
-            },
-            {
-                "name": "amount",
-                "type": "felt"
-            },
-            {
-                "name": "time",
-                "type": "felt"
-            },
-            {
-                "name": "vesting_id",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UserVesting",
         "type": "event"
     },
     {

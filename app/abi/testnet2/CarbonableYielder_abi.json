@@ -60,8 +60,12 @@
     {
         "data": [
             {
-                "name": "total_amount",
+                "name": "address",
                 "type": "felt"
+            },
+            {
+                "name": "token_id",
+                "type": "Uint256"
             },
             {
                 "name": "time",
@@ -69,7 +73,7 @@
             }
         ],
         "keys": [],
-        "name": "VestingsCreated",
+        "name": "Deposit",
         "type": "event"
     },
     {
@@ -79,7 +83,26 @@
                 "type": "felt"
             },
             {
-                "name": "vesting_id",
+                "name": "token_id",
+                "type": "Uint256"
+            },
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Withdraw",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "address",
+                "type": "felt"
+            },
+            {
+                "name": "absorption",
                 "type": "felt"
             },
             {
@@ -88,7 +111,81 @@
             }
         ],
         "keys": [],
-        "name": "VestingOfAddrCreated",
+        "name": "Claim",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "project",
+                "type": "felt"
+            },
+            {
+                "name": "previous_time",
+                "type": "felt"
+            },
+            {
+                "name": "previous_project_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "previous_offseter_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "previous_yielder_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "current_time",
+                "type": "felt"
+            },
+            {
+                "name": "current_project_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "current_offseter_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "current_yielder_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "period_project_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "period_offseter_absorption",
+                "type": "felt"
+            },
+            {
+                "name": "period_yielder_absorption",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Snapshot",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "project",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "felt"
+            },
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Vesting",
         "type": "event"
     },
     {
@@ -98,15 +195,15 @@
                 "type": "felt"
             },
             {
-                "name": "starkvest_address",
+                "name": "carbonable_offseter_address",
+                "type": "felt"
+            },
+            {
+                "name": "carbonable_vester_address",
                 "type": "felt"
             },
             {
                 "name": "owner",
-                "type": "felt"
-            },
-            {
-                "name": "proxy_admin",
                 "type": "felt"
             }
         ],
@@ -162,7 +259,36 @@
     },
     {
         "inputs": [],
-        "name": "carbonable_project_address",
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "owner",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCarbonableProjectAddress",
         "outputs": [
             {
                 "name": "carbonable_project_address",
@@ -174,10 +300,10 @@
     },
     {
         "inputs": [],
-        "name": "get_start_time",
+        "name": "getCarbonableOffseterAddress",
         "outputs": [
             {
-                "name": "start_time",
+                "name": "carbonable_offseter_address",
                 "type": "felt"
             }
         ],
@@ -186,10 +312,10 @@
     },
     {
         "inputs": [],
-        "name": "get_lock_time",
+        "name": "getCarbonableVesterAddress",
         "outputs": [
             {
-                "name": "lock_time",
+                "name": "carbonable_vester_address",
                 "type": "felt"
             }
         ],
@@ -198,31 +324,7 @@
     },
     {
         "inputs": [],
-        "name": "get_end_time",
-        "outputs": [
-            {
-                "name": "end_time",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "is_locked",
-        "outputs": [
-            {
-                "name": "status",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "total_locked",
+        "name": "getTotalDeposited",
         "outputs": [
             {
                 "name": "balance",
@@ -233,21 +335,29 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "getTotalAbsorption",
+        "outputs": [
+            {
+                "name": "total_absorption",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "address",
                 "type": "felt"
-            },
-            {
-                "name": "precision",
-                "type": "felt"
             }
         ],
-        "name": "shares_of",
+        "name": "getAbsorptionOf",
         "outputs": [
             {
-                "name": "shares",
-                "type": "Uint256"
+                "name": "absorption",
+                "type": "felt"
             }
         ],
         "stateMutability": "view",
@@ -260,7 +370,7 @@
                 "type": "Uint256"
             }
         ],
-        "name": "registred_owner_of",
+        "name": "getRegisteredOwnerOf",
         "outputs": [
             {
                 "name": "address",
@@ -268,6 +378,116 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "token_id",
+                "type": "Uint256"
+            }
+        ],
+        "name": "getRegisteredTimeOf",
+        "outputs": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "name": "getRegisteredTokensOf",
+        "outputs": [
+            {
+                "name": "tokens_len",
+                "type": "felt"
+            },
+            {
+                "name": "tokens",
+                "type": "Uint256*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getSnapshotedTime",
+        "outputs": [
+            {
+                "name": "time",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "name": "getSnapshotedOf",
+        "outputs": [
+            {
+                "name": "absorption",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "token_id",
+                "type": "Uint256"
+            }
+        ],
+        "name": "deposit",
+        "outputs": [
+            {
+                "name": "success",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "token_id",
+                "type": "Uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [
+            {
+                "name": "success",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "snapshot",
+        "outputs": [
+            {
+                "name": "success",
+                "type": "felt"
+            }
+        ],
         "type": "function"
     },
     {
@@ -297,70 +517,7 @@
                 "type": "felt"
             }
         ],
-        "name": "create_vestings",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "felt"
-            }
-        ],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "unlocked_duration",
-                "type": "felt"
-            },
-            {
-                "name": "period_duration",
-                "type": "felt"
-            }
-        ],
-        "name": "start_period",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "felt"
-            }
-        ],
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "stop_period",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "felt"
-            }
-        ],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "token_id",
-                "type": "Uint256"
-            }
-        ],
-        "name": "deposit",
-        "outputs": [
-            {
-                "name": "success",
-                "type": "felt"
-            }
-        ],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "token_id",
-                "type": "Uint256"
-            }
-        ],
-        "name": "withdraw",
+        "name": "createVestings",
         "outputs": [
             {
                 "name": "success",

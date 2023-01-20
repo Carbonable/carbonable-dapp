@@ -97,9 +97,9 @@ export default function ProjectPage() {
   const selectedNetwork: Network = data.selectedNetwork;
 
   return (
-      <div className="xl:w-10/12 xl:mx-auto 2xl:w-9/12 2xl:max-w-6xl">
+      <div className="w-full">
         <ProjectOverview project={project} whitelist={whitelist} selectedNetwork={selectedNetwork} />
-        <div className="mt-20 w-11/12 mx-auto">
+        <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
           { content !== undefined && <ContentContainer content={content} /> }
         </div>
       </div>

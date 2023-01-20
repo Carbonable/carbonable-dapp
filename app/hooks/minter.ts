@@ -52,9 +52,22 @@ export function useWhitelistedSaleOpen(contractAddress: string, network: string)
  */
  export function useSoldout(contractAddress: string, network: string): any {
     const { contract: minter } = useMinterContract(contractAddress, network);
-    const { data, loading, error, refresh } = useStarknetCall({ contract: minter, method: network === 'mainnet' ? 'isSoldOut' : 'sold_out', args: [] });
+    const { data, loading, error, refresh } = useStarknetCall({ contract: minter, method: 'isSoldOut', args: [] });
     
     return { soldout:  data?.toString() === "1" ? true : false, errorSoldout: error, loadingSoldout: loading, refreshSoldout: refresh }; 
+}
+
+/**
+ * Fetch if the project is soldout
+ * 
+ * @param { string } contractAddress
+ * @returns { any } is soldout
+ */
+export function useReservedSupplyForMint(contractAddress: string, network: string): any {
+    const { contract: minter } = useMinterContract(contractAddress, network);
+    const { data, loading, error, refresh } = useStarknetCall({ contract: minter, method: 'getReservedSupplyForMint', args: [] });
+    const reservedSupply = data ? data[0] : undefined;
+    return { projectReservedSupplyForMint: reservedSupply?.low.toString(), errorProjectReservedSupplyForMint: error, loadingProjectReservedSupplyForMint: loading, refreshProjectReservedSupplyForMint: refresh };  
 }
 
 /**
