@@ -11,3 +11,6 @@ export const STARKNET_ID_INDEXER_TESTNET="https://goerli.indexer.starknet.id";
 export const STARKNET_ID_INDEXER_MAINNET="https://app.starknet.id/api/indexer";
 export const ASPECT_LINK="https://testnet.aspect.co/"
 export const IPFS_GATEWAY="https://carbonable.infura-ipfs.io/ipfs/";
+export const STARKSCAN_TESTNET="https://testnet.starkscan.co";
+export const STARKSCAN_TESTNET2="https://testnet-2.starkscan.co";
+export const STARKSCAN_MAINNET="https://starkscan.co";

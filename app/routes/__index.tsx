@@ -83,8 +83,8 @@ export default function Index() {
             <header className="py-7 fixed top-0 w-full z-10 bg-neutral-800">
                 <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
             </header>
-            <nav className='hidden lg:block lg:w-[360px] z-20'>
-                <div className="sticky top-0 left-0">
+            <nav className='hidden lg:block z-20'>
+                <div className="sticky top-0 left-0 lg:w-[280px] ">
                     <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
                 </div>
             </nav>
