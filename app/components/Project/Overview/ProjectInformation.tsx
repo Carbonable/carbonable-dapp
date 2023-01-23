@@ -46,7 +46,7 @@ function SaleStatusComponent({project, isSoldout, projectState}: {project: Proje
         )
     }
 
-    if (moment(project.saleDate).isAfter(moment(new Date())) && !(project.publicSaleOpen || project.whitelistedSaleOpen)) {
+    if (!project.publicSaleOpen && !project) {
         return (
             <Tag label="Coming soon" type={projectState} />
         )
