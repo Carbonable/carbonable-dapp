@@ -7,7 +7,7 @@ import { simplifyAddress } from "~/utils/utils";
 import { toFelt } from "starknet/utils/number";
 import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
 
 export function NewsletterDialog({ isOpen, setIsOpen, txHash, network }: {isOpen: boolean, setIsOpen: any, txHash: string, network: string}) {
@@ -77,6 +77,7 @@ export default function Mint({project, priceToDisplay, whitelist, refreshProject
 
     const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
     const isWhitelisted = !project.publicSaleOpen && whitelistInfo ? true : false;
+    const canBuy : boolean = (isWhitelisted || project.publicSaleOpen) && status === "connected";
 
     const [txHash, setTxHash] = useState("");
     const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
@@ -85,8 +86,14 @@ export default function Mint({project, priceToDisplay, whitelist, refreshProject
     let [isTxOpen, setIsTxOpen] = useState(false);
     
     const handleAmountChange = (e: any) => {
-        const max = isWhitelisted ? whitelistInfo.quantity : project.maxBuyPerTx;
-        setAmount(e.target.value > parseInt(max) ? max : e.target.value);
+
+        if (isNaN(e.target.value) || e.target.value < 0) {
+            setAmount(1);
+            return;
+        }
+
+        const max = isWhitelisted ? parseInt(whitelistInfo.quantity) : project.maxBuyPerTx;
+        setAmount(e.target.value > max ? max : isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value));
     }
 
     /**
@@ -141,6 +148,15 @@ export default function Mint({project, priceToDisplay, whitelist, refreshProject
         setIsConnectOpen(true);
     }
 
+    const connectWallet = () => {
+        if (available.length === 1) {
+            connect(available[0]);
+            return;
+        }
+
+        setIsConnectOpen(true);
+    }
+
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
     }, [dataExecute])
@@ -157,13 +173,20 @@ export default function Mint({project, priceToDisplay, whitelist, refreshProject
     }, [dataTx, refreshProjectTotalSupply, refreshProjectReservedSupplyForMint]);
 
     return (
-        <div className="w-full flex justify-between items-center gap-6">
-            <div className="flex flex-col w-3/12">
-                <input className="bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full" type="number" value={amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
+        <div className="w-full">
+            <div className="w-full flex justify-between items-center gap-6">
+                <div className="flex flex-col w-3/12">
+                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
+                </div>
+                <div className="flex flex-col w-full">
+                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={canBuy ? connectAndExecute : null}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.paymentTokenSymbol}</GreenButton>}
+                    {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
+                </div>
             </div>
-            <div className="flex flex-col w-full">
-                <GreenButton className="w-full" onClick={connectAndExecute}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.paymentTokenSymbol}</GreenButton>
-            </div>
+            {status === "connected" && !isWhitelisted && !project.publicSaleOpen && <div className="w-full mt-2 bg-blue-dark text-sm text-neutral-100 rounded-full py-1 px-3 flex flex-nowrap items-center">
+                <InformationCircleIcon className="w-6 mr-2" />
+                You are not whitelisted
+            </div>}
             <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
             <NewsletterDialog isOpen={isTxOpen} setIsOpen={setIsTxOpen} txHash={txHash} network={network} />
         </div>
