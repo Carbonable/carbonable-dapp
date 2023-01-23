@@ -77,7 +77,7 @@ export default function Launchpad() {
                 <div className="uppercase font-inter text-bold text-lg text-center md:text-left md:pl-1 2xl:text-xl">Projects to finance</div>
                 <div className="flex flex-wrap items-start justify-center mt-2 md:justify-start">
                     {projects.map((project: Project) => (     
-                        <div key={project.slug} className="w-full my-2 mx-2 md:ml-0 md:mr-4 md:w-[31%] lg:w-[31%] 2xl:w-[23%]">
+                        <div key={project.slug} className="w-full my-2 mx-2 md:ml-0 md:mr-4 md:w-[31%] lg:w-[31%]">
                             { project.contentReady && 
                                 <NavLink to={`/launchpad/${project.slug}`}>
                                     <LaunchpadCard {...project} />

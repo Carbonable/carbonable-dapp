@@ -57,7 +57,7 @@ function SaleStatusComponent({project, isSoldout, projectState}: {project: Proje
 
 export default function ProjectInformation({project, priceToDisplay, projectTotalSupply, isSoldout, selectedNetwork, projectState, projectReservedSupplyForMint}: 
                                              {project: Project, priceToDisplay: number, projectTotalSupply: string, isSoldout: boolean, selectedNetwork: Network, projectState: SaleStatusType, projectReservedSupplyForMint: string}) {
-    const [supplyLeft, setSupplyLeft] = useState(0);
+    const [supplyLeft, setSupplyLeft] = useState(project.maxSupplyForMint);
     useEffect(() => {
         if (project.maxSupplyForMint === undefined || projectTotalSupply === undefined || projectReservedSupplyForMint === undefined) { return; }
 
