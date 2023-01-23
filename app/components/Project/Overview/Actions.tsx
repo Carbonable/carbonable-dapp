@@ -4,11 +4,17 @@ import ComingSoon from "./ComingSoon";
 import Mint from "./Mint";
 import { SaleStatusType } from "./ProjectOverview";
 
-export default function Actions({projectState, project, priceToDisplay, whitelist, refreshProjectTotalSupply, refreshProjectReservedSupplyForMint, network}: 
-                                {projectState: SaleStatusType, project: Project, priceToDisplay: number, whitelist: any, refreshProjectTotalSupply: () => void, refreshProjectReservedSupplyForMint: () => void, network: string}) {
-    if (projectState === SaleStatusType.Soldout) {
+export default function Actions({projectState, project, priceToDisplay, whitelist, refreshProjectTotalSupply, refreshProjectReservedSupplyForMint, network, hasReports}: 
+                                {projectState: SaleStatusType, project: Project, priceToDisplay: number, whitelist: any, refreshProjectTotalSupply: () => void, refreshProjectReservedSupplyForMint: () => void, network: string, hasReports: boolean}) {
+    if (projectState === SaleStatusType.Soldout && hasReports) {
         return (
             <GreenLinkButton href="#impactreports" className="w-full">View Impact Reports</GreenLinkButton>
+        );
+    }
+
+    if (projectState === SaleStatusType.Soldout && !hasReports) {
+        return (
+            <GreenLinkButton href="#" className="w-full cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800">Impact Reports coming soon</GreenLinkButton>
         );
     }
 

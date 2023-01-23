@@ -14,7 +14,7 @@ export enum SaleStatusType {
     Soldout
 }
 
-export default function ProjectOverview({project, whitelist, selectedNetwork}: {project: Project, whitelist: any, selectedNetwork: Network}) {
+export default function ProjectOverview({project, whitelist, selectedNetwork, hasReports}: {project: Project, whitelist: any, selectedNetwork: Network, hasReports: boolean}) {
     const [priceToDisplay, setPriceToDisplay] = useState(0);
     const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(project.projectContract, project.networkId);
     const { projectReservedSupplyForMint, refreshProjectReservedSupplyForMint } = useReservedSupplyForMint(project.minterContract, project.networkId);
@@ -65,7 +65,15 @@ export default function ProjectOverview({project, whitelist, selectedNetwork}: {
                     <div className="flex flex-wrap mt-8 w-full mx-auto md:w-[55%] md:order-1 md:mt-0">
                         <ProjectInformation project={project} priceToDisplay={priceToDisplay} projectTotalSupply={projectTotalSupply} isSoldout={isSoldout} selectedNetwork={selectedNetwork} projectState={projectState} projectReservedSupplyForMint={projectReservedSupplyForMint} />
                         <div className="mt-4 w-full flex items-center justify-center">
-                            <Actions projectState={projectState} project={project} priceToDisplay={priceToDisplay} whitelist={whitelist} refreshProjectTotalSupply={refreshProjectTotalSupply} refreshProjectReservedSupplyForMint={refreshProjectReservedSupplyForMint} network={selectedNetwork.id} />
+                            <Actions projectState={projectState} 
+                                     project={project} 
+                                     priceToDisplay={priceToDisplay} 
+                                     whitelist={whitelist} 
+                                     refreshProjectTotalSupply={refreshProjectTotalSupply} 
+                                     refreshProjectReservedSupplyForMint={refreshProjectReservedSupplyForMint} 
+                                     network={selectedNetwork.id}
+                                     hasReports={hasReports}
+                             />
                         </div>
                     </div>
                 </div>

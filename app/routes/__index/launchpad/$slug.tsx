@@ -98,7 +98,7 @@ export default function ProjectPage() {
 
   return (
       <div className="w-full">
-        <ProjectOverview project={project} whitelist={whitelist} selectedNetwork={selectedNetwork} />
+        <ProjectOverview project={project} whitelist={whitelist} selectedNetwork={selectedNetwork} hasReports={content?.reports.length > 0} />
         <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
           { content !== undefined && <ContentContainer content={content} /> }
         </div>
