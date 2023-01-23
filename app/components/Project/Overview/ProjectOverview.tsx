@@ -1,5 +1,4 @@
 import type { Network, Project } from "@prisma/client";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { useReservedSupplyForMint, useSoldout } from "~/hooks/minter";
 import { useProjectTotalSupply } from "~/hooks/project";
@@ -36,18 +35,22 @@ export default function ProjectOverview({project, whitelist, selectedNetwork}: {
     useEffect(() => {
         if (isSoldout) {
             setProjectState(SaleStatusType.Soldout);
+            return;
         }
     
         if (project.publicSaleOpen) {
             setProjectState(SaleStatusType.Public);
+            return;
         }
     
         if (project.whitelistedSaleOpen) {
             setProjectState(SaleStatusType.Whitelist);
+            return;
         }
     
-        if (moment(project.saleDate).isAfter(moment(new Date())) && !(project.publicSaleOpen || project.whitelistedSaleOpen)) {
+        if (!project.publicSaleOpen && !project.whitelistedSaleOpen) {
             setProjectState(SaleStatusType.ComingSoon);
+            return;
         }
     }, [project, isSoldout]);
 
