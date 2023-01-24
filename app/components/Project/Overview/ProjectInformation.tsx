@@ -46,7 +46,7 @@ function SaleStatusComponent({project, isSoldout, projectState}: {project: Proje
         )
     }
 
-    if (!project.publicSaleOpen && !project) {
+    if (!project.publicSaleOpen && !project.whitelistedSaleOpen) {
         return (
             <Tag label="Coming soon" type={projectState} />
         )
