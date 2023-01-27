@@ -10,7 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
 
-export function NewsletterDialog({ isOpen, setIsOpen, txHash, network }: {isOpen: boolean, setIsOpen: any, txHash: string, network: string}) {
+export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: {isOpen: boolean, setIsOpen: any, txHash: string, network: string}) {
     const handleClose = () => {
         setIsOpen(false);
     }
@@ -188,7 +188,7 @@ export default function Mint({project, priceToDisplay, whitelist, refreshProject
                 You are not whitelisted
             </div>}
             <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
-            <NewsletterDialog isOpen={isTxOpen} setIsOpen={setIsTxOpen} txHash={txHash} network={network} />
+            <TransactionDialog isOpen={isTxOpen} setIsOpen={setIsTxOpen} txHash={txHash} network={network} />
         </div>
     );
 }

@@ -18,10 +18,10 @@ export const links = [
         outsideLink: false
     },
     {
-        href: 'https://mintsquare.io/starknet',
+        href: '/portfolio',
         label: 'Portfolio',
         isOpen: true,
-        outsideLink: true
+        outsideLink: false
     },
     {
         href: 'https://carbonable.io/#simulator',

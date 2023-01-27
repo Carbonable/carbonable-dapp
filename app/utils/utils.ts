@@ -29,9 +29,17 @@ export function shortenNumber(number: number): string {
       }).format(number);
 }
 
-
+/**
+ * Simplify hex address
+ * @param hex 
+ * @returns string
+ */
 export function simplifyAddress(hex: string | undefined): string {
     if (undefined === hex) { return ''; }
     // Remove the firsts zeros and the 0x
     return hex.replace(/^0x0*/, '').toLowerCase();
+}
+
+export function ipfsUrl(url: string): string | undefined {
+    return url.split("ipfs://").pop();
 }
