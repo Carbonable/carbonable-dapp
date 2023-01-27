@@ -8,7 +8,8 @@ module.exports = {
       fontFamily: {
         americana: [ "americana", "sans-serif" ],
         trash: [ "trash", "sans-serif"],
-        inter: [ "Inter", "sans-serif"]
+        inter: [ "Inter", "sans-serif"],
+        montserrat: [ "Montserrat", "sans-serif"],
       },
       colors: {
         white: '#EBECF0',
@@ -54,6 +55,9 @@ module.exports = {
         opacityLight: {
           5: 'rgba(208, 209, 214, 0.05)'
         },
+        opacityDark: {
+          40: 'rgba(11, 13, 19, 0.4)'
+        },
         undeposited: '#DA7575',
         undepositedBorder: 'rgba(218, 117, 117, 0.3)',
         beaige: '#EFECEA',
@@ -72,7 +76,8 @@ module.exports = {
         'navigation': 'linear-gradient(90.2deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.13) 0.01%, rgba(255, 255, 255, 0.2) 0.02%, rgba(255, 255, 255, 0.1) 43.23%, rgba(255, 255, 255, 0) 70.83%, rgba(255, 255, 255, 0.24) 100%);',
         'mint': 'linear-gradient(166.49deg, #13151C 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(270deg, rgba(168, 196, 239, 0.4) 23.44%, rgba(10, 242, 173, 0.4) 48.44%);',
         'project-info': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
-        'project-info-border': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);'
+        'project-info-border': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
+        'portfolio': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-portfolio.jpeg');"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',
