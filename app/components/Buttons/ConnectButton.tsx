@@ -55,7 +55,20 @@ export function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen
                                     <div className="uppercase font-inter mt-2">{wallet.name()}</div>
                                 </div>
                             ))}
-                        </div>
+                         </div>
+                        { available.length === 0 && 
+                            <div className="mt-6 flex items-center justify-center">
+                                <a className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" href="https://www.argent.xyz/argent-x/" rel="noreferrer" target="_blank">
+                                    <img className="w-8 mx-auto" src={`/assets/images/common/argentX.svg`} alt="Connect with ArgentX" />
+                                    <div className="uppercase font-inter mt-2">Argent X</div>
+                                </a>
+                                <a className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" href="https://braavos.app/" rel="noreferrer" target="_blank">
+                                    <img className="w-8 mx-auto" src={`/assets/images/common/braavos.svg`} alt="Connect with Braavos" />
+                                    <div className="uppercase font-inter mt-2">Braavos</div>
+                                </a>
+                            </div>
+                        }
+                       
                         </Dialog.Panel>
                     </Transition.Child>
                     </div>
