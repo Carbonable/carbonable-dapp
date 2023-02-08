@@ -1550,6 +1550,10 @@ video {
   background-image: linear-gradient(166.49deg, #13151C 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(270deg, rgba(168, 196, 239, 0.4) 23.44%, rgba(10, 242, 173, 0.4) 48.44%);;
 }
 
+.bg-farming {
+  background-image: linear-gradient(50.39deg, rgba(11, 13, 19, 0.2) 15.27%, rgba(19, 21, 28, 0.2) 46.91%, rgba(31, 33, 40, 0.2) 91.42%), url('/assets/images/backgrounds/bg-farming.jpeg');;
+}
+
 .bg-portfolio {
   background-image: linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-portfolio.jpeg');;
 }
@@ -1571,6 +1575,10 @@ video {
 .bg-clip-text {
   -webkit-background-clip: text;
           background-clip: text;
+}
+
+.bg-\[50\%_22\%\] {
+  background-position: 50% 22%;
 }
 
 .bg-bottom {
@@ -1790,11 +1798,6 @@ video {
   line-height: 2.25rem;
 }
 
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -1803,6 +1806,11 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-\[8px\] {
@@ -2737,14 +2745,19 @@ input::-webkit-inner-spin-button {
     line-height: 2.5rem;
   }
 
-  .lg\:text-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
+  .lg\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 
   .lg\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
+  }
+
+  .lg\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 
   .lg\:text-sm {
@@ -2755,11 +2768,6 @@ input::-webkit-inner-spin-button {
   .lg\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
-  }
-
-  .lg\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
   }
 
   .lg\:text-xl {

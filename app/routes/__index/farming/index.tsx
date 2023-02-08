@@ -98,7 +98,7 @@ export default function FarmingIndex() {
 
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
-            <div className="relative w-11/12 mx-auto border border-neutral-700 bg-launchpad-header rounded-3xl p-8 flex items-start justify-start flex-wrap md:px-10">
+            <div className="relative w-11/12 mx-auto border border-neutral-700 bg-farming bg-cover bg-[50%_22%] rounded-3xl p-8 flex items-start justify-start flex-wrap md:px-10">
                 <div className="flex items-start justify-center flex-wrap w-full md:w-5/12 md:justify-start">
                     <div className="font-trash text-lg uppercase w-full lg:text-xl text-center md:text-left">My farming assets</div>
                     {status === 'connected' && <div className="font-trash text-4xl uppercase mt-4 text-neutral-300">$2500</div>}
