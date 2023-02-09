@@ -1,7 +1,7 @@
 import type { Project, Snapshot } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { NavLink, useLoaderData } from "@remix-run/react";
 import { useAccount } from "@starknet-react/core";
 import moment from "moment";
 import { useState } from "react";
@@ -124,8 +124,12 @@ export default function FarmingIndex() {
                 <div className="flex flex-wrap items-center justify-start mt-4 md:justify-between">
                 {
                     projects.map((project, index) => {
-                        return <FarmingCard key={index} project={project} />
-                        })
+                        return (
+                            <NavLink key={index} to={`/farming/${project.slug}`} className="w-full md:w-[48%]">
+                                <FarmingCard project={project} />
+                            </NavLink>
+                            
+                        )})
                     }
                 </div>
             </div>
