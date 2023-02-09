@@ -1,9 +1,8 @@
 import type { Project } from "@prisma/client";
-import Undeposited from "./Undeposited";
 import { sample } from 'lodash';
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { IPFS_GATEWAY } from "~/utils/links";
+import ProjectIdentification from "./ProjectIdentification";
 
 export default function FarmingCard({project}: {project: Project}) {
     // TODO: Replace with real data
@@ -18,17 +17,9 @@ export default function FarmingCard({project}: {project: Project}) {
     
 
     return (
-        <div className={`relative bg-opacityLight-5 rounded-3xl p-6 border w-full mb-4 md:w-[48%] cursor-pointer ${!deposited && status === 'connected' ? "border-undepositedBorder" : "border-neutral-700"} hover:border-neutral-400`}>
+        <div className={`relative bg-opacityLight-5 rounded-3xl p-6 border w-full mb-4 cursor-pointer ${!deposited && status === 'connected' ? "border-undepositedBorder" : "border-neutral-700"} hover:border-neutral-400`}>
             <div className={`hover:before:rounded-3xl hover:before:bg-brand-background hover:before:opacity-10 hover:before:bg-cover hover:before:absolute hover:before:top-0 hover:before:left-0 hover:before:right-0 hover:before:bottom-0 hover:before:content-['']`}>
-                <div className="flex items-center justify-start w-full">
-                    <div className="w-2/12">
-                        <img src={IPFS_GATEWAY + project.imageIpfs} alt={`${project.slug} NFT card`} className="w-12 rounded-[8.8%] lg:w-16 xl:w-18" />
-                    </div>
-                    <div className="px-4 font-inter text-neutral-100 text-lg lg:text-2xl font-normal w-6/12">{project.name}</div>
-                    <div className="w-4/12 flex justify-end">
-                        {!deposited && status === 'connected' && <Undeposited /> }
-                    </div>
-                </div>
+                <ProjectIdentification project={project} deposited={deposited} status={status} displayDeposited={true} />
                 <div className="flex items-center justify-start w-full mt-8 font-inter uppercase">
                     <div className="w-5/12">
                         <div className="text-neutral-300 text-xs lg:text-base">Total removal</div>
