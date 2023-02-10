@@ -1,6 +1,4 @@
-import { ec } from "starknet";
-import { pedersen } from "starknet/dist/utils/hash";
-import { sign } from "starknet/dist/utils/ellipticCurve";
+import { ec, hash } from "starknet";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { db } from "~/utils/db.server";
@@ -29,8 +27,8 @@ export async function loader({ params }: LoaderArgs) {
             const whitelistedUser = token.user;
             const tokenId = token.token_id;
             if (tokenId.toString() === params.tokenId && simplifyAddress(whitelistedUser) === simplifyAddress(user)) {
-                const message = pedersen([user.toLowerCase(), tokenId]);
-                const signature = sign(starkKeyPair, message)
+                const message = hash.pedersen([user.toLowerCase(), tokenId]);
+                const signature = ec.sign(starkKeyPair, message)
                 res.low = signature[0];
                 res.high = signature[1];
             }
