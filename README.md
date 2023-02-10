@@ -40,7 +40,13 @@ npm run dev
 #### Dev
 
 ##### Installation
-Install [Postgres](https://www.postgresql.org/download/)
+Install [Postgres](https://www.postgresql.org/download/) or you can use [Docker](https://docs.docker.com/engine/install/)
+
+**If you're using Docker :**
+```bash
+make
+```
+**Otherwise :**
 
 Start Postgres
 

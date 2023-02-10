@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: carbonable
+      POSTGRES_USER: carbonable
+      POSTGRES_DB: carbonable_dapp
+    ports:
+    - 5432:5432
