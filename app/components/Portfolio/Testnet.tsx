@@ -1,7 +1,9 @@
-import { useAccount } from "@starknet-react/core";
+import { useContext } from "react";
+import { WalletContext } from "~/hooks/wallet-context";
 
 export default function Testnet() {
-    const { address } = useAccount();
+    const { connection } = useContext(WalletContext);
+    const address = connection?.account.address;
 
     return (
         <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
@@ -17,7 +19,7 @@ export default function Testnet() {
                     <img src="/assets/images/icons/aspect-logo.png" className="w-20" alt="Aspect logo" />
                 </a>
             </div>
-            
+
         </div>
     )
 }

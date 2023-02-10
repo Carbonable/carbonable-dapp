@@ -1,14 +1,14 @@
 import { Outlet, useLoaderData } from "@remix-run/react";
 import Header from "~/components/Header";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
-import { useAccount } from "@starknet-react/core";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
+import { WalletContext } from "~/hooks/wallet-context";
 
 function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
     const input = starknetId !== undefined ? starknetId : address;
@@ -19,13 +19,13 @@ function minifyAddressOrStarknetId(address: string | undefined, starknetId: stri
 
 
 export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
+    request,
+}) => {
     try {
         const networks = await db.network.findMany({
-          orderBy: {
-            order: 'asc'
-          }
+            orderBy: {
+                order: 'asc'
+            }
         });
 
         const cookieHeader = request.headers.get("Cookie");
@@ -33,45 +33,45 @@ export const loader: LoaderFunction = async ({
 
         const defautlNetwork = await db.network.findFirst({
             where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+                ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }),
             }
-          });
-        
+        });
+
         return json({ networks, defautlNetwork });
     } catch {
         return json([]);
     }
-    
-  };
-  
+
+};
+
 
 export default function Index() {
     const networks = useLoaderData();
     const [menuOpen, setMenuOpen] = useState(false);
-    const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
-   
+    const { connection } = useContext(WalletContext);
+
 
     async function getStarnetId() {
-        const id = await getStarknetId(address, networks.defautlNetwork);
-        setAddressToDisplay(minifyAddressOrStarknetId(address, id));
+        const id = await getStarknetId(connection?.account.address, networks.defautlNetwork);
+        setAddressToDisplay(minifyAddressOrStarknetId(connection?.account.address, id));
     }
 
     useEffect(() => {
         getStarnetId();
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [account, address, status]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connection]);
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);
-      }
+    }
 
     function toggleMenu() {
         setMenuOpen(!menuOpen);
     }
 
-    function closeMenu () {
+    function closeMenu() {
         setMenuOpen(false);
     }
 

@@ -1,4 +1,4 @@
-import type { AccountStatus} from "@starknet-react/core";
+import type { AccountStatus } from "@starknet-react/core";
 import { useAccount } from "@starknet-react/core";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
@@ -8,23 +8,24 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 import Disconnected from "~/components/Portfolio/Disconnected";
 import Testnet from "~/components/Portfolio/Testnet";
 import type { Network } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
 import { ipfsUrl } from "~/utils/utils";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import NewsletterDialog from "~/components/Newsletter/Newsletter";
+import { WalletContext } from "~/hooks/wallet-context";
 
 export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
+    request,
+}) => {
     try {
         const cookieHeader = request.headers.get("Cookie");
         const cookie = (await userPrefs.parse(cookieHeader)) || {};
 
         const selectedNetwork = await db.network.findFirst({
             where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
+                ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }),
             }
         });
         return json(selectedNetwork);
@@ -97,7 +98,7 @@ function LoaderBadges() {
     )
 }
 
-function ProjectsList({projects}: {projects: any[]}) {
+function ProjectsList({ projects }: { projects: any[] }) {
     const [isOpen, setIsOpen] = useState(false);
 
     if (projects.length === 0) {
@@ -134,7 +135,7 @@ function ProjectsList({projects}: {projects: any[]}) {
     )
 }
 
-function BadgesList({badges}: {badges: any[]}) {
+function BadgesList({ badges }: { badges: any[] }) {
     if (badges.length === 0) {
         return (
             <div className="ml-2 mt-2">
@@ -156,7 +157,7 @@ function BadgesList({badges}: {badges: any[]}) {
     )
 }
 
-function PortfolioState({status, selectedNetwork, state, projects, badges}: {status: AccountStatus, selectedNetwork: Network, state: string, projects: any[], badges: any[] }) {
+function PortfolioState({ status, selectedNetwork, state, projects, badges }: { status: AccountStatus, selectedNetwork: Network, state: string, projects: any[], badges: any[] }) {
 
     if (status === 'disconnected') {
         return <Disconnected />
@@ -169,16 +170,16 @@ function PortfolioState({status, selectedNetwork, state, projects, badges}: {sta
     return (
         <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
-            {state === 'loading' && <LoaderProjects /> }
+            {state === 'loading' && <LoaderProjects />}
             {state !== 'loading' && <ProjectsList projects={projects} />}
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl mt-16">My badges</div>
-            {state === 'loading' && <LoaderBadges /> }
+            {state === 'loading' && <LoaderBadges />}
             {state !== 'loading' && <BadgesList badges={badges} />}
         </div>
     )
 }
 
-function KPI({title, value}: {title: string, value: string}) {
+function KPI({ title, value }: { title: string, value: string }) {
     return (
         <div className="flex flex-col items-start justify-start text-neutral-100 font-trash">
             <h1 className="font-bold uppercase text-xs md:text-sm lg:text-lg">{title}</h1>
@@ -189,15 +190,16 @@ function KPI({title, value}: {title: string, value: string}) {
 
 
 export default function Portfolio() {
-    const { status, address } = useAccount();
     const selectedNetwork = useLoaderData();
     const [investedAmount, setInvestedAmount] = useState(0);
     const [investedProjects, setInvestedProjects] = useState([] as any);
     const [collectedBadges, setCollectedBadges] = useState([] as any);
     const [numberOfProjects, setNumberOfProjects] = useState(0);
     const [numberOfNFT, setNumberOfNFT] = useState(0);
+    const { connection, status } = useContext(WalletContext);
+    const address = connection?.account.address;
     const fetcher = useFetcher();
-    
+
     useEffect(() => {
         if (address !== undefined && fetcher.data === undefined && fetcher.type === "init") {
             fetcher.load(`/portfolio/load?wallet=${address}`);
@@ -242,5 +244,5 @@ export default function Portfolio() {
             <PortfolioState status={status} selectedNetwork={selectedNetwork} state={fetcher.state} projects={investedProjects} badges={collectedBadges} />
         </div>
     )
-    
+
 }

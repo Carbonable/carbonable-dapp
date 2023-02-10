@@ -1,9 +1,7 @@
-import type { ReactNode} from "react";
-import { lazy} from "react";
-import { Suspense } from "react";
+import { ReactNode, useContext } from "react";
 import { useEffect, useState } from "react";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core';
+import { useContract } from '@starknet-react/core';
 import ErrorMessage from "./ErrorMessage";
 import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
@@ -11,14 +9,15 @@ import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 import type { Abi } from "starknet";
 import type { Badge, BadgeContract } from "@prisma/client";
 import { IPFS_GATEWAY } from "~/utils/links";
-import ClientOnly from "../ClientOnly";
+import { WalletContext } from "~/hooks/wallet-context";
+import { useExecute } from "~/hooks/use-starknet-functions";
 
 interface Signature {
     low: string,
     high: string
 }
 
-export default function Carousel({badges, contract}: {badges: Badge[], contract: BadgeContract}) {
+export default function Carousel({ badges, contract }: { badges: Badge[], contract: BadgeContract }) {
     const minterContractAddress = contract?.minter;
     const badgeContractAddress = contract?.badge;
 
@@ -26,19 +25,19 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     const [badgeType, setBadgeType] = useState(0);
     const [menu, setMenu] = useState<ReactNode | null>(null);
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
-    const { account, address } = useAccount();
-    let [isOpen, setIsOpen] = useState(false);
+    const { connection } = useContext(WalletContext);
+    const account = connection?.account;
+    const address = account?.address;
 
-    let ConnectDialog = lazy(() => import("~/components/Connect/ConnectDialog"));
-
-    const { execute } = useStarknetExecute({ 
+    const { execute } = useExecute({
+        account: connection,
         calls: {
             contractAddress: minterContractAddress,
             entrypoint: 'claim',
             calldata: [signature.low, signature.high, badgeType]
-        }
-    })
-    const { contract:badgeContract } = useContract({
+        },
+    });
+    const { contract: badgeContract } = useContract({
         address: badgeContractAddress,
         abi: CarbonableBadgeABI as Abi
     })
@@ -81,12 +80,11 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     const handleMint = async (badge: any) => {
         setMenu(<LoadingScreen />)
 
-        if (!badgeContract){
+        if (!badgeContract) {
             return setMenu(null);
         }
         if (!account) {
-           setIsOpen(true);
-           return setMenu(null);
+            return setMenu(null);
         }
         // Check if the user has already minted the badge
         const balance = parseInt((await badgeContract.functions.balanceOf(address, [badge.token_id, 0])).balance.low);
@@ -110,16 +108,16 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                     {minterContractAddress && badges.map((badge: Badge, index: number) => (
                         <div key={`badge_${index}`} className="text-center">
                             <div className="relative px-2 flex justify-center items-center outline-0 my-2">
-                                <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"}   />
-                                { (badge.mintable && index === activeSlide ) &&
-                                    <div className="opacity-0 hover:opacity-100 absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg"> 
+                                <img alt={`Carbonable Badge ${index}`} onMouseOver={() => handleClick(index)} src={IPFS_GATEWAY + badge.image} className={index === activeSlide ? "rounded-lg w-full h-40 z-0" : "rounded-lg w-full h-40 z-0"} />
+                                {(badge.mintable && index === activeSlide) &&
+                                    <div className="opacity-0 hover:opacity-100 absolute h-full bg-green min-w-fit z-20 uppercase font-inter font-bold text-black w-11/12 py-2 px-2 top-0 text-[8px] md:text-xs lg:px-3 rounded-lg">
                                         <div className="grid grid-flow-row h-full items-stretch">
-                                            <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p> 
+                                            <p className="font-trash font-bold text-3xl self-start">{badge.name1} <br /></p>
                                             <p className="font-americana font-thin text-2xl self-start">{badge.name2}</p>
                                             <BadgeMint className=" place-self-center self-end w-28" onClick={() => handleMint(badge)}>
                                                 Mint SBT
                                             </BadgeMint>
-                                        </div> 
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -129,11 +127,6 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                 </div>
             </div>
             {menu}
-            <ClientOnly>
-                <Suspense fallback="">
-                    <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
-                </Suspense>
-            </ClientOnly>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import type { Project } from "@prisma/client";
-import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
-import { Fragment, lazy, Suspense, useEffect, useState } from "react";
+import { useConnectors, useTransactionReceipt } from "@starknet-react/core";
+import { Fragment, useCallback, useContext, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { simplifyAddress } from "~/utils/utils";
 import { number } from "starknet";
@@ -8,12 +8,11 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
-import ClientOnly from "~/components/ClientOnly";
+import { WalletContext } from "~/hooks/wallet-context";
+import { useExecute } from "~/hooks/use-starknet-functions";
 
 export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: { isOpen: boolean, setIsOpen: any, txHash: string, network: string }) {
-    const handleClose = () => {
-        setIsOpen(false);
-    }
+    const handleClose = useCallback(() => setIsOpen(false), [setIsOpen]);
 
     let starkscanUrl = STARKSCAN_MAINNET;
 
@@ -72,8 +71,9 @@ export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: { isOp
 
 export default function Mint({ project, priceToDisplay, whitelist, refreshProjectTotalSupply, refreshProjectReservedSupplyForMint, network }:
     { project: Project, priceToDisplay: number, whitelist: any, refreshProjectTotalSupply: () => void, refreshProjectReservedSupplyForMint: () => void, network: string }) {
-    const { address, status } = useAccount();
-    const { connect, available } = useConnectors();
+    const { connect, connection, status } = useContext(WalletContext);
+    const address = connection?.account.address;
+    const { available } = useConnectors();
 
     const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
     const isWhitelisted = !project.publicSaleOpen && whitelistInfo ? true : false;
@@ -85,9 +85,8 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
     let [isConnectOpen, setIsConnectOpen] = useState(false);
     let [isTxOpen, setIsTxOpen] = useState(false);
 
-    let ConnectDialog = lazy(() => import("~/components/Connect/ConnectDialog"));
 
-    const handleAmountChange = (e: any) => {
+    const handleAmountChange = useCallback((e: any) => {
 
         if (isNaN(e.target.value) || e.target.value < 0) {
             setAmount(1);
@@ -96,7 +95,7 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
 
         const max = isWhitelisted ? parseInt(whitelistInfo.quantity) : project.maxBuyPerTx;
         setAmount(e.target.value > max ? max : isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value));
-    }
+    }, [setAmount, isWhitelisted, whitelistInfo]);
 
     /**
      * 
@@ -129,41 +128,30 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
         },
     ];
 
-    const { execute, data: dataExecute } = useStarknetExecute({
-        calls,
-        metadata: {
+
+    const { execute, data: dataExecute } = useExecute({
+        account: connection, calls, metadata: {
             method: 'Approve and buy tokens',
             message: 'Approve and buy tokens',
         }
     });
 
-    const connectAndExecute = () => {
+    const connectAndExecute = useCallback(async () => {
         if (status === "connected") {
             execute();
             return;
         }
 
         if (available.length === 1) {
-            connect(available[0]);
+            await connect();
             execute();
             return;
         }
 
         setIsConnectOpen(true);
-    }
+    }, [setIsConnectOpen, connect])
 
-    const connectWallet = () => {
-        if (available.length === 1) {
-            connect(available[0]);
-            return;
-        }
-
-        setIsConnectOpen(true);
-    }
-
-    useEffect(() => {
-        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
-    }, [dataExecute])
+    useEffect(() => setTxHash(dataExecute ? dataExecute.transaction_hash : ""), [dataExecute])
 
     useEffect(() => {
         if (dataTx?.status === TxStatus.RECEIVED) {
@@ -184,18 +172,13 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
                 </div>
                 <div className="flex flex-col w-full">
                     {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={canBuy ? connectAndExecute : null}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.paymentTokenSymbol}</GreenButton>}
-                    {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
+                    {status === "disconnected" && <GreenButton className="w-full" onClick={connect}>Connect wallet</GreenButton>}
                 </div>
             </div>
             {status === "connected" && !isWhitelisted && !project.publicSaleOpen && <div className="w-full mt-2 bg-blue-dark text-sm text-neutral-100 rounded-full py-1 px-3 flex flex-nowrap items-center">
                 <InformationCircleIcon className="w-6 mr-2" />
                 You are not whitelisted
             </div>}
-            <ClientOnly>
-                <Suspense fallback="">
-                    <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
-                </Suspense>
-            </ClientOnly>
 
             <TransactionDialog isOpen={isTxOpen} setIsOpen={setIsTxOpen} txHash={txHash} network={network} />
         </div>
