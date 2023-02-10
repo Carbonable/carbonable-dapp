@@ -1,6 +1,6 @@
 import { useContract, useStarknetCall } from '@starknet-react/core';
 import type { Abi } from 'starknet';
-import { number } from "starknet";
+import { number } from 'starknet';
 
 import MinterAbiTestnet from '../abi/testnet/CarbonableMinter_abi.json';
 import MinterAbiTestnet2 from '../abi/testnet2/CarbonableMinter_abi.json';

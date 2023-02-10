@@ -1,14 +1,14 @@
 import type { Project } from "@prisma/client";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, lazy, Suspense, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
-import { ConnectDialog } from "~/components/Buttons/ConnectButton";
 import { simplifyAddress } from "~/utils/utils";
 import { number } from "starknet";
 import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
+import ClientOnly from "~/components/ClientOnly";
 
 export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: { isOpen: boolean, setIsOpen: any, txHash: string, network: string }) {
     const handleClose = () => {
@@ -84,6 +84,8 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
     const [amount, setAmount] = useState(1);
     let [isConnectOpen, setIsConnectOpen] = useState(false);
     let [isTxOpen, setIsTxOpen] = useState(false);
+
+    let ConnectDialog = lazy(() => import("~/components/Connect/ConnectDialog"));
 
     const handleAmountChange = (e: any) => {
 
@@ -189,7 +191,12 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
                 <InformationCircleIcon className="w-6 mr-2" />
                 You are not whitelisted
             </div>}
-            <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
+            <ClientOnly>
+                <Suspense fallback="">
+                    <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
+                </Suspense>
+            </ClientOnly>
+
             <TransactionDialog isOpen={isTxOpen} setIsOpen={setIsTxOpen} txHash={txHash} network={network} />
         </div>
     );

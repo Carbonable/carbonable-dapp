@@ -1,11 +1,25 @@
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useConnectors } from "@starknet-react/core";
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from "react";
-import { WalletIcon } from "@heroicons/react/24/outline";
+import { Fragment, useEffect, useState } from "react";
+import type { ConnectedStarknetWindowObject } from '@argent/get-starknet';
+import { connect } from '@argent/get-starknet';
 
-export function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
-    const { available, connect } = useConnectors();
+export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
+    const { available } = useConnectors();
+    const [connection, setConnection] = useState<ConnectedStarknetWindowObject | undefined>();
+    console.log(connection)
 
+    useEffect(() => {
+        const connectToStarknet = async () => {
+            const connection = await connect({ modalMode: "neverAsk" }); // try to reconnect to a previously used wallet
+
+            if (connection && connection.isConnected) {
+                setConnection(connection);
+            }
+        };
+        connectToStarknet();
+    }, []);
+    
     const handleClick = (wallet: any) => {
         connect(wallet);
         setIsOpen(false);
@@ -55,6 +69,19 @@ export function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen
                                     <div className="uppercase font-inter mt-2">{wallet.name()}</div>
                                 </div>
                             ))}
+                            <div
+                                onClick={async () => {
+                                    const connection = await connect();
+
+                                    if (connection && connection.isConnected) {
+                                        setConnection(connection);
+                                    }
+                                    }
+                                }
+                                className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5"
+                            >
+                                Connect wallet
+                            </div>
                          </div>
                         { available.length === 0 && 
                             <div className="mt-6 flex items-center justify-center">
@@ -75,35 +102,5 @@ export function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen
                 </div>
             </Dialog>
       </Transition>
-    )
-}
-
-export default function ConnectButton({displayIcon = false}: {displayIcon?: boolean}) {
-    const { connect, available } = useConnectors();
-    const { status } = useAccount();
-    let [isOpen, setIsOpen] = useState(false);
-
-    const handleClick = () => {
-        if (status === "connected") { return; }
-
-
-        if (available.length === 1) {
-            connect(available[0]);
-            return;
-        }
-
-        setIsOpen(true);
-    }
-    return (
-        <>
-            {!displayIcon && <button className="font-inter uppercase rounded-full px-4 py-2 text-sm text-neutal-500 border border-neutral-500 tracking-wide hover:bg-opacityLight-5 md:px-6 md:py-3" onClick = {handleClick}>Connect Wallet</button>}
-            {displayIcon && 
-                <>
-                    <button className="hidden font-inter uppercase rounded-full px-4 py-2 text-sm text-neutal-500 border border-neutral-500 tracking-wide hover:bg-opacityLight-5 md:px-6 md:py-3 md:block" onClick = {handleClick}>Connect Wallet</button>
-                    <WalletIcon className="w-10 border border-neutral-500 text-neutral-100 p-2 rounded-full md:hidden" onClick={handleClick} />
-                </>
-            }
-            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
-        </>
     )
 }

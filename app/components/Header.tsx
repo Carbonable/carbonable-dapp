@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { providers } from "~/utils/blockchain/providers";
 
 import SecondaryButton from "./Buttons/ActionButton";
-import ConnectButton from "./Buttons/ConnectButton";
+import ConnectButton from "./Connect/ConnectButton";
 import Select from "./Filters/Select";
 
 

@@ -1,4 +1,4 @@
-import ConnectButton from "../Buttons/ConnectButton";
+import ConnectButton from "../Connect/ConnectButton";
 
 export default function Disconnected() {
     return (

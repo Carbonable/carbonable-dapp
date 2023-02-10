@@ -5,7 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import { useAccount } from "@starknet-react/core";
 import moment from "moment";
 import { useState } from "react";
-import ConnectButton from "~/components/Buttons/ConnectButton";
+import ConnectButton from "~/components/Connect/ConnectButton";
 import Countdown from "~/components/Countdown/Countdown";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";

@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode} from "react";
+import { lazy} from "react";
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { BadgeMint } from "../Buttons/ActionButton";
 import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core';
@@ -7,9 +9,9 @@ import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
 import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 import type { Abi } from "starknet";
-import { ConnectDialog } from "../Buttons/ConnectButton";
 import type { Badge, BadgeContract } from "@prisma/client";
 import { IPFS_GATEWAY } from "~/utils/links";
+import ClientOnly from "../ClientOnly";
 
 interface Signature {
     low: string,
@@ -26,6 +28,8 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     const [currentTransactionHash, setCurrentTransactionHash] = useState('');
     const { account, address } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
+
+    let ConnectDialog = lazy(() => import("~/components/Connect/ConnectDialog"));
 
     const { execute } = useStarknetExecute({ 
         calls: {
@@ -125,7 +129,11 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
                 </div>
             </div>
             {menu}
-            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ClientOnly>
+                <Suspense fallback="">
+                    <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+                </Suspense>
+            </ClientOnly>
         </div>
     )
 }
