@@ -77,7 +77,7 @@ export default function FarmingPage() {
                 </div>
             </div>
             <div className="relative w-full px-4 py-10 md:py-16 max-w-6xl lg:px-8 mx-auto 2xl:px-0">
-                <div className="pl-4 xl:pl-8">
+                <div className="md:pl-4 xl:pl-8">
                     <div className="font-inter font-semibold uppercase text-neutral-100 text-lg md:text-xl">Carbon credits</div>
                     <div className="flex flex-wrap mt-4 items-start md:mt-8">
                         <div className="w-full grid grid-cols-2 gap-6 md:w-3/12 md:border-r md:border-neutral-300">
