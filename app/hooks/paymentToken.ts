@@ -1,7 +1,6 @@
 import { useContract, useStarknetCall } from '@starknet-react/core';
 import type { Abi } from 'starknet';
-import { decodeShortString } from "starknet/dist/utils/shortString";
-import { number } from "starknet";
+import { number, shortString } from "starknet";
 
 import PaymentTokenAbiTestnet from '../abi/testnet/erc20_abi.json';
 import PaymentTokenAbiTestnet2 from '../abi/testnet2/erc20_abi.json';
@@ -43,5 +42,5 @@ export function usePaymentTokenSymbol(contractAddress: string, network: string):
     const { contract: paymentToken } = usePaymentTokenContract(contractAddress, network);
     const { data, loading, error, refresh } = useStarknetCall({ contract: paymentToken, method: 'symbol', args: [] });
 
-    return { paymentTokenSymbol: data ? decodeShortString(number.toHex(data[0])).toString() : "", errorPaymentTokenSymbol: error, loadingPaymentTokenSymbol: loading, refreshPaymentTokenSymbol: refresh };
+    return { paymentTokenSymbol: data ? shortString.decodeShortString(number.toHex(data[0])).toString() : "", errorPaymentTokenSymbol: error, loadingPaymentTokenSymbol: loading, refreshPaymentTokenSymbol: refresh };
 }

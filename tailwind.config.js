@@ -64,7 +64,9 @@ module.exports = {
         green: "#0AF2AD",
         lightblue: "#AAC6FD",
         grey: "#787675",
-        footerBg: "#272727"
+        footerBg: "#272727",
+        yieldBorder: 'rgba(3, 81, 58, 1)',
+        offsetBorder: 'rgba(51, 69, 102, 1)'
       },
       backgroundImage: {
         'primary': 'linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%)',
@@ -78,7 +80,8 @@ module.exports = {
         'project-info': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
         'project-info-border': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
         'portfolio': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-portfolio.jpeg');",
-        'farming': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.2) 15.27%, rgba(19, 21, 28, 0.2) 46.91%, rgba(31, 33, 40, 0.2) 91.42%), url('/assets/images/backgrounds/bg-farming.jpeg');"
+        'farming': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.2) 15.27%, rgba(19, 21, 28, 0.2) 46.91%, rgba(31, 33, 40, 0.2) 91.42%), url('/assets/images/backgrounds/bg-farming.jpeg');",
+        'farming-footer': "url('/assets/images/backgrounds/bg-farming-footer.png');"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',
