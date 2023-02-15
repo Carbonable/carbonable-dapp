@@ -34,7 +34,7 @@ export default function FarmingAllocation({yieldAmount, offsetAmount, undeposite
                 <div className="w-full col-span-3 md:col-span-2">
                     <FarmingAllocationValue title="Undeposited" value={undepositedAmount} percentage={undepositedPercentage} />
                 </div>
-                <div className="w-full col-span-6 items-center mt-6 text-neutral-200 md:col-span-4 text-right">
+                <div className="w-full col-span-6 items-center mt-6 text-neutral-200 md:col-span-4 text-left md:text-right">
                     <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>
                     <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>
                 </div>
