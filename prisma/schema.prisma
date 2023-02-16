@@ -55,11 +55,6 @@ model Network {
   badgeContract BadgeContract?
 }
 
-model Snapshot {
-  id            String   @id @default(uuid())
-  snapshotDate  DateTime
-} 
-
 model Badge {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())

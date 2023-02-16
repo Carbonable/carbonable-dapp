@@ -2,7 +2,6 @@ import type { Project } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import { useAccount } from "@starknet-react/core";
 import FarmingRepartition from "~/components/Farming/FarmingRepartition";
 import ProjectIdentification from "~/components/Farming/ProjectIdentification";
 import { userPrefs } from "~/cookie";
@@ -49,7 +48,6 @@ export default function FarmingPage() {
     const data = useLoaderData();
     const project: Project = data.project;
     // TODO: Replace with real data
-    const { status } = useAccount();
 
     return (
         <div className="relative w-full">
@@ -57,7 +55,7 @@ export default function FarmingPage() {
                 <div className="max-w-6xl mx-auto pl-4 xl:pl-8">
                     <div className="w-full grid grid-cols-2 gap-4 items-center">
                         <div className="col-span-2 md:col-span-1">
-                            <ProjectIdentification project={project} deposited={undefined} status={status} displayDeposited={false} />
+                            <ProjectIdentification project={project} />
                         </div>
                         <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
                             <FarmingRepartition />

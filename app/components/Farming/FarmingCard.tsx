@@ -2,11 +2,11 @@ import type { Project } from "@prisma/client";
 import { sample } from 'lodash';
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import ProjectIdentification from "./ProjectIdentification";
 
 export default function FarmingCard({project}: {project: Project}) {
     // TODO: Replace with real data
     const [deposited, setDeposited] = useState(sample([false]));
+    const [type, setType] = useState(sample(['blue', 'green', 'orange']));
     const { status } = useAccount();
     
     useEffect(() => {
@@ -17,35 +17,21 @@ export default function FarmingCard({project}: {project: Project}) {
     
 
     return (
-        <div className={`relative bg-opacityLight-5 rounded-3xl p-6 border w-full mb-4 cursor-pointer ${!deposited && status === 'connected' ? "border-undepositedBorder" : "border-neutral-700"} hover:border-neutral-400`}>
-            <div className={`hover:before:rounded-3xl hover:before:bg-brand-background hover:before:opacity-10 hover:before:bg-cover hover:before:absolute hover:before:top-0 hover:before:left-0 hover:before:right-0 hover:before:bottom-0 hover:before:content-['']`}>
-                <ProjectIdentification project={project} deposited={deposited} status={status} displayDeposited={true} />
-                <div className="flex items-center justify-start w-full mt-8 font-inter uppercase">
-                    <div className="w-5/12">
-                        <div className="text-neutral-300 text-xs lg:text-base">Total removal</div>
-                        <div className="text-neutral-100 font-bold lg:text-lg xl:text-xl">12.4T</div>
-                    </div>
-                    <div className="w-4/12">
-                        <div className="text-neutral-300 text-xs lg:text-base">TLV</div>
-                        <div className="text-neutral-100 font-bold lg:text-lg xl:text-xl">$182.5k</div>
-                    </div>
-                    <div className="w-3/12">
-                        <div className="text-neutral-300 text-xs lg:text-base">APR</div>
-                        <div className="text-neutral-100 font-bold lg:text-lg xl:text-xl">23.6%</div>
+        <div className={`relative rounded-3xl p-[1px] ${type === 'blue' ? "bg-farming-border-blue" : ""} ${type === 'green' ? "bg-farming-border-green" : ""} ${type === 'orange' ? "bg-farming-border-orange" : ""}`}>
+            <div className="w-full bg-neutral-800 rounded-3xl">
+                <div className={`relative rounded-3xl p-6 ${type === 'blue' ? "bg-farming-header-blue" : ""} ${type === 'green' ? "bg-farming-header-green" : ""} ${type === 'orange' ? "bg-farming-header-orange" : ""}`}>
+                    <div className="grid grid-cols-2">
+                        <div className="text-left">
+                            <div className="font-inter text-neutral-100">My stake</div>
+                            <div className="font-inter text-neutral-300 mt-1">$0</div>
+                        </div>
+                        <div className="text-right">
+                            <div className="font-inter text-neutral-100">Farming APR</div>
+                            <div className="font-inter text-neutral-300 mt-1">23.6%</div>
+                        </div>
                     </div>
                 </div>
-                { status === 'connected' && <div className="w-full mx-auto py-1 px-4 font-inter flex bg-opacityLight-5 rounded-xl mt-8 mb-2 justify-center items-center border border-neutral-600 text-xs lg:text-sm">
-                    <div className="">
-                        <span className="italic text-neutral-300">My stake</span>
-                        <span className="font-bold text-neutral-100 ml-3">$2500</span>
-                    </div>
-                    <div className="mx-4 lg:mx-6 text-neutral-300 text-xl font-thin pb-1">|</div>
-                    <div className="">
-                        <span className="italic text-neutral-300">Claim</span>
-                        <span className="font-bold text-neutral-100 ml-3">$200.5</span>
-                        <span className="font-bold text-neutral-100 ml-2">t0.06</span>
-                    </div>
-                </div> }
+                <div className={`w-full h-[1px] ${type === 'blue' ? "bg-farming-separator-blue" : ""} ${type === 'green' ? "bg-farming-separator-green" : ""} ${type === 'orange' ? "bg-farming-separator-orange" : ""}`}></div>
             </div>
         </div>
     )
