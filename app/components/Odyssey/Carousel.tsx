@@ -7,9 +7,9 @@ import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
 import CarbonableBadgeABI from "../../abi/testnet/CarbonableBadge_abi.json";
 import type { Abi } from "starknet";
-import { ConnectDialog } from "../Buttons/ConnectButton";
 import type { Badge, BadgeContract } from "@prisma/client";
 import { IPFS_GATEWAY } from "~/utils/links";
+import ConnectDialog from "../Connection/ConnectDialog";
 
 interface Signature {
     low: string,

@@ -53,7 +53,8 @@ module.exports = {
           light: '#D9CC96'
         },
         opacityLight: {
-          5: 'rgba(208, 209, 214, 0.05)'
+          5: 'rgba(208, 209, 214, 0.05)',
+          10: 'rgba(208, 209, 214, 0.1)',
         },
         opacityDark: {
           40: 'rgba(11, 13, 19, 0.4)'
@@ -66,7 +67,8 @@ module.exports = {
         grey: "#787675",
         footerBg: "#272727",
         yieldBorder: 'rgba(3, 81, 58, 1)',
-        offsetBorder: 'rgba(51, 69, 102, 1)'
+        offsetBorder: 'rgba(51, 69, 102, 1)',
+        darkRed: '#AD5C61',
       },
       backgroundImage: {
         'primary': 'linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%)',
@@ -82,21 +84,23 @@ module.exports = {
         'portfolio': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-portfolio.jpeg');",
         'farming': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-farming.jpeg');",
         'farming-footer': "url('/assets/images/backgrounds/bg-farming-footer.png');",
-        'farming-border-green': 'linear-gradient(rgba(125, 248, 211, 0.2), rgba(9, 225, 161, 0.2), rgba(9, 225, 161, 0))',
-        'farming-border-blue': 'linear-gradient(rgba(107, 154, 224, 0.5), rgba(85, 153, 255, 0))',
-        'farming-border-orange': 'linear-gradient(rgba(208, 151, 64, 0.4), rgba(255, 187, 85, 0))',
+        'farming-border-green': 'linear-gradient(rgba(125, 248, 211, 0.2), rgba(9, 225, 161, 0.2), rgba(9, 225, 161, 0.03))',
+        'farming-border-blue': 'linear-gradient(rgba(107, 154, 224, 0.5), rgba(85, 153, 255, 0.03))',
+        'farming-border-orange': 'linear-gradient(rgba(208, 151, 64, 0.4), rgba(255, 187, 85, 0.03))',
         'farming-header-green': 'linear-gradient(180deg, rgba(125, 248, 211, 0.2) -48.56%, rgba(9, 225, 161, 0.2) -48.55%, rgba(9, 225, 161, 0.02) 84.2%);',
         'farming-header-blue': 'linear-gradient(357.63deg, rgba(85, 153, 255, 0.03) 20.41%, rgba(98, 126, 234, 0.3) 141.61%);',
         'farming-header-orange': 'linear-gradient(357.33deg, rgba(255, 187, 85, 0.03) 23.28%, rgba(255, 187, 85, 0.3) 141.15%);',
         'farming-separator-green': 'linear-gradient(90deg, rgba(9, 225, 161, 0.02), rgba(125, 248, 211, 0.4), rgba(9, 225, 161, 0.02));',
         'farming-separator-blue': 'linear-gradient(90deg, rgba(85, 153, 255, 0.025), rgba(141, 165, 255, 0.5), rgba(85, 153, 255, 0.025));',
         'farming-separator-orange': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
+        'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',
         'light-80': 'rgba(11, 13, 19, 0.8);',
         'dark-40': 'rgba(11, 13, 19, 0.4);',
         'undeposited': '#292A2B',
+        'farming-card-bg': '#15171e',
       }
     }
   },
