@@ -2,13 +2,13 @@ import type { Project } from "@prisma/client";
 import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
 import { Fragment, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
-import { ConnectDialog } from "~/components/Buttons/ConnectButton";
 import { simplifyAddress } from "~/utils/utils";
 import { number } from "starknet";
 import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
+import ConnectDialog from "~/components/Connection/ConnectDialog";
 
 export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: { isOpen: boolean, setIsOpen: any, txHash: string, network: string }) {
     const handleClose = () => {
@@ -136,6 +136,8 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
     });
 
     const connectAndExecute = () => {
+        if (!canBuy) { return };
+        
         if (status === "connected") {
             execute();
             return;
@@ -181,7 +183,7 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
                     <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
                 </div>
                 <div className="flex flex-col w-full">
-                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={canBuy ? connectAndExecute : null}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.paymentTokenSymbol}</GreenButton>}
+                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.paymentTokenSymbol}</GreenButton>}
                     {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
                 </div>
             </div>

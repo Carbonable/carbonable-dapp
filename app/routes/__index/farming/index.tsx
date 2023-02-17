@@ -90,13 +90,11 @@ export default function FarmingIndex() {
                         })
                     }
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-start mt-4 gap-4">
+                <div className="flex flex-wrap justify-start mt-8 gap-8 w-full">
                 {
                     projects.map((project, index) => {
                         return (
-                            <NavLink key={index} to={`/farming/${project.slug}`} className="w-full">
-                                <FarmingCard project={project} />
-                            </NavLink>
+                            <FarmingCard project={project} key={index} />
                         )})
                     }
                 </div>
