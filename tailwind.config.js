@@ -42,15 +42,15 @@ module.exports = {
           dark: '#087353',
           light: '#A9FCE4'
         },
-        orange: {
+        bue: {
           DEFAULT: '#CFBD70',
           dark: '#877B44',
-          light: '#C5D7FA'
+          light: '#D9CC96'
         },
         blue: {
           DEFAULT: '#9EBAF0',
           dark: '#334566',
-          light: '#D9CC96'
+          light: '#C5D7FA'
         },
         opacityLight: {
           5: 'rgba(208, 209, 214, 0.05)',

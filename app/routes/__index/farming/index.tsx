@@ -1,11 +1,14 @@
-import type { Project } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useAccount } from "@starknet-react/core";
+import { add } from "lodash";
+import { useEffect, useState } from "react";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
 import { userPrefs } from "~/cookie";
 import { db } from "~/utils/db.server";
+import { shortenNumber } from "~/utils/utils";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -20,17 +23,9 @@ export const loader: LoaderFunction = async ({
             }
         });
 
-        const allProjects = await db.project.findMany({
-            where: {
-                isDisplay: true,
-                network: selectedNetwork || undefined, 
-            },  
-            orderBy: [
-              {
-                saleDate: 'desc',
-              }
-            ]});
-        return json([allProjects]);
+        const allFarms = await fetch(`${process.env.INDEXER_URL}/farming/list`, {});
+        const allFarmsJson = await allFarms.json();
+        return json([allFarmsJson]);
     } catch (e) {
         
         return json({});
@@ -39,7 +34,13 @@ export const loader: LoaderFunction = async ({
 
 export default function FarmingIndex() {
     const loaderData = useLoaderData();
-    const projects: Project[] = loaderData[0];
+    const projects: any[] = loaderData[0].data;
+    const connectedGlobalFetcher = useFetcher();
+    const { address, status } = useAccount();
+    const [myFarmingAssets, setMyFarmingAssets] = useState('-');
+    const [claimableAssets, setClaimableAssets] = useState('-');
+    const [releasableAssets, setReleasableAssets] = useState('-');
+    console.log(projects)
 
     const filterButtons = [
         {
@@ -68,16 +69,37 @@ export default function FarmingIndex() {
         console.log(filter);
     }
 
+    useEffect(() => {
+        if (connectedGlobalFetcher.data === undefined && connectedGlobalFetcher.type === "init" && status === "connected") {
+            console.log(address);
+            connectedGlobalFetcher.load(`/farming/list/global?wallet=${address}`);
+        }
+
+        if (connectedGlobalFetcher.data !== undefined && status === "connected") {
+            if(connectedGlobalFetcher.data === 404 || connectedGlobalFetcher.data.length === 0) {
+                setMyFarmingAssets('0');
+                setClaimableAssets('0');
+                setReleasableAssets('0');
+                return;
+            }
+
+            const data = connectedGlobalFetcher.data.data;
+            isNaN(data?.total_deposited) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_deposited)));
+            isNaN(data?.total_claimable) ? setClaimableAssets('0') : setClaimableAssets(shortenNumber(parseFloat(data?.total_claimable)));
+            isNaN(data?.total_releasable) ? setReleasableAssets('0') : setReleasableAssets(shortenNumber(parseFloat(data?.total_releasable)));
+        }
+    }, [connectedGlobalFetcher, address, status]);
+
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-farming bg-cover bg-[50%_22%] rounded-3xl p-8 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
                 <div className="flex items-start justify-center flex-wrap w-full md:w-5/12 md:justify-start">
                     <div className="font-trash uppercase w-full lg:text-lg text-center md:text-left">My farming assets</div>
-                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold">$0</div>
+                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold"><span className='mr-2 text-3xl'>$</span>{myFarmingAssets}</div>
                 </div>
                 <div className="flex items-start justify-center flex-wrap w-full mt-8 md:w-5/12 md:mt-0 md:justify-start">
                     <div className="font-trash uppercase w-full lg:text-lg text-center md:text-left">Claimable assets</div>
-                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold flex items-center">$0<span className="font-inter font-extralight text-lg px-4">|</span>t0</div>
+                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold flex items-center"><span className='mr-2 text-3xl'>$</span>{claimableAssets}<span className="font-inter font-extralight text-lg px-4">|</span><span className='mr-2 text-3xl'>t</span>{releasableAssets}</div>
                 </div>
                 <img src="/assets/images/common/logo-grey.svg" alt="Carbonable logo grey" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>
