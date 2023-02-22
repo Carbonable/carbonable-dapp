@@ -1,4 +1,3 @@
-import { sample } from 'lodash';
 import { useEffect, useState } from "react";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import { IPFS_GATEWAY } from "~/utils/links";
@@ -103,15 +102,15 @@ export default function FarmingCard({project}: {project: any}) {
                                 <div>Your Offset Rewards</div>
                             </div>
                             <div className="text-right">
-                                <div><span className={`mr-[2px] ${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}>$</span>{yieldRewards}</div>
-                                <div><span className={`mr-[2px] ${offsetRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}>t</span>{offsetRewards}</div>
+                                <div className={`${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>$</span>{yieldRewards}</div>
+                                <div className={`${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>t</span>{offsetRewards}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
-                <ActionButtons minAbsorbtionToClaim={minAbsorbtionToClaim} offsetRewards={offsetRewards} />
+                <ActionButtons minAbsorbtionToClaim={minAbsorbtionToClaim} offsetRewards={offsetRewards} yieldRewards={yieldRewards} />
             </div>
         </div>
     )
@@ -151,11 +150,12 @@ function Tag({text, color, count}: {text: string, color: string, count?: number}
     )
 }
 
-function ActionButtons({minAbsorbtionToClaim, offsetRewards}: {minAbsorbtionToClaim: number, offsetRewards: string}) {
+function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards}: {minAbsorbtionToClaim: number, offsetRewards: string, yieldRewards: string}) {
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
-    const canClaim = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
+    const canClaimOffset = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
+    const canClaimYield = parseFloat(offsetRewards) > 0;
 
     const handleClick = () => {
         if (status === "connected") { return; }
@@ -172,9 +172,10 @@ function ActionButtons({minAbsorbtionToClaim, offsetRewards}: {minAbsorbtionToCl
     if (status === "connected") {
         return (
             <div className="flex gap-x-2">
-                <FarmingButton className="w-1/2 rounded-xl">Claim Yield</FarmingButton>
-                {canClaim && <FarmingButton className="w-1/2 rounded-xl">Claim Offset</FarmingButton>}
-                {!canClaim && <FarmingButton className="w-1/2 rounded-xl cursor-not-allowed">Claim Offset</FarmingButton>}
+                {canClaimYield && <FarmingButton className="w-1/2 rounded-xl">Claim Yield</FarmingButton>}
+                {!canClaimYield && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield}>Claim Yield</FarmingButton>}
+                {canClaimOffset && <FarmingButton className="w-1/2 rounded-xl">Claim Offset</FarmingButton>}
+                {!canClaimOffset && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset}>Claim Offset</FarmingButton>}
             </div>
         )
     }

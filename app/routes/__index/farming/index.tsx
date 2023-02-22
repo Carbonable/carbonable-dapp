@@ -40,7 +40,6 @@ export default function FarmingIndex() {
     const [myFarmingAssets, setMyFarmingAssets] = useState('-');
     const [claimableAssets, setClaimableAssets] = useState('-');
     const [releasableAssets, setReleasableAssets] = useState('-');
-    console.log(projects)
 
     const filterButtons = [
         {
@@ -71,7 +70,6 @@ export default function FarmingIndex() {
 
     useEffect(() => {
         if (connectedGlobalFetcher.data === undefined && connectedGlobalFetcher.type === "init" && status === "connected") {
-            console.log(address);
             connectedGlobalFetcher.load(`/farming/list/global?wallet=${address}`);
         }
 
