@@ -1,7 +1,18 @@
 /** @type {import('tailwindcss').Config} */ 
 module.exports = {
   content: [
-    "./app/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx,js}",
+  ],
+  safelist: [
+    'bg-farming-border-green',
+    'bg-farming-border-blue',
+    'bg-farming-border-brown',
+    'bg-farming-header-green',
+    'bg-farming-header-blue',
+    'bg-farming-header-brown',
+    'bg-farming-separator-green',
+    'bg-farming-separator-blue',
+    'bg-farming-separator-brown',
   ],
   theme: {
     extend: {
@@ -42,7 +53,7 @@ module.exports = {
           dark: '#087353',
           light: '#A9FCE4'
         },
-        bue: {
+        orange: {
           DEFAULT: '#CFBD70',
           dark: '#877B44',
           light: '#D9CC96'
@@ -86,13 +97,13 @@ module.exports = {
         'farming-footer': "url('/assets/images/backgrounds/bg-farming-footer.png');",
         'farming-border-green': 'linear-gradient(rgba(125, 248, 211, 0.2), rgba(9, 225, 161, 0.2), rgba(9, 225, 161, 0.03))',
         'farming-border-blue': 'linear-gradient(rgba(107, 154, 224, 0.5), rgba(85, 153, 255, 0.03))',
-        'farming-border-orange': 'linear-gradient(rgba(208, 151, 64, 0.4), rgba(255, 187, 85, 0.03))',
+        'farming-border-brown': 'linear-gradient(rgba(208, 151, 64, 0.4), rgba(255, 187, 85, 0.03))',
         'farming-header-green': 'linear-gradient(180deg, rgba(125, 248, 211, 0.2) -48.56%, rgba(9, 225, 161, 0.2) -48.55%, rgba(9, 225, 161, 0.02) 84.2%);',
         'farming-header-blue': 'linear-gradient(357.63deg, rgba(85, 153, 255, 0.03) 20.41%, rgba(98, 126, 234, 0.3) 141.61%);',
-        'farming-header-orange': 'linear-gradient(357.33deg, rgba(255, 187, 85, 0.03) 23.28%, rgba(255, 187, 85, 0.3) 141.15%);',
+        'farming-header-brown': 'linear-gradient(357.33deg, rgba(255, 187, 85, 0.03) 23.28%, rgba(255, 187, 85, 0.3) 141.15%);',
         'farming-separator-green': 'linear-gradient(90deg, rgba(9, 225, 161, 0.02), rgba(125, 248, 211, 0.4), rgba(9, 225, 161, 0.02));',
         'farming-separator-blue': 'linear-gradient(90deg, rgba(85, 153, 255, 0.025), rgba(141, 165, 255, 0.5), rgba(85, 153, 255, 0.025));',
-        'farming-separator-orange': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
+        'farming-separator-brown': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
         'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');"
       },
       backgroundColor: {

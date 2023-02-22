@@ -5,10 +5,16 @@ import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
 import { ipfsUrl, shortenNumber } from "~/utils/utils";
-import { Color, FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
+import type { Color} from '~/utils/blockchain/traits';
+import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
+
+const enum CardLocation {
+    HEADER = "header",
+    BORDER = "border",
+    SEPARATOR = "separator",
+}
 
 export default function FarmingCard({project}: {project: any}) {
-    // TODO: Replace with real data
     const color = getTraitValue(project.Uri.data.attributes, Traits.COLOR);
     const farmStatus = getTraitValue(project.Uri.data.attributes, Traits.STATUS);
     const { status, address } = useAccount();
@@ -62,10 +68,10 @@ export default function FarmingCard({project}: {project: any}) {
     }, [connectedUserFetcher, address, status, project.slug]);
 
     return (
-        <div className={`relative rounded-3xl p-[1px] max-w-md min-w-[350px] ${color === Color.BLUE ? "bg-farming-border-blue" : ""} ${color === Color.GREEN ? "bg-farming-border-green" : ""} ${color === Color.BROWN ? "bg-farming-border-orange" : ""} hover:brightness-[108%]`}>
+        <div className={`relative rounded-3xl p-[1px] max-w-md min-w-[350px] ${printFarmingColorClass(color, CardLocation.BORDER)} hover:brightness-[108%]`}>
             <NavLink to={`/farming/${project.slug}`} className="w-full">
                 <div className="w-full bg-neutral-800 rounded-t-3xl">
-                    <div className={`relative rounded-t-3xl p-6 ${color === Color.BLUE ? "bg-farming-header-blue" : ""} ${color === Color.GREEN ? "bg-farming-header-green" : ""} ${color === Color.BROWN ? "bg-farming-header-orange" : ""}`}>
+                    <div className={`relative rounded-t-3xl p-6 ${printFarmingColorClass(color, CardLocation.HEADER)}`}>
                         <div className="grid grid-cols-2">
                             <div className="text-left">
                                 <div className="font-inter text-neutral-100">My stake</div>
@@ -77,7 +83,7 @@ export default function FarmingCard({project}: {project: any}) {
                             </div>
                         </div>
                     </div>
-                    <div className={`w-full h-[1px] ${color === Color.BLUE ? "bg-farming-separator-blue" : ""} ${color === Color.GREEN ? "bg-farming-separator-green" : ""} ${color === Color.BROWN ? "bg-farming-separator-orange" : ""}`}></div>
+                    <div className={`w-full h-[1px] ${printFarmingColorClass(color, CardLocation.SEPARATOR)}`}></div>
                     <div className="relative text-center p-4 bg-farming-card-bg">
                         <img src={IPFS_GATEWAY + ipfsUrl(project.Uri.data.image)} alt={`${project.slug} NFT card`} className="w-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50" />
                         <div className="font-inter font-medium text-neutral-100 text-lg pt-8">
@@ -114,6 +120,17 @@ export default function FarmingCard({project}: {project: any}) {
             </div>
         </div>
     )
+}
+
+function printFarmingColorClass(color: Color, location: CardLocation) {
+    switch(location) {
+        case CardLocation.HEADER:
+            return `bg-farming-header-${color.toLowerCase()}`;
+        case CardLocation.BORDER:
+            return `bg-farming-border-${color.toLowerCase()}`;
+        case CardLocation.SEPARATOR:
+            return `bg-farming-separator-${color.toLowerCase()}`;
+    }
 }
 
 function FarmStatusComponent({status}: {status: string}) {
