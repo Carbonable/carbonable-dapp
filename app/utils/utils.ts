@@ -22,7 +22,8 @@ export function getErrorMessage(error: unknown) {
  * @param {number} number
  * @returns {string} Shorten value
  */
-export function shortenNumber(number: number): string {
+export function shortenNumber(number: number | undefined): string {
+    if (undefined === number) { return '-'; }
     return Intl.NumberFormat('en-US', {
         notation: "compact",
         maximumFractionDigits: 2

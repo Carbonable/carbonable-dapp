@@ -1,22 +1,31 @@
+import { useEffect, useState } from "react";
 import SecondaryButton from "../Buttons/ActionButton";
 
-export default function FarmingAllocation({yieldAmount, offsetAmount, undepositedAmount, handleDeposit, handleWithdraw}: {yieldAmount: number, offsetAmount: number, undepositedAmount: number, handleDeposit: () => void, handleWithdraw: () => void}) {
-    const FarmingAllocationValue = ({title, value, percentage}: {title: string, value: number, percentage?: string}) => (
+export default function FarmingAllocation({yieldAmount, offsetAmount, undepositedAmount, total, handleDeposit, handleWithdraw}: {yieldAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, handleDeposit: () => void, handleWithdraw: () => void}) {
+    const [yieldPercentage, setYieldPercentage] = useState<string | undefined>(undefined);
+    const [offsetPercentage, setOffsetPercentage] = useState<string | undefined>(undefined);
+    const [undepositedPercentage, setUndepositedPercentage] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        if (total === undefined || total === 0 || yieldAmount === undefined || offsetAmount === undefined || undepositedAmount === undefined) { return; }
+
+        setYieldPercentage(`${((yieldAmount / total) * 100).toFixed(0)}%`);
+        setOffsetPercentage(`${((offsetAmount / total) * 100).toFixed(0)}%`);
+        setUndepositedPercentage(`${((undepositedAmount / total) * 100).toFixed(0)}%`);
+
+    }, [yieldAmount, offsetAmount, undepositedAmount, total]);
+    
+    const FarmingAllocationValue = ({title, value, percentage}: {title: string, value: number | undefined, percentage?: string}) => (
         <div className="flex flex-col items-left">
             <div className={`font-inter font-light text-neutral-300 uppercase text-sm md:text-base"`}>{title}</div>
             <div className="mt-2">
                 <span className={`font-trash font-extrabold ${value === 0 ? "text-neutral-200" : "text-neutral-100"} text-lg md:text-xl`}>
-                    {value}
-                    {percentage && <span className={`font-americana font-thin text-neutral-300 uppercase ml-2 md:text-lg mr-2`}>({percentage})</span>}
+                    {value !== undefined ? value : '-'}
+                    {percentage !== undefined && <span className={`font-americana font-thin text-neutral-300 uppercase ml-2 md:text-lg mr-2`}>({percentage})</span>}
                 </span>
             </div>
         </div>
     )
-
-    const total = yieldAmount + offsetAmount + undepositedAmount;
-    const yieldPercentage = `${((yieldAmount / total) * 100).toFixed(0)}%`;
-    const OffsetPercentage = `${((offsetAmount / total) * 100).toFixed(0)}%`;
-    const undepositedPercentage = `${((undepositedAmount / total) * 100).toFixed(0)}%`;
     
     return (
         <div className="w-full rounded-2xl border border-neutral-500 bg-opacityLight-5 p-4 xl:p-8">
@@ -29,14 +38,16 @@ export default function FarmingAllocation({yieldAmount, offsetAmount, undeposite
                     <FarmingAllocationValue title="Yield" value={yieldAmount} percentage={yieldPercentage} />
                 </div>
                 <div className="w-full col-span-3 md:col-span-2">
-                    <FarmingAllocationValue title="Offset" value={offsetAmount} percentage={OffsetPercentage} />
+                    <FarmingAllocationValue title="Offset" value={offsetAmount} percentage={offsetPercentage} />
                 </div>
                 <div className="w-full col-span-3 md:col-span-2">
                     <FarmingAllocationValue title="Undeposited" value={undepositedAmount} percentage={undepositedPercentage} />
                 </div>
                 <div className="w-full col-span-6 items-center mt-6 text-neutral-200 md:col-span-4 text-left md:text-right">
-                    <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>
-                    <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>
+                    {total !== undefined && <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>}
+                    {total === undefined && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
+                    {total !== undefined && total > 0 && <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>}
+                    {(total === undefined || total === 0) && <SecondaryButton className="ml-2 cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Withdraw</SecondaryButton>}
                 </div>
             </div>
         </div>
