@@ -13,8 +13,9 @@ import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
 import { ipfsUrl, shortenNumber } from "~/utils/utils";
+import AssetsManagementDialog, { AssetsManagementContext } from "~/components/Farming/AssetsManagement/Dialog";
 
-interface OverviewProps {
+export interface OverviewProps {
     total_removal: number;
     tvl: number;
     current_apr: number;
@@ -67,17 +68,19 @@ export const loader: LoaderFunction = async ({
 
 export default function FarmingPage() {
     const { project, slug } = useLoaderData();
-    let [isOpen, setIsOpen] = useState(false);
+    const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
     const { status, address } = useAccount();
     const fetcher = useFetcher();
     const [overview, setOverview] = useState<OverviewProps | undefined>(undefined);
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
+    const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
+    const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
 
     useEffect(() => {
-        if (status === "connected" || isOpen) { return; }
+        if (status === "connected" || isConnectDialogOpen) { return; }
 
-        setIsOpen(true);
+        setIsConnectDialogOpen(true);
     }, [status]);
 
     useEffect(() => {
@@ -92,7 +95,28 @@ export default function FarmingPage() {
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.assets_allocation);
         }
+        console.log(fetcher.data)
     }, [fetcher, address, status, slug]);
+
+    const handleClaimYield = async () => {
+        console.log("Claim Yield");
+    }
+
+    const handleClaimOffset = async () => {
+        setContext(AssetsManagementContext.CLAIM);
+        setIsAssetsManagementDialogOpen(true);
+    }
+
+    const handleDeposit = async () => {
+        setContext(AssetsManagementContext.DEPOSIT);
+        setIsAssetsManagementDialogOpen(true);
+    }
+
+    const handleWithdraw = async () => {
+        setContext(AssetsManagementContext.WITHDRAW);
+        setIsAssetsManagementDialogOpen(true);
+    }
+
     return (
         <>
              <div className="relative w-full">
@@ -103,7 +127,7 @@ export default function FarmingPage() {
                                 <ProjectIdentification project={project} />
                             </div>
                             <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
-                                <FarmingRepartition />
+                                <FarmingRepartition yieldAmount={overview?.total_yielded} offsetAmount={overview?.total_offseted} />
                             </div>
                         </div>
                         <div className="w-full grid grid-cols-4 gap-4 mx-auto items-center mt-10 text-left md:mt-18 md:grid-cols-8 2xl:grid-cols-12 md:gap-12">
@@ -133,17 +157,17 @@ export default function FarmingPage() {
                             </div>
                             <div className="w-full md:w-9/12 md:pl-8">
                                 <div className="mt-12 md:mt-0">
-                                    <FarmDetail type={FarmType.YIELD} total={shortenNumber(carbonCredits?.yield.total)} available={shortenNumber(carbonCredits?.yield.available)} handleClaim={() => {}} />
+                                    <FarmDetail type={FarmType.YIELD} total={shortenNumber(carbonCredits?.yield.total)} available={shortenNumber(carbonCredits?.yield.available)} handleClaim={handleClaimYield} />
                                 </div>
                                 <div className="mt-12">
-                                    <FarmDetail type={FarmType.OFFSET} total={shortenNumber(carbonCredits?.offset.total)} available={shortenNumber(carbonCredits?.offset.available)} handleClaim={() => {}} />
+                                    <FarmDetail type={FarmType.OFFSET} total={shortenNumber(carbonCredits?.offset.total)} available={shortenNumber(carbonCredits?.offset.available)} handleClaim={handleClaimOffset} />
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div className="mt-12">
-                        <FarmingAllocation yieldAmount={assetsAllocation?.yield} offsetAmount={assetsAllocation?.offseted} undepositedAmount={assetsAllocation?.undeposited} total={assetsAllocation?.total} handleDeposit={() => {}} handleWithdraw={() => {}} /> 
+                        <FarmingAllocation yieldAmount={assetsAllocation?.yield} offsetAmount={assetsAllocation?.offseted} undepositedAmount={assetsAllocation?.undeposited} total={assetsAllocation?.total} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} /> 
                     </div>
                     <div className="relative bg-farming-footer bg-no-repeat bg-center bg-cover px-8 py-12 mt-12 rounded-2xl overflow-hidden md:p-16">
                         <div className="font-inter font-bold text-white text-3xl md:text-4xl">
@@ -155,7 +179,8 @@ export default function FarmingPage() {
                     </div>
                 </div>
             </div>
-            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
+            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} />
         </>
     )
 }

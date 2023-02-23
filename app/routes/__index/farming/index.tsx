@@ -2,7 +2,6 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useAccount } from "@starknet-react/core";
-import { add } from "lodash";
 import { useEffect, useState } from "react";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
