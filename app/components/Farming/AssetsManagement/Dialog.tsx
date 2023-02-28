@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
+import Management from "./Management";
 import Tabs from "./Tabs";
 
 export const enum AssetsManagementContext {
@@ -8,7 +9,6 @@ export const enum AssetsManagementContext {
     WITHDRAW = "Withdraw",
     CLAIM = "Claim",
 }
-
 
 export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {isOpen: boolean, setIsOpen: any, context: AssetsManagementContext}) {
     const handleClose = () => {
@@ -41,7 +41,7 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {is
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl border border-neutral-500 bg-neutral-700 text-left align-middle shadow-xl transition-all">
+                        <Dialog.Panel className="w-full max-w-md xl:max-w-xl transform overflow-hidden rounded-2xl border border-neutral-500 bg-neutral-700 text-left align-middle shadow-xl transition-all">
                         <Dialog.Title
                             as="h3"
                             className="uppercase font-inter text-left text-neutral-300 font-bold text-sm flex items-center justify-between border-b border-neutral-500 px-6 py-4"
@@ -50,8 +50,9 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {is
                             <div className="text-right"><XMarkIcon className="w-4 cursor-pointer hover:text-neutral-100" onClick={() => setIsOpen(false)} /> </div>
                         </Dialog.Title>
                         <div className="px-6">
-                            <div className="text-center w-fit mx-auto mt-8">
-                                <Tabs />
+                            <div className="text-center w-full mx-auto mt-8">
+                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} /> }
+                                {context === AssetsManagementContext.CLAIM && <Management context={context} tab={"Claim"} />}
                             </div>
                         </div>
                         </Dialog.Panel>

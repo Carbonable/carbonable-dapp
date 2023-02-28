@@ -9,7 +9,7 @@ const secondaryButton = 'font-inter uppercase rounded-full px-4 py-2 text-xs tex
 const whitelistCssClass = 'font-inter text-black/50 uppercase rounded-full p-3 font-bold hover:bg-gradient-to-r from-green to-lightblue ';
 const greenButtonCssClass = 'font-inter text-black/50 uppercase bg-green rounded-full px-6 py-2 font-semibold hover:bg-gradient-to-r from-green to-lightblue text-sm ';
 const badgeButton= "cursor-pointer h-12 w-20 rounded-full bg-beaige "
-const greenActionButton = 'font-inter uppercase rounded-full p-4 text-sm text-neutral-100 bg-greenish-600 text-center hover:bg-greenish-500 outine-none ';
+const greenActionButton = 'font-inter uppercase rounded-full px-4 py-3 text-sm text-neutral-100 bg-greenish-600 text-center hover:bg-greenish-500 outine-none ';
 
 export default function SecondaryButton({ children, className, onClick }: ButtonProps) {
     return <button className={secondaryButton + className} onClick={onClick}>{children}</button>;

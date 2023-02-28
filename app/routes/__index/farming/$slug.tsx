@@ -89,13 +89,11 @@ export default function FarmingPage() {
         }
 
         if (fetcher.data !== undefined && fetcher.data !== null && status === "connected") {
-            console.log(fetcher.data)
             const data = fetcher.data.data;
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.assets_allocation);
         }
-        console.log(fetcher.data)
     }, [fetcher, address, status, slug]);
 
     const handleClaimYield = async () => {
