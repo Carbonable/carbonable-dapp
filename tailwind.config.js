@@ -104,7 +104,9 @@ module.exports = {
         'farming-separator-green': 'linear-gradient(90deg, rgba(9, 225, 161, 0.02), rgba(125, 248, 211, 0.4), rgba(9, 225, 161, 0.02));',
         'farming-separator-blue': 'linear-gradient(90deg, rgba(85, 153, 255, 0.025), rgba(141, 165, 255, 0.5), rgba(85, 153, 255, 0.025));',
         'farming-separator-brown': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
-        'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');"
+        'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');",
+        'allocation-yield': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
+        'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',

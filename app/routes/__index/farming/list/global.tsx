@@ -7,8 +7,7 @@ export const loader: LoaderFunction = async ({
     try {
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");
-        const slug = url.searchParams.get("slug");
-        const global = await fetch(`${process.env.INDEXER_URL}/farming/${wallet}/${slug}`, {});
+        const global = await fetch(`${process.env.INDEXER_URL}/farming/list/global/${wallet}`, {});
         return json(await global.json());
     } catch (e) {
         console.log(e)
