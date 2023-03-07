@@ -1,0 +1,167 @@
+[
+    {
+        "id": 1,
+        "name": "Factory",
+        "description": "Production plant - Montasola",
+        "about": "Facilities for manufacturing our Products.",
+        "icon": "business_unit",
+        "yearly_emissions": 53706 ,
+        "yearly_contribution": 624900,
+        "emission": 53706,
+        "debt": 50000,
+        "total_consumption": 25728,
+        "current_compensation": 48,
+        "allocations": [
+            {
+                "project_name": "Banegas Farm",
+                "color": "#1B6B49",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+                "carbon_credit_allocated": 6174,
+                "allocation_percentage": 24
+            },
+            {
+                "project_name": "Las Delicias",
+                "color": "#877B44",
+                "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
+                "carbon_credit_allocated": 12606,
+                "allocation_percentage": 49
+            },
+            {
+                "project_name": "Manjarisoa",
+                "color": "#334566",
+                "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
+                "carbon_credit_allocated": 6948,
+                "allocation_percentage": 27
+            }
+        ],
+        "carbon_credit_purchased": [
+            {
+                "project_name": "Patch.io",
+                "color": "#878A94",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
+                "carbon_credit_allocated": 3200,
+                "allocation_percentage": 20
+            }
+        ],
+        "transactions": [
+            {
+                "date": "23.02.03",
+                "source": "Banegas Farm",
+                "quantity": 412,
+                "type": "Added"
+            },
+            {
+                "date": "23.01.18",
+                "source": "Las Delicias",
+                "quantity": 234,
+                "type": "Removed"
+            },
+            {
+                "date": "23.01.12",
+                "source": "Manjarisoa",
+                "quantity": 123,
+                "type": "Added"
+            },
+            {
+                "date": "23.01.08",
+                "source": "Banegas Farm",
+                "quantity": 97,
+                "type": "Added"
+            }
+        ],
+        "graph_data": [
+            {
+                "year": 2023,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 27
+            },
+            {
+                "year": 2024,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 28
+            },
+            {
+                "year": 2025,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 26
+            },
+            {
+                "year": 2026,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 25
+            },
+            {
+                "year": 2027,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 29
+            },
+            {
+                "year": 2028,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 22
+            },
+            {
+                "year": 2029,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 15
+            },
+            {
+                "year": 2030,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 100
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Business unit 2",
+        "description": "Description of business unit 1",
+        "about": "About business unit 1",
+        "icon": "business_unit",
+        "yearly_emissions": 17.9,
+        "yearly_contribution": 123900,
+        "emission": 12000,
+        "debt": 59000,
+        "total_consumption": 68000,
+        "current_compensation": 65,
+        "allocations": [
+            {
+                "project_name": "Project 1",
+                "color": "#1B6B49",
+                "image": "project_1",
+                "carbon_credit_allocated": 2500,
+                "allocation_percentage": 10
+            },
+            {
+                "project_name": "Project 2",
+                "color": "#877B44",
+                "image": "project_2",
+                "carbon_credit_allocated": 2500,
+                "allocation_percentage": 60
+            },
+            {
+                "project_name": "Project 3",
+                "color": "#334566",
+                "image": "project_3",
+                "carbon_credit_allocated": 2500,
+                "allocation_percentage": 30
+            }
+        ]
+    }
+]

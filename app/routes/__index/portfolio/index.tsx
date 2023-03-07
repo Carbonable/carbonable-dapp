@@ -14,6 +14,7 @@ import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
 import { ipfsUrl } from "~/utils/utils";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import NewsletterDialog from "~/components/Newsletter/Newsletter";
+import BannerKPI from "~/components/Common/BannerKPI";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -178,16 +179,6 @@ function PortfolioState({status, selectedNetwork, state, projects, badges}: {sta
     )
 }
 
-function KPI({title, value}: {title: string, value: string}) {
-    return (
-        <div className="flex flex-col items-start justify-start text-neutral-100 font-trash">
-            <h1 className="font-bold uppercase text-xs md:text-sm lg:text-lg">{title}</h1>
-            <div className="text-2xl mt-3 lg:text-4xl">{value}</div>
-        </div>
-    )
-}
-
-
 export default function Portfolio() {
     const { status, address } = useAccount();
     const selectedNetwork = useLoaderData();
@@ -233,9 +224,9 @@ export default function Portfolio() {
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-portfolio bg-cover bg-bottom rounded-3xl px-4 py-6 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
                 <div className="grid grid-cols-3 gap-3 md:grid-cols-none md:grid-flow-col md:auto-cols-max md:gap-6 xl:gap-16">
-                    <KPI title="Invested Amount" value={`$${investedAmount}`} />
-                    <KPI title="Number of projects" value={`# ${numberOfProjects}`} />
-                    <KPI title="Number of NFT" value={`# ${numberOfNFT}`} />
+                    <BannerKPI title="Invested Amount" value={`$${investedAmount}`} />
+                    <BannerKPI title="Number of projects" value={`# ${numberOfProjects}`} />
+                    <BannerKPI title="Number of NFT" value={`# ${numberOfNFT}`} />
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>

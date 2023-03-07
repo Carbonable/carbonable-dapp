@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import Management from "./Management";
-import Tabs from "./Tabs";
+import FarmingContext from "./FarmingContext";
 
 export const enum AssetsManagementContext {
     DEPOSIT = "Deposit",
@@ -51,7 +51,7 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {is
                         </Dialog.Title>
                         <div className="px-6">
                             <div className="text-center w-full mx-auto mt-8">
-                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} /> }
+                                {context !== AssetsManagementContext.CLAIM && <FarmingContext context={context} /> }
                                 {context === AssetsManagementContext.CLAIM && <Management context={context} tab={"Claim"} />}
                             </div>
                         </div>

@@ -24,6 +24,12 @@ export const links = [
         outsideLink: false
     },
     {
+        href: '/planification',
+        label: 'Planification',
+        isOpen: true,
+        outsideLink: false
+    },
+    {
         href: 'https://carbonable.io/#simulator',
         label: 'Simulator',
         isOpen: true,

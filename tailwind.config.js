@@ -93,6 +93,7 @@ module.exports = {
         'project-info': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
         'project-info-border': 'linear-gradient(270deg, rgba(168, 196, 239, 0.1) 39.58%, rgba(10, 242, 173, 0.1) 100%);',
         'portfolio': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-portfolio.jpeg');",
+        'planification': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-planification.png');",
         'farming': "linear-gradient(50.39deg, rgba(11, 13, 19, 0.5) 15.27%, rgba(19, 21, 28, 0.5) 46.91%, rgba(31, 33, 40, 0.5) 91.42%), url('/assets/images/backgrounds/bg-farming.jpeg');",
         'farming-footer': "url('/assets/images/backgrounds/bg-farming-footer.png');",
         'farming-border-green': 'linear-gradient(rgba(125, 248, 211, 0.2), rgba(9, 225, 161, 0.2), rgba(9, 225, 161, 0.03))',
@@ -105,6 +106,7 @@ module.exports = {
         'farming-separator-blue': 'linear-gradient(90deg, rgba(85, 153, 255, 0.025), rgba(141, 165, 255, 0.5), rgba(85, 153, 255, 0.025));',
         'farming-separator-brown': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
         'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');",
+        'allocation-card': "url('/assets/images/backgrounds/bg-farming-card.png'), radial-gradient(69.95% 61.34% at 50% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);",
         'allocation-yield': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
         'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);"
       },
