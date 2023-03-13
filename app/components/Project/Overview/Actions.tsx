@@ -1,5 +1,5 @@
 import type { Project } from "@prisma/client";
-import { GreenLinkButton } from "~/components/Buttons/LinkButton";
+import GreenLinkButton from "~/components/Buttons/LinkButton";
 import ComingSoon from "./ComingSoon";
 import Mint from "./Mint";
 import { SaleStatusType } from "./ProjectOverview";

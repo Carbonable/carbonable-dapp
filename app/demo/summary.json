@@ -1,0 +1,255 @@
+{
+    "global": {
+        "invested_amount": 5035046,
+        "generated_cc": 18123,
+        "forecasted_cc": 475203,
+        "number_of_projects": 5
+    },
+    "graph_data": [
+        {
+            "year": 2023,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 27
+        },
+        {
+            "year": 2024,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 28
+        },
+        {
+            "year": 2025,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 26
+        },
+        {
+            "year": 2026,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 25
+        },
+        {
+            "year": 2027,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 29
+        },
+        {
+            "year": 2028,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 22
+        },
+        {
+            "year": 2029,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 15
+        },
+        {
+            "year": 2030,
+            "emission": 50,
+            "ex_post": 8,
+            "ex_ante": 18,
+            "target": 100
+        }
+    ],
+    "projected_decarbonation": [
+        {
+            "time_period": 2020,
+            "emission": 49900,
+            "received_cc": 8000,
+            "purchased_cc": 16000,
+            "retired_cc": 24000,
+            "target": 50,
+            "delta": -2
+        },
+        {
+            "time_period": 2022,
+            "emission": 45200,
+            "received_cc": 10100,
+            "purchased_cc": 16000,
+            "retired_cc": 26100,
+            "target": 55,
+            "delta": 8
+        },
+        {
+            "time_period": 2024,
+            "emission": 43100,
+            "received_cc": 12200,
+            "purchased_cc": 16000,
+            "retired_cc": 25000,
+            "target": 60,
+            "delta": 1
+        },
+        {
+            "time_period": 2026,
+            "emission": 40100,
+            "received_cc": 14100,
+            "purchased_cc": 14000,
+            "retired_cc": 25000,
+            "target": 65,
+            "delta": 2
+        },
+        {
+            "time_period": 2028,
+            "emission": 40100,
+            "received_cc": 16800,
+            "purchased_cc": 12000,
+            "retired_cc": 28000,
+            "target": 70,
+            "delta": -1
+        }
+    ],
+    "funding_allocations": [
+        {
+            "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+            "project_name": "Chaco Agroforestry",
+            "allocation": 55,
+            "available": 9646,
+            "allocated": 5306,
+            "end_date": "05-02-2042",
+            "blocks": 2
+        },
+        {
+            "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
+            "project_name": "Las Delicias",
+            "allocation": 25,
+            "available": 57592,
+            "allocated": 14398,
+            "end_date": "04-18-2048",
+            "blocks": 2
+        },
+        {
+            "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+            "project_name": "Banegas Farm",
+            "allocation": 15,
+            "available": 84256,
+            "allocated": 12638,
+            "end_date": "03-14-2053",
+            "blocks": 2
+        },
+        {
+            "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
+            "project_name": "Manjarisoa",
+            "allocation": 80,
+            "available": 6298,
+            "allocated": 5038,
+            "end_date": "04-20-2045",
+            "blocks": 2
+        },
+        {
+            "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+            "project_name": "Bénara",
+            "allocation": 50,
+            "available": 18380,
+            "allocated": 9190,
+            "end_date": "01-28-2050",
+            "blocks": 2
+        }
+    ],
+    "projects_metrics": {
+        "colors": [
+            {
+                "name": "green",
+                "value": 22,
+                "color": "#29A46F"
+            },
+            {
+                "name": "orange",
+                "value": 12,
+                "color": "#CFBD70"
+            },
+            {
+                "name": "blue",
+                "value": 66,
+                "color": "#9EBAF0"
+            }
+        ],
+        "types": [
+            {
+                "removal": 80,
+                "avoidance": 20
+            }
+        ],
+        "locations": [
+            {
+                "iso_code": "mg",
+                "name": "Madagascar",
+                "percentage": 50
+            },
+            {
+                "iso_code": "fr",
+                "name": "France",
+                "percentage": 20
+            },
+            {
+                "iso_code": "br",
+                "name": "Brazil",
+                "percentage": 10
+            },
+            {
+                "iso_code": "cr",
+                "name": "Costa Rica",
+                "percentage": 10
+            },
+            {
+                "iso_code": "kh",
+                "name": "Cambodia",
+                "percentage": 10
+            }
+        ]
+    },
+    "action_logs": [
+        {
+            "date": "01-22-2022",
+            "action": "Added supply",
+            "quantity": 812,
+            "source": "Banegas Farm",
+            "to": "Factory",
+            "user": "Maria"
+        },
+        {
+            "date": "01-20-2022",
+            "action": "Removed supply",
+            "quantity": 170,
+            "source": "Banegas Farm",
+            "to": "Factory",
+            "user": "Jérôme"
+        },
+        {
+            "date": "01-18-2022",
+            "action": "Removed supply",
+            "quantity": 2400,
+            "source": "Banegas Farm",
+            "to": "Transport",
+            "user": "William"
+        },
+        {
+            "date": "01-11-2022",
+            "action": "Added supply",
+            "quantity": 4854,
+            "source": "Banegas Farm",
+            "to": "Transport",
+            "user": "Maria"
+        }
+    ],
+    "impacts": {
+        "sdg": {
+            "total": 10,
+            "list": [1, 2, 3, 5, 8, 10, 12, 13, 14, 15]
+        },
+        "removed_tons": 14120,
+        "protected_forest": 1143.72,
+        "protected_species": 11
+    }
+}
