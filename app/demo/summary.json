@@ -10,56 +10,119 @@
             "year": 2023,
             "emission": 50,
             "ex_post": 8,
-            "ex_ante": 18,
-            "target": 27
-        },
-        {
-            "year": 2024,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
-            "target": 28
-        },
-        {
-            "year": 2025,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
-            "target": 26
-        },
-        {
-            "year": 2026,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
+            "ex_ante": 20,
             "target": 25
         },
         {
+            "year": 2024,
+            "emission": 48,
+            "ex_post": 9,
+            "ex_ante": 21,
+            "target": 30
+        },
+        {
+            "year": 2025,
+            "emission": 46,
+            "ex_post": 10,
+            "ex_ante": 22,
+            "target": 35
+        },
+        {
+            "year": 2026,
+            "emission": 44,
+            "ex_post": 11,
+            "ex_ante": 21,
+            "target": 40
+        },
+        {
             "year": 2027,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
-            "target": 29
+            "emission": 42,
+            "ex_post": 12,
+            "ex_ante": 20,
+            "target": 45
         },
         {
             "year": 2028,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
-            "target": 22
+            "emission": 40,
+            "ex_post": 13,
+            "ex_ante": 19,
+            "target": 50
         },
         {
             "year": 2029,
-            "emission": 50,
-            "ex_post": 8,
+            "emission": 40,
+            "ex_post": 14,
             "ex_ante": 18,
-            "target": 15
+            "target": 55
         },
         {
             "year": 2030,
-            "emission": 50,
-            "ex_post": 8,
-            "ex_ante": 18,
+            "emission": 40,
+            "ex_post": 15,
+            "ex_ante": 17,
+            "target": 60
+        },
+        {
+            "year": 2031,
+            "emission": 40,
+            "ex_post": 16,
+            "ex_ante": 16,
+            "target": 65
+        },
+        {
+            "year": 2032,
+            "emission": 40,
+            "ex_post": 17,
+            "ex_ante": 15,
+            "target": 70
+        },
+        {
+            "year": 2033,
+            "emission": 40,
+            "ex_post": 18,
+            "ex_ante": 14,
+            "target": 75
+        },
+        {
+            "year": 2034,
+            "emission": 40,
+            "ex_post": 19,
+            "ex_ante": 13,
+            "target": 80
+        },
+        {
+            "year": 2036,
+            "emission": 40,
+            "ex_post": 20,
+            "ex_ante": 12,
+            "target": 85
+        },
+        {
+            "year": 2037,
+            "emission": 38,
+            "ex_post": 21,
+            "ex_ante": 11,
+            "target": 90
+        },
+        {
+            "year": 2038,
+            "emission": 38,
+            "ex_post": 22,
+            "ex_ante": 10,
+            "target": 95
+        },
+        {
+            "year": 2039,
+            "emission": 36,
+            "ex_post": 23,
+            "ex_ante": 9,
+            "target": 100
+        },
+        {
+            "year": 2040,
+            "emission": 35,
+            "ex_post": 24,
+            "ex_ante": 8,
             "target": 100
         }
     ],

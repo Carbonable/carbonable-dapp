@@ -28,7 +28,7 @@
             },
             {
                 "project_name": "Manjarisoa",
-                "color": "#334566",
+                "color": "#771639",
                 "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
                 "carbon_credit_allocated": 6948,
                 "allocation_percentage": 27
@@ -131,36 +131,373 @@
     {
         "id": 2,
         "name": "Delivery",
-        "description": "Description of business unit 1",
-        "about": "About business unit 1",
+        "description": "Goods transport - Worldwide",
+        "about": "Shipping for all products, from production plant to customers",
         "icon": "🚚",
-        "yearly_emissions": 17.9,
-        "yearly_contribution": 123900,
-        "emission": 12000,
-        "debt": 59000,
-        "total_consumption": 68000,
-        "current_compensation": 65,
+        "yearly_emissions": 22850 ,
+        "yearly_contribution": 264100,
+        "emission": 22850,
+        "debt": 22000,
+        "total_consumption": 11196,
+        "current_compensation": 49,
         "allocations": [
             {
-                "project_name": "Project 1",
+                "project_name": "Banegas Farm",
                 "color": "#1B6B49",
-                "image": "project_1",
-                "carbon_credit_allocated": 2500,
-                "allocation_percentage": 10
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+                "carbon_credit_allocated": 4926,
+                "allocation_percentage": 44
             },
             {
-                "project_name": "Project 2",
+                "project_name": "Las Delicias",
                 "color": "#877B44",
-                "image": "project_2",
-                "carbon_credit_allocated": 2500,
-                "allocation_percentage": 60
+                "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
+                "carbon_credit_allocated": 1792,
+                "allocation_percentage": 16
             },
             {
-                "project_name": "Project 3",
+                "project_name": "Bénéra",
                 "color": "#334566",
-                "image": "project_3",
-                "carbon_credit_allocated": 2500,
-                "allocation_percentage": 30
+                "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
+                "carbon_credit_allocated": 2239,
+                "allocation_percentage": 20
+            }
+        ],
+        "carbon_credit_purchased": [
+            {
+                "project_name": "Patch.io",
+                "color": "#878A94",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
+                "carbon_credit_allocated": 2239,
+                "allocation_percentage": 20
+            }
+        ],
+        "transactions": [
+            {
+                "date": "23.02.18",
+                "source": "Bénéra",
+                "quantity": 413,
+                "type": "Added"
+            },
+            {
+                "date": "23.02.14",
+                "source": "Bénéra",
+                "quantity": 182,
+                "type": "Removed"
+            },
+            {
+                "date": "22.09.16",
+                "source": "Banegas Farm",
+                "quantity": 2400,
+                "type": "Added"
+            },
+            {
+                "date": "22.07.07",
+                "source": "Las Delicias",
+                "quantity": 4854,
+                "type": "Removed"
+            }
+        ],
+        "graph_data": [
+            {
+                "year": 2023,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 27
+            },
+            {
+                "year": 2024,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 28
+            },
+            {
+                "year": 2025,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 26
+            },
+            {
+                "year": 2026,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 25
+            },
+            {
+                "year": 2027,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 29
+            },
+            {
+                "year": 2028,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 22
+            },
+            {
+                "year": 2029,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 15
+            },
+            {
+                "year": 2030,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 100
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Office",
+        "description": "Building for admin. employees",
+        "about": "Emissions done at the workplace including employees and furnitures",
+        "icon": "🏢",
+        "yearly_emissions": 12624 ,
+        "yearly_contribution": 162300,
+        "emission": 12624,
+        "debt": 10982,
+        "total_consumption": 10982,
+        "current_compensation": 87,
+        "allocations": [
+            {
+                "project_name": "Banegas Farm",
+                "color": "#1B6B49",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+                "carbon_credit_allocated": 1538,
+                "allocation_percentage": 14
+            },
+            {
+                "project_name": "Chaco Agroforestry",
+                "color": "#7A3F9E",
+                "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
+                "carbon_credit_allocated": 5052,
+                "allocation_percentage": 46
+            },
+            {
+                "project_name": "Manjarisoa",
+                "color": "#771639",
+                "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
+                "carbon_credit_allocated": 4392,
+                "allocation_percentage": 40
+            }
+        ],
+        "carbon_credit_purchased": [
+        ],
+        "transactions": [
+            {
+                "date": "23.02.22",
+                "source": "Chaco Agroforestry",
+                "quantity": 671,
+                "type": "Added"
+            },
+            {
+                "date": "23.01.20",
+                "source": "Chaco Agroforestry",
+                "quantity": 214,
+                "type": "Removed"
+            },
+            {
+                "date": "22.08.15",
+                "source": "Manjarisoa",
+                "quantity": 2110,
+                "type": "Added"
+            },
+            {
+                "date": "22.06.06",
+                "source": "Banegas Farm",
+                "quantity": 114,
+                "type": "Added"
+            }
+        ],
+        "graph_data": [
+            {
+                "year": 2023,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 27
+            },
+            {
+                "year": 2024,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 28
+            },
+            {
+                "year": 2025,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 26
+            },
+            {
+                "year": 2026,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 25
+            },
+            {
+                "year": 2027,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 29
+            },
+            {
+                "year": 2028,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 22
+            },
+            {
+                "year": 2029,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 15
+            },
+            {
+                "year": 2030,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 100
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Trips",
+        "description": "Employee travels & Business Trips",
+        "about": "Business trips for all employees (including car, train and plane)",
+        "icon": "🛫",
+        "yearly_emissions": 11550 ,
+        "yearly_contribution": 146800,
+        "emission": 11550,
+        "debt": 1200,
+        "total_consumption": 1502,
+        "current_compensation": 13,
+        "allocations": [
+            {
+                "project_name": "Chaco Agroforestry",
+                "color": "#7A3F9E",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
+                "carbon_credit_allocated": 254,
+                "allocation_percentage": 17
+            },
+            {
+                "project_name": "Manjarisoa",
+                "color": "#771639",
+                "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
+                "carbon_credit_allocated": 646,
+                "allocation_percentage": 43
+            }
+        ],
+        "carbon_credit_purchased": [
+            {
+                "project_name": "Patch.io",
+                "color": "#878A94",
+                "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
+                "carbon_credit_allocated": 602,
+                "allocation_percentage": 40
+            }
+        ],
+        "transactions": [
+            {
+                "date": "23.02.18",
+                "source": "Manjarisoa",
+                "quantity": 44,
+                "type": "Added"
+            },
+            {
+                "date": "23.01.23",
+                "source": "Manjarisoa",
+                "quantity": 18,
+                "type": "Removed"
+            },
+            {
+                "date": "22.09.12",
+                "source": "Chaco Agroforestry",
+                "quantity": 114,
+                "type": "Added"
+            },
+            {
+                "date": "22.07.08",
+                "source": "Chaco Agroforestry",
+                "quantity": 13,
+                "type": "Removed"
+            }
+        ],
+        "graph_data": [
+            {
+                "year": 2023,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 27
+            },
+            {
+                "year": 2024,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 28
+            },
+            {
+                "year": 2025,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 26
+            },
+            {
+                "year": 2026,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 25
+            },
+            {
+                "year": 2027,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 29
+            },
+            {
+                "year": 2028,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 22
+            },
+            {
+                "year": 2029,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 15
+            },
+            {
+                "year": 2030,
+                "emission": 50,
+                "ex_post": 8,
+                "ex_ante": 18,
+                "target": 100
             }
         ]
     }
