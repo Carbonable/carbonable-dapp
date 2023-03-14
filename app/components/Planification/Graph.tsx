@@ -22,7 +22,7 @@ export default function AllocationGraph({yearStep, data, isFullScreen}: {yearSte
         <div className={`w-full px-0 mt-8`}>
             <ResponsiveContainer width="100%" aspect={2.2}>
                 <ComposedChart
-                    width={500}
+                    width={300}
                     height={300}
                     data={data}
                     margin={{
