@@ -53,16 +53,7 @@ export default function Mapping({globalKPI, blocks}: {globalKPI: any, blocks: an
                                     </div>
                                 </div>
                                 <div className="mt-8 w-full bg-neutral-600 rounded-full h-4 p-[4px] flex items-center justify-start">
-                                    {block.allocations.map((allocation: any, idx: number) => (
-                                        <div key={`allocation_${idx}`} 
-                                            className={`${idx === 0 ? "rounded-l-full" : ""}
-                                                        ${idx === block.allocations.length - 1 ? "rounded-r-full" : ""}
-                                                        h-[10px]
-                                                        `}
-                                            style={{width: `${allocation.allocation_percentage}%`, backgroundColor: `${allocation.color}`}}
-                                        >
-                                        </div>
-                                    ))}
+                                    <Repartition block={block} />
                                 </div>
                             </div>
                         ))}
@@ -70,6 +61,24 @@ export default function Mapping({globalKPI, blocks}: {globalKPI: any, blocks: an
                 </div>
             </div>
             {currentBlock && <AllocationDetailDialog isOpen={isOpen} setIsOpen={setIsOpen} block={currentBlock} /> }
+        </>
+    )
+}
+
+function Repartition({block}: {block: any}) {
+    const totalAllocations = block.allocations.concat(block.carbon_credit_purchased);
+    return (
+        <>
+            {totalAllocations.map((allocation: any, idx: number) => (
+                <div key={`allocation_${idx}`} 
+                    className={`${idx === 0 ? "rounded-l-full" : ""}
+                                ${idx === totalAllocations.length - 1 ? "rounded-r-full" : ""}
+                                h-[10px]
+                                `}
+                    style={{width: `${allocation.allocation_percentage}%`, backgroundColor: `${allocation.color}`}}
+                >
+                </div>
+            ))}
         </>
     )
 }
