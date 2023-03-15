@@ -10,28 +10,24 @@
         "emission": 53706,
         "debt": 50000,
         "total_consumption": 25728,
-        "current_compensation": 48,
         "allocations": [
             {
                 "project_name": "Banegas Farm",
                 "color": "#1B6B49",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
-                "carbon_credit_allocated": 6174,
-                "allocation_percentage": 24
+                "carbon_credit_allocated": 6174
             },
             {
                 "project_name": "Las Delicias",
                 "color": "#877B44",
                 "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
-                "carbon_credit_allocated": 12606,
-                "allocation_percentage": 49
+                "carbon_credit_allocated": 12606
             },
             {
                 "project_name": "Manjarisoa",
                 "color": "#771639",
                 "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
-                "carbon_credit_allocated": 6948,
-                "allocation_percentage": 27
+                "carbon_credit_allocated": 6948
             }
         ],
         "carbon_credit_purchased": [
@@ -39,8 +35,7 @@
                 "project_name": "Patch.io",
                 "color": "#878A94",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
-                "carbon_credit_allocated": 3200,
-                "allocation_percentage": 20
+                "carbon_credit_allocated": 3200
             }
         ],
         "transactions": [
@@ -139,28 +134,24 @@
         "emission": 22850,
         "debt": 22000,
         "total_consumption": 11196,
-        "current_compensation": 49,
         "allocations": [
             {
                 "project_name": "Banegas Farm",
                 "color": "#1B6B49",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
-                "carbon_credit_allocated": 4926,
-                "allocation_percentage": 44
+                "carbon_credit_allocated": 4926
             },
             {
                 "project_name": "Las Delicias",
                 "color": "#877B44",
                 "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
-                "carbon_credit_allocated": 1792,
-                "allocation_percentage": 16
+                "carbon_credit_allocated": 1792
             },
             {
                 "project_name": "Bénéra",
                 "color": "#334566",
                 "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
-                "carbon_credit_allocated": 2239,
-                "allocation_percentage": 20
+                "carbon_credit_allocated": 2239
             }
         ],
         "carbon_credit_purchased": [
@@ -168,8 +159,7 @@
                 "project_name": "Patch.io",
                 "color": "#878A94",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
-                "carbon_credit_allocated": 2239,
-                "allocation_percentage": 20
+                "carbon_credit_allocated": 2239
             }
         ],
         "transactions": [
@@ -268,28 +258,24 @@
         "emission": 12624,
         "debt": 10982,
         "total_consumption": 10982,
-        "current_compensation": 87,
         "allocations": [
             {
                 "project_name": "Banegas Farm",
                 "color": "#1B6B49",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
-                "carbon_credit_allocated": 1538,
-                "allocation_percentage": 14
+                "carbon_credit_allocated": 1538
             },
             {
                 "project_name": "Chaco Agroforestry",
                 "color": "#7A3F9E",
                 "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png",
-                "carbon_credit_allocated": 5052,
-                "allocation_percentage": 46
+                "carbon_credit_allocated": 5052
             },
             {
                 "project_name": "Manjarisoa",
                 "color": "#771639",
                 "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
-                "carbon_credit_allocated": 4392,
-                "allocation_percentage": 40
+                "carbon_credit_allocated": 4392
             }
         ],
         "carbon_credit_purchased": [
@@ -390,21 +376,18 @@
         "emission": 11550,
         "debt": 1200,
         "total_consumption": 1502,
-        "current_compensation": 13,
         "allocations": [
             {
                 "project_name": "Chaco Agroforestry",
                 "color": "#7A3F9E",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png",
-                "carbon_credit_allocated": 254,
-                "allocation_percentage": 17
+                "carbon_credit_allocated": 254
             },
             {
                 "project_name": "Manjarisoa",
                 "color": "#771639",
                 "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png",
-                "carbon_credit_allocated": 646,
-                "allocation_percentage": 43
+                "carbon_credit_allocated": 646
             }
         ],
         "carbon_credit_purchased": [
@@ -412,8 +395,7 @@
                 "project_name": "Patch.io",
                 "color": "#878A94",
                 "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/card.png",
-                "carbon_credit_allocated": 602,
-                "allocation_percentage": 40
+                "carbon_credit_allocated": 602
             }
         ],
         "transactions": [

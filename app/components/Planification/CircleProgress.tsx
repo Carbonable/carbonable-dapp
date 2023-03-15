@@ -1,4 +1,5 @@
-export default function CircleProgress({progress, size, bgColor, progressColor}: {progress: number, size: number, bgColor: string, progressColor: string}) {
+export default function CircleProgress({value, over, size, bgColor, progressColor}: {value: number, over: number, size: number, bgColor: string, progressColor: string}) {
+    const progress = Math.round((value / over) * 100);
     return (
         <div className="relative w-[60px] h-[60px] rounded-full bg-neutral-500 ml-auto mr-3"
              style={{backgroundImage: `conic-gradient(${bgColor} ${progress}%, ${progressColor} 0)` }}>

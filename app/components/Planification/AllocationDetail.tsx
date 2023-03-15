@@ -11,6 +11,8 @@ import TransactionHistory from "./TransactionHistory";
 export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOpen: boolean, setIsOpen: any, block: any}) {
     const graphTabs = ["Year", "3Y", "5Y"];
     const [graphYears, setGraphYears] = useState(1);
+    const allocationsList = block.allocations.concat(block.carbon_credit_purchased);
+    const totalConsumption = allocationsList.map((totalAllocation: any) => totalAllocation.carbon_credit_allocated).reduce((acc: any, amount: any) => acc + amount);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -84,23 +86,7 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
                                     <BlockKPI title="Emission" value={`${parseFloat(block.emission).toLocaleString('en')} Tons / year`} />
                                     <BlockKPI title="Debt" value={`${parseFloat(block.debt).toLocaleString('en')} Tons`} />
                                     <BlockKPI title="Total consumption (YtD)" value={`${parseFloat(block.total_consumption).toLocaleString('en')} Tons`} />
-                                    <BlockKPI title="Current compensation" value={`${block.current_compensation} %`} />
-                                </div>
-                                <div className="mt-12">
-                                    <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Project Funding Allocation</div>
-                                    {block.allocations.map((allocation: any, idx: number) => {
-                                        return (
-                                            <AllocationProject key={`allocation_project_${idx}`} project={allocation} />
-                                        )
-                                    })}
-                                </div>
-                                <div className="mt-12">
-                                    <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Carbon Credit Purchase Allocation</div>
-                                    {block.carbon_credit_purchased.map((purchase: any, idx: number) => {
-                                        return (
-                                            <AllocationProject key={`purchase_cc_${idx}`} project={purchase} />
-                                        )
-                                    })}
+                                    <BlockKPI title="Current compensation" value={`${Math.round((block.total_consumption / block.yearly_emissions) * 100)} %`} />
                                 </div>
                                 <div className="mt-12">
                                     <div className="flex justify-between items-center">
@@ -120,6 +106,22 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
                                     <div>
                                         <AllocationGraph yearStep={graphYears} data={block.graph_data} isFullScreen={false} />
                                     </div>
+                                </div>
+                                <div className="mt-12">
+                                    <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Project Funding Allocation</div>
+                                    {block.allocations.map((allocation: any, idx: number) => {
+                                        return (
+                                            <AllocationProject key={`allocation_project_${idx}`} project={allocation} totalConsumption={totalConsumption} />
+                                        )
+                                    })}
+                                </div>
+                                <div className="mt-12">
+                                    <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Carbon Credit Purchase Allocation</div>
+                                    {block.carbon_credit_purchased.map((purchase: any, idx: number) => {
+                                        return (
+                                            <AllocationProject key={`purchase_cc_${idx}`} project={purchase} totalConsumption={totalConsumption} />
+                                        )
+                                    })}
                                 </div>
                                 <div className="mt-12">
                                     <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Transaction History</div>
@@ -144,7 +146,8 @@ function BlockKPI({title, value}: {title: string, value: string}) {
     )
 }
 
-function AllocationProject({project}: {project: any}) {
+function AllocationProject({project, totalConsumption}: {project: any, totalConsumption: number}) {
+    const percentage = Math.round((project.carbon_credit_allocated / totalConsumption) * 100);
     return (
         <div className="flex items-start justify-start w-full border-t border-neutral-600 py-4">
             <div className="w-fit">
@@ -155,7 +158,7 @@ function AllocationProject({project}: {project: any}) {
                 <div className="font-light flex justify-start items-center mt-1">
                     <div className="text-neutral-100">{project.carbon_credit_allocated} CC</div>
                     <div className="px-3 text-neutral-300">&bull;</div>
-                    <div className="text-neutral-200 italic">{project.allocation_percentage}% of the offset block</div>
+                    <div className="text-neutral-200 italic">{percentage}% of the offset block</div>
                 </div>
             </div>
         </div>
