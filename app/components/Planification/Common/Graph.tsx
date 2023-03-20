@@ -19,8 +19,8 @@ export default function AllocationGraph({yearStep, data, isFullScreen}: {yearSte
     };
 
     return (
-        <div className={`w-full px-0 mt-8`}>
-            <ResponsiveContainer width="100%" aspect={2.2}>
+        <div className={`w-full px-0 mt-8 h-full`}>
+            <ResponsiveContainer width="100%" height="100%" aspect={2.2}>
                 <ComposedChart
                     width={300}
                     height={300}

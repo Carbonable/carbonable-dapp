@@ -38,4 +38,4 @@ export async function action({ request }: ActionArgs) {
     } catch (error) {
         return json({ error: "Your email has not been saved. Please try again later." });
     }
-  }
+}

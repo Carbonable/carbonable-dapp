@@ -1,0 +1,26 @@
+[
+    {   
+        "id": 1,
+        "value": "Banegas Farm",
+        "color": "#1B6B49",
+        "image": "QmQZq4AJNMwqPNWs31iu2p2Cema6GVdrNgi8x4QKohirjn/collection.png"
+    },
+    {
+        "id": 2,
+        "value": "Las Delicias",
+        "color": "#877B44",
+        "image": "QmcvEY5ENrUEt7KTZUUBq6aRRsTBMAvCSooNYbe8TQRuoF/collection.png"
+    },
+    {
+        "id": 3,
+        "value": "Manjarisoa",
+        "color": "#771639",
+        "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png"
+    },
+    {
+        "id": 4,
+        "value": "Bénéra",
+        "color": "#334566",
+        "image": "QmW1gkYecBr8pGXTubvabqSgyphagK18pCtHVKQWQwJ8Xw/collection.png"
+    }
+]

@@ -1,5 +1,5 @@
 import { shortenNumber } from "~/utils/utils"
-import Pagination from "../Common/Pagination"
+import Pagination from "../../Common/Pagination"
 
 export default function ProjectedDecarbonation({projections}: {projections: any[]}) {
     const handlePageClick = (data: any) => {

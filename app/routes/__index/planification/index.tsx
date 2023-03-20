@@ -1,12 +1,14 @@
 import { Tab } from "@headlessui/react";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction} from "react-router";
-import Mapping from "~/components/Planification/Mapping";
-import Summary from "~/components/Planification/Summary";
+import Mapping from "~/components/Planification/Allocations/Allocations";
+import Summary from "~/components/Planification/Summary/Summary";
 import allocation from "~/demo/allocations.json";
 import globalkpi from "~/demo/globalKPI.json";
 import summary from "~/demo/summary.json";
+import projectsList from "~/demo/projects.json";
+import { useEffect, useState } from "react";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -15,15 +17,47 @@ export const loader: LoaderFunction = async ({
         const globalKPI = globalkpi;
         const blocks = allocation;
         const summaryKPI = summary;
-        return json({globalKPI, blocks, summaryKPI});
+        const projects = projectsList;
+        return json({globalKPI, blocks, summaryKPI, projects});
     } catch (e) {
         return json({});
     }
 };
 
 export default function Planification() {
-    const { globalKPI, blocks, summaryKPI } = useLoaderData();
+    const loaderData = useLoaderData();
+    const globalKPI = loaderData.globalKPI;
+    const summaryKPI = loaderData.summaryKPI;
+    const projects = loaderData.projects;
+    const [blocks, setBlocks] = useState(loaderData.blocks);
+    const addExAnteFetcher = useFetcher();
+    const addExPostFetcher = useFetcher();
     const tabs = ["Summary", "Allocation"];
+
+    // An effect for appending data to items state
+    useEffect(() => {
+        if (!addExAnteFetcher.data || addExAnteFetcher.state === "loading") {
+            return;
+        }
+        // If we have new data - append it
+        if (addExAnteFetcher.data) {
+            const newBlocks = addExAnteFetcher.data.newBlocks;
+            setBlocks(newBlocks);
+        }
+    }, [addExAnteFetcher.data, addExAnteFetcher.state]);
+
+    // An effect for appending data to items state
+    useEffect(() => {
+        if (!addExPostFetcher.data || addExPostFetcher.state === "loading") {
+            return;
+        }
+        // If we have new data - append it
+        if (addExPostFetcher.data) {
+            const newBlocks = addExPostFetcher.data.newBlocks;
+            setBlocks(newBlocks);
+        }
+    }, [addExPostFetcher.data, addExPostFetcher.state]);
+
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl p-2 pb-16">
             <Tab.Group>
@@ -44,7 +78,7 @@ export default function Planification() {
                         <Summary summaryKPI={summaryKPI} />
                     </Tab.Panel>
                     <Tab.Panel key={`tab_panel_maaping}`}>
-                        <Mapping globalKPI={globalKPI} blocks={blocks} />
+                        <Mapping globalKPI={globalKPI} blocks={blocks} projects={projects} addExAnteFetcher={addExAnteFetcher} addExPostFetcher={addExPostFetcher} />
                     </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>

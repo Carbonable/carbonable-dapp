@@ -1,5 +1,5 @@
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
-import { CustomLegend } from "../Common/Graph";
+import { CustomLegend } from "../../Common/Graph";
 
 export default function ProjectsMetrics({metrics}: {metrics: any}) {
     return (

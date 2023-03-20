@@ -1,4 +1,4 @@
-import { LinkSecondary } from "../Buttons/LinkButton"
+import { LinkSecondary } from "../../Buttons/LinkButton"
 
 export default function ProjectsImpact({impacts}: {impacts: any}) {
     const cssBlock = "border border-neutral-500 rounded-xl px-6 py-4 bg-neutral-700"

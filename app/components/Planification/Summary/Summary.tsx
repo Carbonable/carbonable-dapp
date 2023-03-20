@@ -1,10 +1,10 @@
 import { Tab } from "@headlessui/react";
 import { useState } from "react";
-import { CustomLegend } from "../Common/Graph";
-import Tabs from "../Common/Tabs";
+import { CustomLegend } from "../../Common/Graph";
+import Tabs from "../../Common/Tabs";
 import ActionLogs from "./ActionLogs";
 import FundingAllocation from "./FundingAllocation";
-import AllocationGraph from "./Graph"
+import AllocationGraph from "../Common/Graph"
 import ProjectedDecarbonation from "./ProjectedDecarbonation";
 import ProjectsImpact from "./ProjectsImpact";
 import ProjectsMetrics from "./ProjectsMetrics";

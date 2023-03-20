@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { shortenNumber } from "~/utils/utils";
-import BannerKPI from "../Common/BannerKPI";
-import SecondaryButton from "../Buttons/ActionButton";
+import BannerKPI from "../../Common/BannerKPI";
+import SecondaryButton from "../../Buttons/ActionButton";
 import AllocationDetailDialog from "./AllocationDetail";
 import AllocationKPI from "./AllocationKPI";
 import CircleProgress from "./CircleProgress";
 
-export default function Mapping({globalKPI, blocks}: {globalKPI: any, blocks: any}) {
+export default function Mapping({globalKPI, blocks, projects, addExAnteFetcher, addExPostFetcher}: {globalKPI: any, blocks: any[], projects: any[], addExAnteFetcher: any, addExPostFetcher: any}) {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentBlock, setCurrentBlock] = useState(null);
+    const [currentBlock, setCurrentBlock] = useState<any>(null);
 
     const handleAddBlock = () => {
         console.log('add block');
@@ -18,6 +18,17 @@ export default function Mapping({globalKPI, blocks}: {globalKPI: any, blocks: an
         setCurrentBlock(block);
         setIsOpen(true);
     }
+
+    useEffect(() => {
+        if (!isOpen || !currentBlock) {
+            return;
+        }
+
+        const newBlock = blocks.find((block: any) => block.id === currentBlock.id);
+        setCurrentBlock(newBlock);
+
+    }, [blocks]);
+
 
     return (
         <>
@@ -45,7 +56,7 @@ export default function Mapping({globalKPI, blocks}: {globalKPI: any, blocks: an
                     </div>
                 </div>
             </div>
-            {currentBlock && <AllocationDetailDialog isOpen={isOpen} setIsOpen={setIsOpen} block={currentBlock} /> }
+            {currentBlock && <AllocationDetailDialog isOpen={isOpen} setIsOpen={setIsOpen} block={currentBlock} projects={projects} addExAnteFetcher={addExAnteFetcher} addExPostFetcher={addExPostFetcher} /> }
         </>
     )
 }

@@ -1,14 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment, useRef, useState } from "react";
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { IPFS_GATEWAY } from "~/utils/links";
 import { ipfsUrl } from "~/utils/utils";
 import { Tab } from "@headlessui/react";
-import Tabs from "../Common/Tabs";
-import AllocationGraph from "./Graph";
+import Tabs from "../../Common/Tabs";
+import AllocationGraph from "../Common/Graph";
 import TransactionHistory from "./TransactionHistory";
+import ComboBox from "~/components/Common/ComboBox";
 
-export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOpen: boolean, setIsOpen: any, block: any}) {
+export default function AllocationDetailDialog({isOpen, setIsOpen, block, projects, addExAnteFetcher, addExPostFetcher}: {isOpen: boolean, setIsOpen: any, block: any, projects: any[], addExAnteFetcher: any, addExPostFetcher: any}) {
     const graphTabs = ["Year", "3Y", "5Y"];
     const [graphYears, setGraphYears] = useState(1);
     const allocationsList = block.allocations.concat(block.carbon_credit_purchased);
@@ -32,7 +33,7 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
         }
     }
 
-    let initialFocusElement = useRef(null)
+    let initialFocusElement = useRef(null);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -78,10 +79,6 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
                                 <div className="text-right"><XMarkIcon className="w-6 cursor-pointer hover:text-neutral-100" onClick={() => setIsOpen(false)} /> </div>
                             </Dialog.Title>
                             <div className="relative mt-12">
-                                <div>
-                                    <div className="text-neutral-300 text-lg font-normal font-inter">About</div>
-                                    <div className="mt-1 text-neutral-100">{block.about}</div>
-                                </div>
                                 <div className="mt-8 pr-6 pb-12 border-b border-neutral-600">
                                     <BlockKPI title="Emission" value={`${parseFloat(block.emission).toLocaleString('en')} Tons / year`} />
                                     <BlockKPI title="Debt" value={`${parseFloat(block.debt).toLocaleString('en')} Tons`} />
@@ -114,6 +111,7 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
                                             <AllocationProject key={`allocation_project_${idx}`} project={allocation} totalConsumption={totalConsumption} />
                                         )
                                     })}
+                                    <AddExAnte projects={projects} addExAnteFetcher={addExAnteFetcher} blockId={block.id} />
                                 </div>
                                 <div className="mt-12">
                                     <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Carbon Credit Purchase Allocation</div>
@@ -122,6 +120,7 @@ export default function AllocationDetailDialog({isOpen, setIsOpen, block}: {isOp
                                             <AllocationProject key={`purchase_cc_${idx}`} project={purchase} totalConsumption={totalConsumption} />
                                         )
                                     })}
+                                    <AddExPost addExPostFetcher={addExPostFetcher} blockId={block.id} />
                                 </div>
                                 <div className="mt-12">
                                     <div className="text-neutral-300 text-lg font-normal font-inter mb-4">Transaction History</div>
@@ -160,6 +159,78 @@ function AllocationProject({project, totalConsumption}: {project: any, totalCons
                     <div className="px-3 text-neutral-300">&bull;</div>
                     <div className="text-neutral-200 italic">{percentage}% of the offset block</div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+function AddExAnte({projects, addExAnteFetcher, blockId}: { projects: any[], addExAnteFetcher: any, blockId: number }) {
+    const [isAddingExAnte, setIsAddingExAnte] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(projects[0]);
+    const ref = useRef<HTMLFormElement>(null);
+
+    useEffect(() => {
+        if(addExAnteFetcher.type === "done") {
+            setIsAddingExAnte(false);
+        }
+    }, [addExAnteFetcher.type]);
+   
+    if (isAddingExAnte) {
+        return (
+            <addExAnteFetcher.Form method="post" action="/planification/allocation/exante" ref={ref} className="w-full" >
+                <ComboBox inputList={projects} selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+                <input type="number" name="cc" className="w-full mt-2 py-3 pl-3 pr-10 text-sm rounded-lg leading-5 text-neutral-100 focus:outline-none focus:ring-0 bg-neutral-700 border border-neutral-500 hover:border-neutral-400" placeholder="Amount of CC" />
+                <input type="hidden" name="block_id" value={blockId} />
+                <div className="w-full mt-2 flex items-center justify-end">
+                    <button className="text-neutral-300 font-inter font-normal text-sm mr-2 border-none bg-transparent outline-none hover:text-neutral-200" onClick={() => setIsAddingExAnte(false)}>Cancel</button>
+                    <button type="submit" className="text-neutral-200 font-inter font-normal text-sm mr-2 border-none bg-transparent outline-none hover:text-neutral-100">Confirm</button>
+                </div>
+            </addExAnteFetcher.Form>
+        )
+    }
+    return (
+        <div className="flex items-center justify-start w-full py-4 cursor-pointer text-neutral-200 hover:text-neutral-100" onClick={() => setIsAddingExAnte(true)}>
+            <div className="w-fit">
+                <PlusIcon className="w-6" />
+            </div>
+            <div className="w-fit font-inter ml-4">
+                Add Ex Ante allocation
+            </div>
+        </div>
+    )
+}
+
+function AddExPost({addExPostFetcher, blockId}: { addExPostFetcher: any, blockId: number }) {
+    const [isAddingExPost, setIsAddingExPost] = useState(false);
+    const ref = useRef<HTMLFormElement>(null);
+
+    useEffect(() => {
+        if(addExPostFetcher.type === "done") {
+            setIsAddingExPost(false);
+        }
+    }, [addExPostFetcher.type]);
+
+    if (isAddingExPost) {
+        return (
+            <addExPostFetcher.Form method="post" action="/planification/allocation/expost" ref={ref} className="w-full" >
+                <input type="text" name="name" className="w-full mt-2 py-3 pl-3 pr-10 text-sm rounded-lg leading-5 text-neutral-100 focus:outline-none focus:ring-0 bg-neutral-700 border border-neutral-500 hover:border-neutral-400" placeholder="Name" />
+                <input type="text" name="ipfs" className="w-full mt-2 py-3 pl-3 pr-10 text-sm rounded-lg leading-5 text-neutral-100 focus:outline-none focus:ring-0 bg-neutral-700 border border-neutral-500 hover:border-neutral-400" placeholder="IPFS Picture" />
+                <input type="number" name="cc" className="w-full mt-2 py-3 pl-3 pr-10 text-sm rounded-lg leading-5 text-neutral-100 focus:outline-none focus:ring-0 bg-neutral-700 border border-neutral-500 hover:border-neutral-400" placeholder="Amount of CC" />
+                <input type="hidden" name="block_id" value={blockId} />
+                <div className="w-full mt-2 flex items-center justify-end">
+                    <button type="button" className="text-neutral-300 font-inter font-normal text-sm mr-2 border-none bg-transparent outline-none hover:text-neutral-200" onClick={() => setIsAddingExPost(false)}>Cancel</button>
+                    <button type="submit" className="text-neutral-200 font-inter font-normal text-sm mr-2 border-none bg-transparent outline-none hover:text-neutral-100">Confirm</button>
+                </div>
+            </addExPostFetcher.Form>
+        )
+    }
+    return (
+        <div className="flex items-center justify-start w-full py-4 cursor-pointer text-neutral-200 hover:text-neutral-100" onClick={() => setIsAddingExPost(true)}>
+            <div className="w-fit">
+                <PlusIcon className="w-6" />
+            </div>
+            <div className="w-fit font-inter ml-4">
+                Add Ex Post allocation
             </div>
         </div>
     )
