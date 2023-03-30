@@ -11,11 +11,13 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react";
+import type { Connector } from '@starknet-react/core';
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
 import { Provider } from "starknet";
 import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
 import { db } from "./utils/db.server";
+import { useEffect } from "react";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -48,7 +50,7 @@ export const loader: LoaderFunction = async ({
 
 export default function App() {
   const defautlNetwork = useLoaderData();
-  const connectors = [
+  const connectors:Connector<any>[] = [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
   ];
@@ -58,6 +60,17 @@ export default function App() {
       baseUrl: defautlNetwork.nodeUrl
     }
   })
+
+  useEffect(() => {
+
+    import("@argent/starknet-react-webwallet-connector").then(({ WebWalletConnector }) => {
+      connectors.push(new WebWalletConnector());
+      connectors.push(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }))
+    });
+    
+  }, []);
+
+  console.log(connectors)
   
   return (
     <html lang="en" className="bg-neutral-800 text-white">

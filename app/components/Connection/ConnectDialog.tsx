@@ -3,7 +3,8 @@ import { Fragment } from "react";
 import { useConnectors } from "@starknet-react/core";
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
-    const { available, connect } = useConnectors();
+    const { connectors, connect } = useConnectors();
+    console.log(connectors)
 
     const handleClick = (wallet: any) => {
         connect(wallet);
@@ -48,14 +49,14 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                             Connect your wallet
                         </Dialog.Title>
                         <div className="mt-6 flex items-center justify-center">
-                            { available.map((wallet) => (
+                            { connectors.map((wallet) => (
                                 <div key={wallet.id() + "_modal"} className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" onClick={() => handleClick(wallet)}>
-                                    <img className="w-8 mx-auto" src={`/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.name()}`} />
-                                    <div className="uppercase font-inter mt-2">{wallet.name()}</div>
+                                    <img className="w-8 mx-auto" src={`/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.id()}`} />
+                                    <div className="uppercase font-inter mt-2">{wallet.id()}</div>
                                 </div>
                             ))}
                          </div>
-                        { available.length === 0 && 
+                        { connectors.length === 0 && 
                             <div className="mt-6 flex items-center justify-center">
                                 <a className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" href="https://www.argent.xyz/argent-x/" rel="noreferrer" target="_blank">
                                     <img className="w-8 mx-auto" src={`/assets/images/common/argentX.svg`} alt="Connect with ArgentX" />
