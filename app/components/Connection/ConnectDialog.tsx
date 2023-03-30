@@ -4,7 +4,6 @@ import { useConnectors } from "@starknet-react/core";
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
     const { connectors, connect } = useConnectors();
-    console.log(connectors)
 
     const handleClick = (wallet: any) => {
         connect(wallet);
