@@ -17,7 +17,7 @@ import { Provider } from "starknet";
 import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
 import { db } from "./utils/db.server";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -50,10 +50,14 @@ export const loader: LoaderFunction = async ({
 
 export default function App() {
   const defautlNetwork = useLoaderData();
-  const connectors:Connector<any>[] = [
+
+  const [webwallet, setWebwallet] = useState<any>(null);
+  const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
+
+  const connectors:Connector<any>[] = useMemo(() => [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
-  ];
+  ], []);
 
   const defaultProfider = new Provider({
     sequencer: {
@@ -64,13 +68,26 @@ export default function App() {
   useEffect(() => {
 
     import("@argent/starknet-react-webwallet-connector").then(({ WebWalletConnector }) => {
-      connectors.push(new WebWalletConnector());
-      connectors.push(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }))
+      setWebwallet(new WebWalletConnector());
+
+      if (defautlNetwork.id === 'testnet2') { 
+        setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }));
+      }
     });
     
-  }, []);
+  }, [defautlNetwork]);
 
-  console.log(connectors)
+  useEffect(() => {
+    if (connectors.length > 2) { return; }
+
+    if (webwallet) {
+      connectors.push(webwallet);
+    }
+
+    if (webwalletTestnet2) {
+      connectors.push(webwalletTestnet2);
+    }
+  }, [webwallet, webwalletTestnet2, connectors]);
   
   return (
     <html lang="en" className="bg-neutral-800 text-white">
