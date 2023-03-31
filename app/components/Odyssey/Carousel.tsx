@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { BadgeMint } from "../Buttons/ActionButton";
-import { useStarknetExecute,  useAccount, useContract } from '@starknet-react/core';
+import { useContractWrite,  useAccount, useContract } from '@starknet-react/core';
 import ErrorMessage from "./ErrorMessage";
 import LoadingScreen from "./LoadingScreen";
 import SuccessMessage from "./SuccessMessage";
@@ -27,7 +27,7 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     const { account, address } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
 
-    const { execute } = useStarknetExecute({ 
+    const { writeAsync } = useContractWrite({ 
         calls: {
             contractAddress: minterContractAddress,
             entrypoint: 'claim',
@@ -45,11 +45,11 @@ export default function Carousel({badges, contract}: {badges: Badge[], contract:
     }
 
     useEffect(() => {
-        execute().then(transaction => {
+        writeAsync().then((transaction: any) => {
             const transactionHash = transaction.transaction_hash;
             setCurrentTransactionHash(transactionHash);
         })
-    }, [signature, badgeType, execute]);
+    }, [signature, badgeType, writeAsync]);
 
     useEffect(() => {
         if (currentTransactionHash) {
