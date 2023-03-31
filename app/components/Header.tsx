@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "@remix-run/react";
 import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
 import { useEffect } from "react";
@@ -10,7 +10,7 @@ import Select from "./Filters/Select";
 
 
 export default function Header({toggleMenu, menuOpen, addressToDisplay, networksList, selectedNetwork}: any) {
-    const { status } = useAccount();
+    const { status, connector } = useAccount();
     const { disconnect } = useConnectors();
     const { library } = useStarknet();
     const navigate = useNavigate();
@@ -33,6 +33,8 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
             library.chainId = filtered[0][1].chainId;
         }
     }, [status]);
+
+    console.log(connector)
     return (
         <>
             <div className="flex items-center justify-center mx-auto w-11/12 lg:w-full lg:px-4">
@@ -51,7 +53,10 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
 
                     {status === 'connected' && 
                         <>
-                            <span className="mr-12 font-trash hidden lg:block">{addressToDisplay}</span>
+                            <span className="mr-12 font-trash hidden lg:flex items-center justify-center">
+                                {addressToDisplay}
+                                {connector?.id() === 'argentWebWallet' && <a href={selectedNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
+                            </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>
                     }
