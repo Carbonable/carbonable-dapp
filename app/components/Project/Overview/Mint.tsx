@@ -1,5 +1,5 @@
 import type { Project } from "@prisma/client";
-import { useAccount, useConnectors, useStarknetExecute, useTransactionReceipt } from "@starknet-react/core";
+import { useAccount, useConnectors, useContractWrite, useWaitForTransaction } from "@starknet-react/core";
 import { Fragment, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { simplifyAddress } from "~/utils/utils";
@@ -80,7 +80,7 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
     const canBuy: boolean = (isWhitelisted || project.publicSaleOpen) && status === "connected";
 
     const [txHash, setTxHash] = useState("");
-    const { data: dataTx } = useTransactionReceipt({ hash: txHash, watch: true });
+    const { data: dataTx } = useWaitForTransaction({ hash: txHash, watch: true });
     const [amount, setAmount] = useState(1);
     let [isConnectOpen, setIsConnectOpen] = useState(false);
     let [isTxOpen, setIsTxOpen] = useState(false);
@@ -127,7 +127,7 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
         },
     ];
 
-    const { execute, data: dataExecute } = useStarknetExecute({
+    const { write, data: dataExecute } = useContractWrite({
         calls,
         metadata: {
             method: 'Approve and buy tokens',
@@ -139,13 +139,13 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
         if (!canBuy) { return };
         
         if (status === "connected") {
-            execute();
+            write();
             return;
         }
 
         if (available.length === 1) {
             connect(available[0]);
-            execute();
+            write();
             return;
         }
 

@@ -68,7 +68,9 @@ export default function App() {
   useEffect(() => {
 
     import("@argent/starknet-react-webwallet-connector").then(({ WebWalletConnector }) => {
-      setWebwallet(new WebWalletConnector());
+      if (defautlNetwork.id === 'mainnet') { 
+        setWebwallet(new WebWalletConnector());
+      }
 
       if (defautlNetwork.id === 'testnet2') { 
         setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }));

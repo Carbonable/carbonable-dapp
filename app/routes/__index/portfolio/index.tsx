@@ -1,4 +1,4 @@
-import type { AccountStatus} from "@starknet-react/core";
+import type { AccountStatus } from "@starknet-react/core";
 import { useAccount } from "@starknet-react/core";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
