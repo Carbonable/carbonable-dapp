@@ -34,7 +34,6 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
         }
     }, [status]);
 
-    console.log(connector)
     return (
         <>
             <div className="flex items-center justify-center mx-auto w-11/12 lg:w-full lg:px-4">
