@@ -1,6 +1,6 @@
 import { useContractRead } from '@starknet-react/core';
 import type { Abi } from 'starknet';
-import { number } from "starknet";
+import { num } from "starknet";
 
 import MinterAbiTestnet from '../abi/testnet/CarbonableMinter_abi.json';
 import MinterAbiTestnet2 from '../abi/testnet2/CarbonableMinter_abi.json';
@@ -76,7 +76,7 @@ export function useReservedSupplyForMint(contractAddress: string, network: strin
 export function useProjectNftAddress(contractAddress: string, network: string): any {
     const abi = useMinterContract(network);
     const { data, error } = useContractRead({ abi, address: contractAddress, functionName: 'carbonable_project_address', args: [] });
-    const addr = data ? number.toHex(data[0]) : undefined;
+    const addr = data ? num.toHex(data[0]) : undefined;
     return { projectNftAddress: addr, errorProjectNftAddress: error };
 }
 
@@ -125,6 +125,6 @@ export function useUnitPrice(contractAddress: string, network: string): any {
 export function usePaymentTokenAddress(contractAddress: string, network: string): any {
     const abi = useMinterContract(network);
     const { data, error } = useContractRead({ abi, address: contractAddress, functionName: 'payment_token_address', args: [] });
-    const addr = data ? number.toHex(data[0]) : undefined;
+    const addr = data ? num.toHex(data[0]) : undefined;
     return { paymentTokenAddress: addr, errorPaymentTokenAddress: error };
 }

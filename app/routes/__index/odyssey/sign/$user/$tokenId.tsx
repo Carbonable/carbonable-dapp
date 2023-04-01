@@ -1,18 +1,16 @@
-import { ec, hash } from "starknet";
+import { ec } from "starknet";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { simplifyAddress } from "~/utils/utils";
 
 
+
 export async function loader({ params }: LoaderArgs) {
     const user = params.user
     const privateKey = process.env.QUEST_SIGNER_PRIVATE_KEY;
-    const starkKeyPair = ec.getKeyPair(privateKey || '0x0');
-    const res = {
-        low: '',
-        high: ''
-    };
+    const starkKeyPair = ec.starkCurve.getStarkKey(privateKey || '0x0');
+    let res;
 
     const whitelist = await db.badgeWhitelist.findFirst();
     let eligibleUsers: any[] = [];
@@ -27,10 +25,9 @@ export async function loader({ params }: LoaderArgs) {
             const whitelistedUser = token.user;
             const tokenId = token.token_id;
             if (tokenId.toString() === params.tokenId && simplifyAddress(whitelistedUser) === simplifyAddress(user)) {
-                const message = hash.pedersen([user.toLowerCase(), tokenId]);
-                const signature = ec.sign(starkKeyPair, message)
-                res.low = signature[0];
-                res.high = signature[1];
+                const message = ec.starkCurve.pedersen(user.toLowerCase(), tokenId);
+                res = ec.starkCurve.sign(message, starkKeyPair);
+                return res;
             }
         }
         return res;

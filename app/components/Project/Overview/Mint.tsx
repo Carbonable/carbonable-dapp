@@ -3,7 +3,6 @@ import { useAccount, useConnectors, useContractWrite, useWaitForTransaction } fr
 import { Fragment, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { simplifyAddress } from "~/utils/utils";
-import { number } from "starknet";
 import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -105,12 +104,12 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
     function buildWhitelistCallArgs(whitelistInfo: any, amount: number) {
         if (!whitelistInfo) return [];
         const args = [];
-        args.push(number.toFelt(whitelistInfo.quantity));
-        args.push(number.toFelt(whitelistInfo.proof.length));
+        args.push(whitelistInfo.quantity);
+        args.push(whitelistInfo.proof.length);
         whitelistInfo.proof.forEach((proof: any) => {
-            args.push(number.toFelt(proof));
+            args.push(proof);
         });
-        args.push(number.toFelt(amount))
+        args.push(amount)
         return args;
     }
 
@@ -118,12 +117,12 @@ export default function Mint({ project, priceToDisplay, whitelist, refreshProjec
         {
             contractAddress: project.paymentContract,
             entrypoint: 'approve',
-            calldata: [number.toFelt(project.minterContract), (amount * (priceToDisplay * Math.pow(10, project.paymentTokenDecimals))).toString(), 0]
+            calldata: [project.minterContract, (amount * (priceToDisplay * Math.pow(10, project.paymentTokenDecimals))).toString(), 0]
         },
         {
             contractAddress: project.minterContract,
             entrypoint: project.publicSaleOpen ? 'publicBuy' : 'preBuy',
-            calldata: project.publicSaleOpen ? [number.toFelt(amount)] : buildWhitelistCallArgs(whitelistInfo, amount)
+            calldata: project.publicSaleOpen ? [amount] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
 
