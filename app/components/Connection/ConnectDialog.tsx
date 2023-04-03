@@ -13,8 +13,6 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
     const handleClose = () => {
         setIsOpen(false);
     }
-
-    console.log(connectors)
     
     return (
         <Transition appear show={isOpen} as={Fragment}>
