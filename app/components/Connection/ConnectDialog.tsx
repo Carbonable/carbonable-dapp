@@ -40,17 +40,17 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl border border-neutral-700 bg-launchpad-header p-6 text-left align-middle shadow-xl transition-all">
+                        <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl border border-neutral-700 bg-launchpad-header p-6 text-left align-middle shadow-xl transition-all">
                         <Dialog.Title
                             as="h3"
                             className="uppercase font-trash text-lg text-center"
                         >
                             Connect your wallet
                         </Dialog.Title>
-                        <div className="mt-6 flex items-center justify-center">
+                        <div className="mt-6 flex items-start justify-center">
                             { connectors.map((wallet) => (
-                                <div key={wallet.id() + "_modal"} className="p-4 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" onClick={() => handleClick(wallet)}>
-                                    <img className="w-8 mx-auto" src={wallet.id() === 'argentWebWallet' ? '/assets/images/common/argentx.svg' : `/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.id()}`} />
+                                <div key={wallet.id() + "_modal"} className="p-4 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5 max-w-[150px] min-h-[120px]" onClick={() => handleClick(wallet)}>
+                                    <img className="w-8 h-8 mx-auto" src={wallet.id() === 'argentWebWallet' ? '/assets/images/common/argentx.svg' : `/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.id()}`} />
                                     <div className="uppercase font-inter mt-2">{wallet.id() === 'argentWebWallet' ? 'Argent Web Wallet' : wallet.id()}</div>
                                 </div>
                             ))}
