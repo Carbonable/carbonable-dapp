@@ -22,7 +22,9 @@ export const loader: LoaderFunction = async ({
             }
         });
 
-        const allFarms = await fetch(`${process.env.INDEXER_URL}/farming/list`, {});
+        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+
+        const allFarms = await fetch(`${indexerURL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
         return json([allFarmsJson]);
     } catch (e) {
@@ -39,6 +41,24 @@ export default function FarmingIndex() {
     const [myFarmingAssets, setMyFarmingAssets] = useState('-');
     const [claimableAssets, setClaimableAssets] = useState('-');
     const [releasableAssets, setReleasableAssets] = useState('-');
+    const fetcher = useFetcher();
+    const [portfolio, setPortfolio] = useState([] as any);
+
+    useEffect(() => {
+        if (address !== undefined && fetcher.data === undefined && fetcher.type === "init") {
+            fetcher.load(`/portfolio/load?wallet=${address}`);
+        }
+
+        if (fetcher.data !== undefined && status === 'connected') {
+            setPortfolio(fetcher.data.data.projects);
+        }
+    }, [fetcher, address, status]);
+
+    useEffect(() => {
+        if (address !== undefined && status === 'connected') {
+            fetcher.load(`/portfolio/load?wallet=${address}`);
+        }
+    }, [address, status]);
 
     const filterButtons = [
         {
@@ -113,7 +133,7 @@ export default function FarmingIndex() {
                 {
                     projects.map((project, index) => {
                         return (
-                            <FarmingCard project={project} key={index} />
+                            <FarmingCard project={project} key={index} portfolio={portfolio} />
                         )})
                     }
                 </div>

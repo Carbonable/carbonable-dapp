@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import { IPFS_GATEWAY } from "~/utils/links";
 import { FarmingButton } from "../Buttons/ActionButton";
-import { NavLink, useFetcher } from "@remix-run/react";
+import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
 import { ipfsUrl, shortenNumber } from "~/utils/utils";
 import type { Color} from '~/utils/blockchain/traits';
@@ -14,7 +14,7 @@ const enum CardLocation {
     SEPARATOR = "separator",
 }
 
-export default function FarmingCard({project}: {project: any}) {
+export default function FarmingCard({project, portfolio}: {project: any, portfolio: any[]}) {
     const color = getTraitValue(project.Uri.data.attributes, Traits.COLOR);
     const farmStatus = getTraitValue(project.Uri.data.attributes, Traits.STATUS);
     const { status, address } = useAccount();
@@ -28,6 +28,7 @@ export default function FarmingCard({project}: {project: any}) {
     const [offsetRewards, setOffsetRewards] = useState('-');
     const [undepositedCount, setUndepositedCount] = useState(0);
     const [minAbsorbtionToClaim, setMinAbsorbtionToClaim] = useState(1);
+    const [mustMigrate, setMustMigrate] = useState(false);
 
     useEffect(() => {
         if (unconnectedFetcher.data === undefined && unconnectedFetcher.type === "init") {
@@ -66,6 +67,12 @@ export default function FarmingCard({project}: {project: any}) {
 
         }
     }, [connectedUserFetcher, address, status, project.slug]);
+
+    useEffect(() => {
+        if (portfolio?.length > 0) {
+            setMustMigrate(portfolio.find(asset => asset.id === project.id) !== undefined);
+        }
+    }, [portfolio, project.id]);
 
     return (
         <div className={`relative rounded-3xl p-[1px] max-w-md min-w-[350px] ${printFarmingColorClass(color, CardLocation.BORDER)} hover:brightness-[108%]`}>
@@ -116,7 +123,7 @@ export default function FarmingCard({project}: {project: any}) {
                 </div>
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
-                <ActionButtons minAbsorbtionToClaim={minAbsorbtionToClaim} offsetRewards={offsetRewards} yieldRewards={yieldRewards} />
+                <ActionButtons minAbsorbtionToClaim={minAbsorbtionToClaim} offsetRewards={offsetRewards} yieldRewards={yieldRewards} mustMigrate={mustMigrate} />
             </div>
         </div>
     )
@@ -167,12 +174,13 @@ function Tag({text, color, count}: {text: string, color: string, count?: number}
     )
 }
 
-function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards}: {minAbsorbtionToClaim: number, offsetRewards: string, yieldRewards: string}) {
+function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards, mustMigrate}: {minAbsorbtionToClaim: number, offsetRewards: string, yieldRewards: string, mustMigrate: boolean}) {
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
     const canClaimOffset = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
-    const canClaimYield = parseFloat(offsetRewards) > 0;
+    const canClaimYield = parseFloat(yieldRewards) > 0;
+    const navigate = useNavigate();
 
     const handleClick = () => {
         if (status === "connected") { return; }
@@ -187,6 +195,12 @@ function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards}: {min
     }
 
     if (status === "connected") {
+        if (mustMigrate) {
+            return (
+                <FarmingButton className="w-full rounded-xl !bg-greenish-600 hover:!bg-greenish-500" onClick={() => {navigate("/portfolio")}}>Migrate assets</FarmingButton>
+            )
+        }
+
         return (
             <div className="flex gap-x-2">
                 {canClaimYield && <FarmingButton className="w-1/2 rounded-xl">Claim Yield</FarmingButton>}
