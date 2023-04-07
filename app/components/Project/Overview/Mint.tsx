@@ -7,7 +7,7 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "~/utils/links";
-import ConnectDialog from "~/components/Connection/ConnectDialog";
+import ConnectDialog from "~/components/Connection/ConnectDialog"
 
 export function TransactionDialog({ isOpen, setIsOpen, txHash, network }: { isOpen: boolean, setIsOpen: any, txHash: string, network: string }) {
     const handleClose = () => {

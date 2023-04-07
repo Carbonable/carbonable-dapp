@@ -15,7 +15,6 @@ export default function SecondaryButton({ children, className, onClick }: Button
     return <button className={secondaryButton + className} onClick={onClick}>{children}</button>;
 }
 
-
 export function WaitinglistButton({ children, className, onClick }: ButtonProps) {
     return <button className={whitelistCssClass + className} onClick={onClick}>{children}</button>;
 }
@@ -33,6 +32,5 @@ export function GreenButton({ children, className, onClick }: ButtonProps) {
 }
 
 export function FarmingButton({ children, className, onClick, disabled }: ButtonProps) {
-    return <button className={`font-inter text-white text-sm rounded-lg bg-opacityLight-5 px-4 py-3 hover:bg-opacityLight-5/10 ${disabled ? "cursor-not-allowed bg-transparent border border-neutral-700 hover:bg-transparent" : ""} ` + className} onClick={onClick}>{children}</button>;
+    return <button className={`font-inter text-white text-sm rounded-lg bg-opacityLight-5 px-4 py-3 hover:bg-opacityLight-5/10 ${disabled ? "cursor-not-allowed bg-transparent border border-neutral-700 hover:bg-transparent text-neutral-500" : ""} ` + className} onClick={onClick}>{children}</button>;
 }
-

@@ -69,32 +69,57 @@ export const loader: LoaderFunction = async ({
 export default function FarmingPage() {
     const { project, slug } = useLoaderData();
     const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
-    const { status, address } = useAccount();
+    const { address, isConnected } = useAccount();
     const fetcher = useFetcher();
     const [overview, setOverview] = useState<OverviewProps | undefined>(undefined);
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
+    const fetcherPortfolio = useFetcher();
+    const [portfolio, setPortfolio] = useState([] as any);
+    const [mustMigrate, setMustMigrate] = useState(false);
 
     useEffect(() => {
-        if (status === "connected" || isConnectDialogOpen) { return; }
+        if (address !== undefined && fetcherPortfolio.data === undefined && fetcherPortfolio.type === "init") {
+            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
+        }
+
+        if (fetcherPortfolio.data !== undefined && isConnected) {
+            setPortfolio(fetcherPortfolio.data.projects);
+        }
+    }, [fetcherPortfolio, address, isConnected]);
+
+    useEffect(() => {
+        if (address !== undefined && isConnected) {
+            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
+        }
+    }, [address, isConnected]);
+
+    useEffect(() => {
+        if (isConnected === undefined || isConnected || isConnectDialogOpen) { return; }
 
         setIsConnectDialogOpen(true);
-    }, [status]);
+    }, [isConnected]);
 
     useEffect(() => {
-        if (fetcher.data === undefined && fetcher.type === "init" && status === "connected") {
+        if (fetcher.data === undefined && fetcher.type === "init" && isConnected) {
             fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
         }
 
-        if (fetcher.data !== undefined && fetcher.data !== null && status === "connected") {
+        if (fetcher.data !== undefined && fetcher.data !== null && isConnected) {
             const data = fetcher.data.data;
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.assets_allocation);
         }
-    }, [fetcher, address, status, slug]);
+    }, [fetcher, address, isConnected, slug]);
+
+    useEffect(() => {
+        if (portfolio?.length > 0) {
+            setMustMigrate(portfolio.find((asset: any) => asset.id === project.id) !== undefined);
+        }
+    }, [portfolio, project.id]);
 
     const handleClaimYield = async () => {
         console.log("Claim Yield");
@@ -165,7 +190,7 @@ export default function FarmingPage() {
                     </div>
                     
                     <div className="mt-12">
-                        <FarmingAllocation yieldAmount={assetsAllocation?.yield} offsetAmount={assetsAllocation?.offseted} undepositedAmount={assetsAllocation?.undeposited} total={assetsAllocation?.total} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} /> 
+                        <FarmingAllocation yieldAmount={assetsAllocation?.yield} offsetAmount={assetsAllocation?.offseted} undepositedAmount={assetsAllocation?.undeposited} total={assetsAllocation?.total} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} mustMigrate={mustMigrate} /> 
                     </div>
                     <div className="relative bg-farming-footer bg-no-repeat bg-center bg-cover px-8 py-12 mt-12 rounded-2xl overflow-hidden md:p-16">
                         <div className="font-inter font-bold text-white text-3xl md:text-4xl">

@@ -20,3 +20,7 @@ export function GreenLinkButton({ href, children, className }: LinkButtonProps) 
     return <a href={href} className={greenActionButton + className}>{children}</a>;
 }
 
+export function FarmingGreenLinkButton({ href, children, className}: LinkButtonProps) {
+    return <a href={href} className={`font-inter text-white text-sm rounded-lg bg-greenish-600 px-4 py-3 hover:bg-greenish-500 ` + className}>{children}</a>;
+}
+

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import SecondaryButton from "../Buttons/ActionButton";
+import SecondaryButton, { FarmingButton } from "../Buttons/ActionButton";
+import { useNavigate } from "@remix-run/react";
 
-export default function FarmingAllocation({yieldAmount, offsetAmount, undepositedAmount, total, handleDeposit, handleWithdraw}: {yieldAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, handleDeposit: () => void, handleWithdraw: () => void}) {
+export default function FarmingAllocation({yieldAmount, offsetAmount, undepositedAmount, total, mustMigrate, handleDeposit, handleWithdraw}: {yieldAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void}) {
     const [yieldPercentage, setYieldPercentage] = useState<string | undefined>(undefined);
     const [offsetPercentage, setOffsetPercentage] = useState<string | undefined>(undefined);
     const [undepositedPercentage, setUndepositedPercentage] = useState<string | undefined>(undefined);
@@ -44,12 +45,28 @@ export default function FarmingAllocation({yieldAmount, offsetAmount, undeposite
                     <FarmingAllocationValue title="Undeposited" value={undepositedAmount} percentage={undepositedPercentage} />
                 </div>
                 <div className="w-full col-span-6 items-center mt-6 text-neutral-200 md:col-span-4 text-left md:text-right">
-                    {total !== undefined && <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>}
-                    {total === undefined && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
-                    {total !== undefined && total > 0 && <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>}
-                    {(total === undefined || total === 0) && <SecondaryButton className="ml-2 cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Withdraw</SecondaryButton>}
+                    <ActionButtons total={total} mustMigrate={mustMigrate} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} />
                 </div>
             </div>
         </div>
+    )
+}
+
+function ActionButtons({total, mustMigrate, handleDeposit, handleWithdraw}: {total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void}) {
+    const navigate = useNavigate();
+
+    if (mustMigrate) {
+        return (
+            <SecondaryButton className="!bg-greenish-600 hover:!bg-greenish-500 text-white" onClick={() => {navigate("/portfolio")}}>Migrate assets</SecondaryButton>
+        )
+    }
+
+    return (
+        <>
+            {total !== undefined && <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>}
+            {total === undefined && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
+            {total !== undefined && total > 0 && <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>}
+            {(total === undefined || total === 0) && <SecondaryButton className="ml-2 cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Withdraw</SecondaryButton>}
+        </>
     )
 }
