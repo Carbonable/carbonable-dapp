@@ -3,6 +3,8 @@ node_modules
 .cache
 .env
 .output
+.DS_Store
+/**/.DS_Store
 
 /build/
 /public/build
