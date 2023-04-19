@@ -1,3 +1,5 @@
+import { IPFS_GATEWAY } from "./links";
+
 /**
  * Validate user email format
  * 
@@ -41,6 +43,26 @@ export function simplifyAddress(hex: string | undefined): string {
     return hex.replace(/^0x0*/, '').toLowerCase();
 }
 
+/** 
+ * Split the url to get the ipfs path
+ * @param url
+ * @returns string
+ */
 export function ipfsUrl(url: string): string | undefined {
     return url.split("ipfs://").pop();
+}
+
+/**
+ * Get the url of the image
+ * @param url
+ * @returns string
+ */
+export async function getImageUrl(url: string): Promise<string> {
+    if (url.startsWith("ipfs://")) {
+        return IPFS_GATEWAY + ipfsUrl(url);
+    }
+
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.image;
 }
