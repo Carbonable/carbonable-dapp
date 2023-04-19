@@ -11,9 +11,10 @@ import type { Network } from "@prisma/client";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
-import { ipfsUrl, shortenNumber } from "~/utils/utils";
+import { getImageUrl, ipfsUrl, shortenNumber } from "~/utils/utils";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import NewsletterDialog from "~/components/Newsletter/Newsletter";
+import { num } from "starknet";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -141,23 +142,33 @@ function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate
 
 function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigrate?: boolean, handleMigrate?: any}) {
     const shares = project.tokens.reduce((acc: any, token: any) => acc + token.value, 0);
+    const [imageSrc, setImageSrc] = useState("");
+
+    useEffect(() => {
+        if (project.tokens[0].image) {
+                getImageUrl(project.tokens[0].image).then((url) => {
+                setImageSrc(url);
+            });
+        }
+    }, [project.tokens]);
+
     return (
         <div className="w-full flex flex-wrap" >
             <div className="flex justify-start items-center flex-wrap col-span-4 md:col-span-1">
                 <div className="relative group">
-                    <img src={IPFS_GATEWAY + ipfsUrl(project.tokens[0].image)} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
+                    <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
                     <div className="absolute invisible top-0 left-0 bg-transparent group-hover:bg-dark-40 group-hover:visible w-full h-[100%] rounded-[8.8%]">
                         <div className="relative w-full h-100%">
-                            <a href={`${ASPECT_LINK}/asset/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-16 md:top-4 xl:top-6 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
+                            <a href={`${ASPECT_LINK}/asset/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-16 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
                                 <img src='/assets/images/icons/aspect-icon.png' alt="Go to Aspect" className="w-full" />
                             </a>
-                            <a href={`${MINTSQUARE_LINK}/asset/starknet/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-5 md:top-4 xl:top-6 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
+                            <a href={`${MINTSQUARE_LINK}/asset/starknet/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-5 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
                                 <img src='/assets/images/icons/mintsquare-icon.svg' alt="Go to Mint Square" className="w-full" />
                             </a>
                         </div>
                     </div>
-                    {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-6 xl:left-6 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">x{project.tokens.length}</div>}
-                    {!toMigrate && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-6 xl:left-6 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shares} shares</div>}
+                    {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">x{project.tokens.length}</div>}
+                    {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shortenNumber(parseFloat(num.hexToDecimalString(shares)))} shares</div>}
                 </div>
             </div>
             {toMigrate && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
@@ -188,10 +199,21 @@ function BadgesList({badges}: {badges: any[]}) {
     )
 }
 
-function PortfolioState({status, selectedNetwork, state, projects, badges, handleMigrate}: {status: AccountStatus, selectedNetwork: Network, state: string, projects: any[], badges: any[], handleMigrate: any}) {
+function PortfolioState({status, selectedNetwork, state, projects, badges, reloadData, setReloadData, handleMigrate}: {status: AccountStatus, selectedNetwork: Network, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, handleMigrate: any}) {
 
     if (status === 'disconnected') {
         return <Disconnected />
+    }
+
+    if (reloadData) {
+        return (
+            <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
+                <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
+                <GreenButton className="w-full mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
+                <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl mt-16">My badges</div>
+                <GreenButton className="w-full mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
+            </div>
+        )
     }
 
     return (
@@ -228,6 +250,7 @@ export default function Portfolio() {
     const [badges, setBadges] = useState([] as any);
     const fetcher = useFetcher();
     const [txHash, setTxHash] = useState("");
+    const [reloadData, setReloadData] = useState(false);
     const { data: dataTx } = useWaitForTransaction({ hash: txHash, watch: true });
     const calls: any = [];
     
@@ -238,6 +261,10 @@ export default function Portfolio() {
 
         if (fetcher.data !== undefined && status === 'connected') {
             const data = fetcher.data.data;
+            if (data === undefined) {
+                setReloadData(true);
+                return; 
+            }
             setProjects(data.projects);
             setBadges(data.badges);
             setInvestedAmount(shortenNumber(data.global.total));
@@ -246,7 +273,7 @@ export default function Portfolio() {
             setNumberOfProjects((_.filter(projects, (project) => project.tokens.length > 0)).length)
             setNumberOfNFT(_(projects).flatMap('tokens').value().length);
         }
-    }, [fetcher, address, status]);
+    }, [fetcher, address, status, reloadData]);
 
     useEffect(() => {
         if (address !== undefined && status === 'connected') {
@@ -254,7 +281,7 @@ export default function Portfolio() {
         }
 
         if (status === 'disconnected') {
-            setInvestedAmount(0);
+            setInvestedAmount("0");
             setInvestedProjects([]);
             setCollectedBadges([]);
             setNumberOfProjects(0);
@@ -296,7 +323,7 @@ export default function Portfolio() {
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>
-            <PortfolioState status={status} selectedNetwork={selectedNetwork} state={fetcher.state} projects={investedProjects} badges={collectedBadges} handleMigrate={handleMigrate} />
+            <PortfolioState status={status} selectedNetwork={selectedNetwork} state={fetcher.state} projects={investedProjects} badges={collectedBadges} reloadData={reloadData} setReloadData={setReloadData} handleMigrate={handleMigrate} />
         </div>
     )
     

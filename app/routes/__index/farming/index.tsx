@@ -130,11 +130,12 @@ export default function FarmingIndex() {
                     }
                 </div>
                 <div className="flex flex-wrap justify-start mt-8 gap-8 w-full">
-                {
-                    projects.map((project, index) => {
-                        return (
-                            <FarmingCard project={project} key={index} portfolio={portfolio} />
-                        )})
+                    {
+                        projects.map((project, index) => {
+                            return (
+                                <FarmingCard project={project} key={index} portfolio={portfolio} />
+                            )
+                        })
                     }
                 </div>
             </div>

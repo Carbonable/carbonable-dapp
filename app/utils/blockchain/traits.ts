@@ -23,6 +23,8 @@ export const enum FarmStatus {
  * @param key
  * @returns string
 */
-export function getTraitValue(traits: any[], key: string){
+export function getTraitValue(traits: any[] | undefined, key: string) {
+    if (undefined === traits) { return ''; }
+    
     return traits.filter(trait => trait.trait_type === key)[0].value;
 }
