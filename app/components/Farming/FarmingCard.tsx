@@ -4,7 +4,7 @@ import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
 import { getImageUrl, shortenNumber } from "~/utils/utils";
-import type { Color} from '~/utils/blockchain/traits';
+import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 
 const enum CardLocation {
@@ -14,7 +14,6 @@ const enum CardLocation {
 }
 
 export default function FarmingCard({project, portfolio}: {project: any, portfolio: any[]}) {
-    console.log(project, portfolio);
     const color = getTraitValue(project.uri?.data?.attributes, Traits.COLOR);
     const farmStatus = getTraitValue(project.uri?.data?.attributes, Traits.STATUS);
     const { status, address } = useAccount();
@@ -32,10 +31,8 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {
-        if (project.tokens !== undefined) { return; }
-        
-        if (project.tokens[0].image) {
-                getImageUrl(project.uri.data.banner_image_url).then((url) => {
+        if (project.uri?.data.image) {
+            getImageUrl(project.uri.data.image).then((url) => {
                 setImageSrc(url);
             });
         }
@@ -48,9 +45,10 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
         if (unconnectedFetcher.data !== undefined) {
             const data = unconnectedFetcher.data.data;
+            console.log(data)
             isNaN(data?.apr) ? setApr(data?.apr) : setApr(shortenNumber(parseFloat(data?.apr)));
-            setTvl(shortenNumber(parseFloat(data?.tvl)));
-            setTotalRemoval(shortenNumber(parseFloat(data?.total_removal)));
+            setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
+            setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value)));
         }
     }, [unconnectedFetcher, project.slug]);
 
@@ -70,6 +68,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             }
 
             const data = connectedUserFetcher.data.data;
+            console.log(data)
             isNaN(data?.customer_stake) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_stake)));
             isNaN(data?.vesting_to_claim) ? setYieldRewards('0') : setYieldRewards(shortenNumber(parseFloat(data?.vesting_to_claim)));
             isNaN(data?.absorption_to_claim) ? setOffsetRewards('0') : setOffsetRewards(shortenNumber(parseFloat(data?.absorption_to_claim)));
@@ -103,7 +102,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                     </div>
                     <div className={`w-full h-[1px] ${printFarmingColorClass(color, CardLocation.SEPARATOR)}`}></div>
                     <div className="relative text-center p-4 bg-farming-card-bg">
-                        <img src={imageSrc} alt={`${project.slug} NFT card`} className="w-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50" />
+                        <img src={imageSrc} alt={`${project.slug} NFT card`} className="w-[66px] h-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50" />
                         <div className="font-inter font-medium text-neutral-100 text-lg pt-8">
                             {project.name}
                         </div>

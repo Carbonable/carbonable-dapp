@@ -159,10 +159,10 @@ function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigra
                     <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
                     <div className="absolute invisible top-0 left-0 bg-transparent group-hover:bg-dark-40 group-hover:visible w-full h-[100%] rounded-[8.8%]">
                         <div className="relative w-full h-100%">
-                            <a href={`${ASPECT_LINK}/asset/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-16 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
+                            <a href={`${ASPECT_LINK}/asset/${project.address}/${num.hexToDecimalString(project.tokens[0].token_id)}`} rel="noreferrer" target="_blank" className="absolute top-6 right-16 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
                                 <img src='/assets/images/icons/aspect-icon.png' alt="Go to Aspect" className="w-full" />
                             </a>
-                            <a href={`${MINTSQUARE_LINK}/asset/starknet/${project.address}/${project.tokens[0].tokenId}`} rel="noreferrer" target="_blank" className="absolute top-6 right-5 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
+                            <a href={`${MINTSQUARE_LINK}/asset/starknet/${project.address}/${num.hexToDecimalString(project.tokens[0].token_id)}`} rel="noreferrer" target="_blank" className="absolute top-6 right-5 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
                                 <img src='/assets/images/icons/mintsquare-icon.svg' alt="Go to Mint Square" className="w-full" />
                             </a>
                         </div>
@@ -265,6 +265,7 @@ export default function Portfolio() {
                 setReloadData(true);
                 return; 
             }
+            console.log(data.global)
             setProjects(data.projects);
             setBadges(data.badges);
             setInvestedAmount(shortenNumber(data.global.total));
@@ -302,7 +303,7 @@ export default function Portfolio() {
             calls.push( {
                 contractAddress: project.minter_address,
                 entrypoint: 'migrate',
-                calldata: [parseInt(token.token_id), 0]
+                calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
             }
         )});
         write();
