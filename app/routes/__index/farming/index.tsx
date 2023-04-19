@@ -43,7 +43,7 @@ export default function FarmingIndex() {
     const [releasableAssets, setReleasableAssets] = useState('-');
     const fetcher = useFetcher();
     const [portfolio, setPortfolio] = useState([] as any);
-
+    
     useEffect(() => {
         if (address !== undefined && fetcher.data === undefined && fetcher.type === "init") {
             fetcher.load(`/portfolio/load?wallet=${address}`);
@@ -99,7 +99,6 @@ export default function FarmingIndex() {
                 setReleasableAssets('0');
                 return;
             }
-
             const data = connectedGlobalFetcher.data.data;
             isNaN(data?.total_deposited) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_deposited)));
             isNaN(data?.total_claimable) ? setClaimableAssets('0') : setClaimableAssets(shortenNumber(parseFloat(data?.total_claimable)));

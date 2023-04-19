@@ -61,8 +61,5 @@ export async function getImageUrl(url: string): Promise<string> {
     if (url.startsWith("ipfs://")) {
         return IPFS_GATEWAY + ipfsUrl(url);
     }
-
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.image;
+    return url;
 }
