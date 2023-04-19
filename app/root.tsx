@@ -139,3 +139,29 @@ export function CatchBoundary() {
     </html>
   );
 }
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <html className="bg-neutral-800 text-white">
+      <head>
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div className="flex w-screen h-screen items-center justify-center flex-wrap">
+          <div>
+            <div className="text-6xl font-trash w-full text-center">Oops!</div>
+            <div className="text-4xl font-americana w-full text-center">We are working on fixing this issue</div>
+            <div className="text-center mt-4">
+              <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
+            </div>
+          </div>
+        </div>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
