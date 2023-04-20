@@ -6,6 +6,8 @@ import ConnectDialog from "../Connection/ConnectDialog";
 import { getImageUrl, shortenNumber } from "~/utils/utils";
 import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
+import _ from "lodash";
+import { GRAMS_PER_TON } from "~/utils/constant";
 
 const enum CardLocation {
     HEADER = "header",
@@ -48,7 +50,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             console.log(data)
             isNaN(data?.apr) ? setApr(data?.apr) : setApr(shortenNumber(parseFloat(data?.apr)));
             setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
-            setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value)));
+            setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value) / GRAMS_PER_TON));
         }
     }, [unconnectedFetcher, project.slug]);
 
@@ -69,18 +71,19 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
             const data = connectedUserFetcher.data.data;
             console.log(data)
-            isNaN(data?.customer_stake) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_stake)));
-            isNaN(data?.vesting_to_claim) ? setYieldRewards('0') : setYieldRewards(shortenNumber(parseFloat(data?.vesting_to_claim)));
-            isNaN(data?.absorption_to_claim) ? setOffsetRewards('0') : setOffsetRewards(shortenNumber(parseFloat(data?.absorption_to_claim)));
-            isNaN(data?.undeposited) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited);
-            isNaN(data?.min_to_claim) ? setMinAbsorbtionToClaim(1) : setMinAbsorbtionToClaim(data?.min_to_claim);
+            isNaN(data?.customer_stake.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_stake.displayable_value)));
+            isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumber(parseFloat(data?.vesting_to_claim.displayable_value)));
+            isNaN(data?.absorption_to_claim.displayable_value) ? setOffsetRewards('0') : setOffsetRewards(shortenNumber(parseFloat(data?.absorption_to_claim.displayable_value)));
+            isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
+            isNaN(data?.min_to_claim.displayable_value) ? setMinAbsorbtionToClaim(1000000) : setMinAbsorbtionToClaim(data?.min_to_claim.displayable_value);
 
         }
     }, [connectedUserFetcher, address, status, project.slug]);
 
     useEffect(() => {
         if (portfolio?.length > 0) {
-            setMustMigrate(portfolio.find(asset => asset.id === project.id) !== undefined);
+            const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
+            setMustMigrate(projectsToMigrate.find(asset => asset.id === project.id) !== undefined);
         }
     }, [portfolio, project.id]);
 
@@ -179,7 +182,7 @@ function Tag({text, color, count}: {text: string, color: string, count?: number}
     return (
         <div className={`flex items-center justify-center rounded-3xl pl-3 ${(count !==  undefined && count > 0) ? "pr-1" : "pr-3"} py-1 ${color}  font-inter font-light text-sm bg-opacityLight-5 ${count !== undefined ? "ml-2" : ""}`}>
             <div>{text}</div>
-            { (count !==  undefined && count > 0) && <div className="bg-opacityLight-10 rounded-full min-w-[24px] min-h-[24px] ml-2 flex justify-center items-center">{count}</div>}
+            { (count !==  undefined && count > 0) && <div className="bg-opacityLight-10 rounded-full min-w-[24px] min-h-[24px] ml-2 flex justify-center items-center">{shortenNumber(count)}</div>}
         </div>
     )
 }

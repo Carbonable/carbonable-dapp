@@ -11,7 +11,7 @@ import type { Network } from "@prisma/client";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
-import { getImageUrl, ipfsUrl, shortenNumber } from "~/utils/utils";
+import { getImageUrlFromMetadata, ipfsUrl, shortenNumber } from "~/utils/utils";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import NewsletterDialog from "~/components/Newsletter/Newsletter";
 import { num } from "starknet";
@@ -141,12 +141,12 @@ function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate
 }
 
 function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigrate?: boolean, handleMigrate?: any}) {
-    const shares = project.tokens.reduce((acc: any, token: any) => acc + token.value, 0);
+    const shares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
     const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {
         if (project.tokens[0].image) {
-                getImageUrl(project.tokens[0].image).then((url) => {
+            getImageUrlFromMetadata(project.tokens[0].image).then((url) => {
                 setImageSrc(url);
             });
         }
@@ -168,7 +168,7 @@ function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigra
                         </div>
                     </div>
                     {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">x{project.tokens.length}</div>}
-                    {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shortenNumber(parseFloat(num.hexToDecimalString(shares)))} shares</div>}
+                    {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shortenNumber(shares)} {shares > 1 ? 'shares' : 'share'}</div>}
                 </div>
             </div>
             {toMigrate && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
@@ -209,9 +209,9 @@ function PortfolioState({status, selectedNetwork, state, projects, badges, reloa
         return (
             <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
                 <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
-                <GreenButton className="w-full mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
+                <GreenButton className="w-fit mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
                 <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl mt-16">My badges</div>
-                <GreenButton className="w-full mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
+                <GreenButton className="w-fit mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
             </div>
         )
     }
@@ -265,7 +265,6 @@ export default function Portfolio() {
                 setReloadData(true);
                 return; 
             }
-            console.log(data.global)
             setProjects(data.projects);
             setBadges(data.badges);
             setInvestedAmount(shortenNumber(data.global.total));

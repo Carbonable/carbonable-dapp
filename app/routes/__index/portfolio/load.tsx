@@ -10,13 +10,7 @@ export const loader: LoaderFunction = async ({
         const cookieHeader = request.headers.get("Cookie");
         const cookie = (await userPrefs.parse(cookieHeader)) || {};
 
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
-
-        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        const indexerURL = cookie.selected_network === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
 
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");

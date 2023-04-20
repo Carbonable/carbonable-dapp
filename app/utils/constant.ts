@@ -1,0 +1,1 @@
+export const GRAMS_PER_TON = 1000000;

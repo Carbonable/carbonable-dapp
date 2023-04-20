@@ -14,32 +14,40 @@ import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
 import { ipfsUrl, shortenNumber } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext } from "~/components/Farming/AssetsManagement/Dialog";
+import _ from "lodash";
+import { GRAMS_PER_TON } from "~/utils/constant";
 
 export interface OverviewProps {
-    total_removal: number;
-    tvl: number;
-    current_apr: number;
-    total_yielded: number;
-    total_offseted: number;
+    total_removal: NumericValueProps;
+    tvl: NumericValueProps;
+    apr: any;
+    total_yielded: NumericValueProps;
+    total_offseted: NumericValueProps;
+}
+
+interface NumericValueProps {
+    displayable_value: string;
+    type: string;
+    value: any;
 }
 
 interface ClaimableProps {
-    available: number;
-    total: number;
+    available: NumericValueProps;
+    total: NumericValueProps;
 }
 
 interface CarbonCreditsProps {
-    generated_credits: number;
-    to_be_generated: number;
+    generated_credits: NumericValueProps;
+    to_be_generated: NumericValueProps;
     offset: ClaimableProps;
     yield: ClaimableProps;
 }
 
 interface AssetsAllocationProps {
-    yield: number;
-    offseted: number;
-    total: number;
-    undeposited: number;
+    yield: NumericValueProps;
+    offseted: NumericValueProps;
+    total: NumericValueProps;
+    undeposited: NumericValueProps;
 }
 
 export const loader: LoaderFunction = async ({
@@ -80,6 +88,8 @@ export default function FarmingPage() {
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
 
+    console.log(overview, carbonCredits, assetsAllocation)
+
     useEffect(() => {
         if (address !== undefined && fetcherPortfolio.data === undefined && fetcherPortfolio.type === "init") {
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
@@ -108,16 +118,18 @@ export default function FarmingPage() {
         }
 
         if (fetcher.data !== undefined && fetcher.data !== null && isConnected) {
+            console.log(fetcher.data)
             const data = fetcher.data.data;
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
-            setAssetsAllocation(data.assets_allocation);
+            setAssetsAllocation(data.allocation);
         }
     }, [fetcher, address, isConnected, slug]);
 
     useEffect(() => {
         if (portfolio?.length > 0) {
-            setMustMigrate(portfolio.find((asset: any) => asset.id === project.id) !== undefined);
+            const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
+            setMustMigrate(projectsToMigrate.find(asset => asset.id === project.id) !== undefined);
         }
     }, [portfolio, project.id]);
 
@@ -150,18 +162,35 @@ export default function FarmingPage() {
                                 <ProjectIdentification project={project} />
                             </div>
                             <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
-                                <FarmingRepartition yieldAmount={overview?.total_yielded} offsetAmount={overview?.total_offseted} />
+                                <FarmingRepartition 
+                                    yieldAmount={overview?.total_yielded.displayable_value ? parseFloat(overview?.total_yielded.displayable_value) : 0} 
+                                    offsetAmount={overview?.total_offseted.displayable_value ? parseFloat(overview?.total_offseted.displayable_value) : 0} 
+                                />
                             </div>
                         </div>
                         <div className="w-full grid grid-cols-4 gap-4 mx-auto items-center mt-10 text-left md:mt-18 md:grid-cols-8 2xl:grid-cols-12 md:gap-12">
                             <div className="col-span-2 md:col-span-3 2xl:col-span-5">
-                                <KPI title="Total Removal" value={shortenNumber(overview?.total_removal)} unit="t" large={true} />
+                                <KPI 
+                                    title="Total Removal" 
+                                    value={overview?.total_removal.displayable_value ? shortenNumber(parseFloat(overview?.total_removal.displayable_value) / GRAMS_PER_TON) : "-"} 
+                                    unit="t" 
+                                    large={true} 
+                                />
                             </div>
                             <div className="col-span-2 md:col-span-3 2xl:col-span-5">
-                                <KPI title="TVL" value={shortenNumber(overview?.tvl)} unit="$" large={true} />
+                                <KPI 
+                                    title="TVL" 
+                                    value={overview?.tvl.displayable_value ? shortenNumber(parseFloat(overview?.tvl.displayable_value)) : "-"} 
+                                    unit="$" 
+                                    large={true} 
+                                />
                             </div>
                             <div className="col-span-2 md:col-span-2">
-                                <KPI title="Current APR" value={`${shortenNumber(overview?.current_apr)}%`} large={true} />
+                                <KPI 
+                                    title="Current APR" 
+                                    value={overview?.apr === 'n/a' ? '- %' : `${shortenNumber(overview?.apr)}%`} 
+                                    large={true} 
+                                />
                             </div>
                         </div>
                     </div>
@@ -172,25 +201,53 @@ export default function FarmingPage() {
                         <div className="flex flex-wrap mt-4 items-start md:mt-8">
                             <div className="w-full grid grid-cols-2 gap-6 md:w-3/12 md:border-r md:border-neutral-300">
                                 <div className="w-full md:col-span-2 md:mt-2">
-                                    <KPI title="Generated to date" value={shortenNumber(carbonCredits?.generated_credits)} unit="CC" large={false} />
+                                    <KPI 
+                                        title="Generated to date" 
+                                        value={carbonCredits?.generated_credits.displayable_value ? shortenNumber(parseFloat(carbonCredits?.generated_credits.displayable_value) * GRAMS_PER_TON) : "-"} 
+                                        unit="CC" 
+                                        large={false} 
+                                    />
                                 </div>
                                 <div className="w-full md:col-span-2 md:mt-12">
-                                    <KPI title="To be generated" value={shortenNumber(carbonCredits?.to_be_generated)} unit="CC" large={false} />
+                                    <KPI 
+                                        title="To be generated" 
+                                        value={carbonCredits?.to_be_generated.displayable_value ? shortenNumber(parseFloat(carbonCredits?.to_be_generated.displayable_value) * GRAMS_PER_TON) : "-"} 
+                                        unit="CC" 
+                                        large={false} 
+                                    />
                                 </div>
                             </div>
                             <div className="w-full md:w-9/12 md:pl-8">
                                 <div className="mt-12 md:mt-0">
-                                    <FarmDetail type={FarmType.YIELD} total={shortenNumber(carbonCredits?.yield.total)} available={shortenNumber(carbonCredits?.yield.available)} handleClaim={handleClaimYield} />
+                                    <FarmDetail 
+                                        type={FarmType.YIELD} 
+                                        total={carbonCredits?.yield.total.displayable_value ? shortenNumber(parseFloat(carbonCredits?.yield.total.displayable_value)) : "-"} 
+                                        available={carbonCredits?.yield.available.displayable_value ? shortenNumber(parseFloat(carbonCredits?.yield.available.displayable_value)) : "-"} 
+                                        handleClaim={handleClaimYield} 
+                                    />
                                 </div>
                                 <div className="mt-12">
-                                    <FarmDetail type={FarmType.OFFSET} total={shortenNumber(carbonCredits?.offset.total)} available={shortenNumber(carbonCredits?.offset.available)} handleClaim={handleClaimOffset} />
+                                    <FarmDetail 
+                                        type={FarmType.OFFSET} 
+                                        total={carbonCredits?.offset.total.displayable_value ? shortenNumber(parseFloat(carbonCredits?.offset.total.displayable_value)) : "-"} 
+                                        available={carbonCredits?.offset.available.displayable_value ? shortenNumber(parseFloat(carbonCredits?.offset.available.displayable_value)) : "-"} 
+                                        handleClaim={handleClaimOffset} 
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div className="mt-12">
-                        <FarmingAllocation yieldAmount={assetsAllocation?.yield} offsetAmount={assetsAllocation?.offseted} undepositedAmount={assetsAllocation?.undeposited} total={assetsAllocation?.total} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} mustMigrate={mustMigrate} /> 
+                        <FarmingAllocation 
+                            yieldAmount={assetsAllocation?.yield.displayable_value ? parseFloat(assetsAllocation?.yield.displayable_value) : 0} 
+                            offsetAmount={assetsAllocation?.offseted.displayable_value ? parseFloat(assetsAllocation?.offseted.displayable_value) : 0} 
+                            undepositedAmount={assetsAllocation?.undeposited.displayable_value ? parseFloat(assetsAllocation?.undeposited.displayable_value) : 0} 
+                            total={assetsAllocation?.total.displayable_value ? parseFloat(assetsAllocation?.total.displayable_value) : 0} 
+                            handleDeposit={handleDeposit} 
+                            handleWithdraw={handleWithdraw} 
+                            mustMigrate={mustMigrate} 
+                        /> 
                     </div>
                     <div className="relative bg-farming-footer bg-no-repeat bg-center bg-cover px-8 py-12 mt-12 rounded-2xl overflow-hidden md:p-16">
                         <div className="font-inter font-bold text-white text-3xl md:text-4xl">
