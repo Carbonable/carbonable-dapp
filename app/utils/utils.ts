@@ -61,5 +61,21 @@ export async function getImageUrl(url: string): Promise<string> {
     if (url.startsWith("ipfs://")) {
         return IPFS_GATEWAY + ipfsUrl(url);
     }
+
     return url;
+}
+
+/**
+ * Get the url of the image
+ * @param url
+ * @returns string
+ */
+export async function getImageUrlFromMetadata(url: string): Promise<string> {
+    if (url.startsWith("ipfs://")) {
+        return IPFS_GATEWAY + ipfsUrl(url);
+    }
+
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.image;
 }
