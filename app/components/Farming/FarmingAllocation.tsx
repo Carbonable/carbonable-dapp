@@ -45,14 +45,20 @@ export default function FarmingAllocation({yieldAmount, offsetAmount, undeposite
                     <FarmingAllocationValue title="Undeposited" value={undepositedAmount} percentage={undepositedPercentage} />
                 </div>
                 <div className="w-full col-span-6 items-center mt-6 text-neutral-200 md:col-span-4 text-left md:text-right">
-                    <ActionButtons total={total} mustMigrate={mustMigrate} undepositedPercentage={undepositedPercentage} handleDeposit={handleDeposit} handleWithdraw={handleWithdraw} />
+                    <ActionButtons 
+                        mustMigrate={mustMigrate}
+                        undepositedPercentage={undepositedPercentage} 
+                        undepositedAmount={undepositedAmount}
+                        handleDeposit={handleDeposit} 
+                        handleWithdraw={handleWithdraw} 
+                    />
                 </div>
             </div>
         </div>
     )
 }
 
-function ActionButtons({total, mustMigrate, undepositedPercentage, handleDeposit, handleWithdraw}: {total: number | undefined, mustMigrate: boolean, undepositedPercentage: string | undefined, handleDeposit: () => void, handleWithdraw: () => void}) {
+function ActionButtons({mustMigrate, undepositedPercentage, undepositedAmount, handleDeposit, handleWithdraw}: {mustMigrate: boolean, undepositedPercentage: string | undefined, undepositedAmount: number | undefined, handleDeposit: () => void, handleWithdraw: () => void}) {
     const navigate = useNavigate();
 
     if (mustMigrate) {
@@ -63,8 +69,8 @@ function ActionButtons({total, mustMigrate, undepositedPercentage, handleDeposit
 
     return (
         <>
-            {total !== undefined && <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>}
-            {total === undefined && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
+            {(undepositedAmount !== undefined && undepositedAmount > 0) && <SecondaryButton onClick={handleDeposit}>Deposit</SecondaryButton>}
+            {(undepositedAmount === undefined || undepositedAmount === 0) && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
             {undepositedPercentage !== undefined && undepositedPercentage !== '100%' && <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>}
             {(undepositedPercentage === undefined || undepositedPercentage === '100%') && <SecondaryButton className="ml-2 cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Withdraw</SecondaryButton>}
         </>
