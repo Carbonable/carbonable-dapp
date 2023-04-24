@@ -292,12 +292,18 @@ export default function Portfolio() {
     const { write, data: dataExecute } = useContractWrite({
         calls,
         metadata: {
-            method: 'Migrate tokens',
+            method: 'Approve migration, migrate tokens then revoke approval',
             message: 'Migrate ERC-721 tokens to ERC-3525 tokens',
         }
     });
 
     const handleMigrate = (project: any) => {
+        calls.push( {
+            contractAddress: project.address,
+            entrypoint: 'setApprovalForAll',
+            calldata: [project.minter_address, 1]
+        });
+
         project.tokens.forEach((token: any) => {
             calls.push( {
                 contractAddress: project.minter_address,
@@ -305,6 +311,11 @@ export default function Portfolio() {
                 calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
             }
         )});
+        calls.push( {
+            contractAddress: project.address,
+            entrypoint: 'setApprovalForAll',
+            calldata: [project.minter_address, 0]
+        });
         write();
         return;
     }
