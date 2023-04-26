@@ -18,7 +18,7 @@ const enum CardLocation {
 export default function FarmingCard({project, portfolio}: {project: any, portfolio: any[]}) {
     const color = getTraitValue(project.uri?.data?.attributes, Traits.COLOR);
     const farmStatus = getTraitValue(project.uri?.data?.attributes, Traits.STATUS);
-    const { status, address } = useAccount();
+    const { isConnected, address } = useAccount();
     const unconnectedFetcher = useFetcher();
     const connectedUserFetcher = useFetcher();
     const [apr, setApr] = useState('-');
@@ -41,25 +41,26 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     }, [project]);
 
     useEffect(() => {
-        if (unconnectedFetcher.data === undefined && unconnectedFetcher.type === "init") {
+        if (unconnectedFetcher.data === undefined) {
             unconnectedFetcher.load(`/farming/list/unconnected?slug=${project.slug}`);
         }
 
         if (unconnectedFetcher.data !== undefined) {
             const data = unconnectedFetcher.data.data;
-            console.log(data)
             isNaN(data?.apr) ? setApr(data?.apr) : setApr(shortenNumber(parseFloat(data?.apr)));
             setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
             setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value) / GRAMS_PER_TON));
         }
-    }, [unconnectedFetcher, project.slug]);
+    }, [unconnectedFetcher.data]);
 
     useEffect(() => {
-        if (connectedUserFetcher.data === undefined && connectedUserFetcher.type === "init" && status === "connected") {
+        if (isConnected) {
             connectedUserFetcher.load(`/farming/list/customer?wallet=${address}&slug=${project.slug}`);
         }
+    }, [address, isConnected]);
 
-        if (connectedUserFetcher.data !== undefined && status === "connected") {
+    useEffect(() => {
+        if (isConnected && connectedUserFetcher.data !== undefined) {
             if(connectedUserFetcher.data === 404 || connectedUserFetcher.data.length === 0) {
                 setMyStake('0');
                 setYieldRewards('0');
@@ -70,7 +71,6 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             }
 
             const data = connectedUserFetcher.data.data;
-            console.log(data)
             isNaN(data?.customer_stake.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_stake.displayable_value)));
             isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumber(parseFloat(data?.vesting_to_claim.displayable_value)));
             isNaN(data?.absorption_to_claim.displayable_value) ? setOffsetRewards('0') : setOffsetRewards(shortenNumber(parseFloat(data?.absorption_to_claim.displayable_value)));
@@ -78,7 +78,16 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             isNaN(data?.min_to_claim.displayable_value) ? setMinAbsorbtionToClaim(1000000) : setMinAbsorbtionToClaim(data?.min_to_claim.displayable_value);
 
         }
-    }, [connectedUserFetcher, address, status, project.slug]);
+
+        if (!isConnected) {
+            setMyStake('-');
+            setYieldRewards('-');
+            setOffsetRewards('-');
+            setUndepositedCount(0);
+            setMinAbsorbtionToClaim(1);
+            return;
+        }
+    }, [connectedUserFetcher.data, isConnected]);
 
     useEffect(() => {
         if (portfolio?.length > 0) {
@@ -193,6 +202,7 @@ function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards, mustM
     let [isOpen, setIsOpen] = useState(false);
     const canClaimOffset = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
     const canClaimYield = parseFloat(yieldRewards) > 0;
+    console.log("canClaimOffset", canClaimOffset, "canClaimYield", canClaimYield);
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -217,9 +227,9 @@ function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards, mustM
         return (
             <div className="flex gap-x-2">
                 {canClaimYield && <FarmingButton className="w-1/2 rounded-xl">Claim Yield</FarmingButton>}
-                {!canClaimYield && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield}>Claim Yield</FarmingButton>}
+                {canClaimYield === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield}>Claim Yield</FarmingButton>}
                 {canClaimOffset && <FarmingButton className="w-1/2 rounded-xl">Claim Offset</FarmingButton>}
-                {!canClaimOffset && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset}>Claim Offset</FarmingButton>}
+                {canClaimOffset === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset}>Claim Offset</FarmingButton>}
             </div>
         )
     }
