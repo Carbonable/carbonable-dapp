@@ -1,13 +1,11 @@
-import type { AccountStatus} from "@starknet-react/core";
 import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
 import { useAccount } from "@starknet-react/core";
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
 import { db } from "~/utils/db.server";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import Disconnected from "~/components/Portfolio/Disconnected";
-import type { Network } from "@prisma/client";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
@@ -35,24 +33,24 @@ export const loader: LoaderFunction = async ({
     }
 };
 
-export const meta: MetaFunction = () => ({
-    charset: "utf-8",
-    title: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform",
-    description: "Manage your assets and badges from your Carbonable portfolio.",
-    image: "https://carbonable.io/assets/images/social/social.jpg",
-    viewport: "width=device-width,initial-scale=1",
-    'og:url': "https://app.carbonable.io/portfolio",
-    'og:type': "website",
-    'og:title': "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform",
-    'og:description': "Manage your assets and badges from your Carbonable portfolio.",
-    'og:image': "https://carbonable.io/assets/images/social/social.jpg",
-    'twitter:domain': "carbonable.io",
-    'twitter:url': "https://app.carbonable.io/portfolio",
-    'twitter:title': "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform",
-    'twitter:description': "Manage your assets and badges from your Carbonable portfolio.",
-    'twitter:card': "summary_large_image",
-    'twitter:image': "https://carbonable.io/assets/images/social/social.jpg",
-});
+export const meta: V2_MetaFunction = () => {
+    return [
+        {title: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
+        { name: "description", content: "Manage your assets and badges from your Carbonable portfolio."},
+        { name: "image", content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { property: 'og:url', content: "https://app.carbonable.io/portfolio"},
+        { property: 'og:type', content: "website"},
+        { property: 'og:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
+        { property: 'og:description', content: "Manage your assets and badges from your Carbonable portfolio."},
+        { property: 'og:image', content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { property: 'twitter:domain', content: "carbonable.io"},
+        { property: 'twitter:url', content: "https://app.carbonable.io/portfolio"},
+        { property: 'twitter:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
+        { property: 'twitter:description', content: "Manage your assets and badges from your Carbonable portfolio."},
+        { property: 'twitter:card', content: "summary_large_image"},
+        { property: 'twitter:image', content: "https://carbonable.io/assets/images/social/social.jpg"}
+    ]
+};
 
 function LoaderProjects() {
     return (
@@ -199,9 +197,9 @@ function BadgesList({badges}: {badges: any[]}) {
     )
 }
 
-function PortfolioState({status, selectedNetwork, state, projects, badges, reloadData, setReloadData, handleMigrate}: {status: AccountStatus, selectedNetwork: Network, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, handleMigrate: any}) {
+function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, handleMigrate}: {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, handleMigrate: any}) {
 
-    if (status === 'disconnected') {
+    if (!isConnected) {
         return <Disconnected />
     }
 
@@ -239,55 +237,53 @@ function KPI({title, value}: {title: string, value: string}) {
 
 
 export default function Portfolio() {
-    const { status, address } = useAccount();
-    const selectedNetwork = useLoaderData();
+    const { isConnected, address } = useAccount();
     const [investedAmount, setInvestedAmount] = useState("-");
     const [investedProjects, setInvestedProjects] = useState([] as any);
     const [collectedBadges, setCollectedBadges] = useState([] as any);
     const [numberOfProjects, setNumberOfProjects] = useState(0);
     const [numberOfNFT, setNumberOfNFT] = useState(0);
-    const [projects, setProjects] = useState([] as any);
-    const [badges, setBadges] = useState([] as any);
     const fetcher = useFetcher();
     const [txHash, setTxHash] = useState("");
     const [reloadData, setReloadData] = useState(false);
     const { data: dataTx } = useWaitForTransaction({ hash: txHash, watch: true });
     const calls: any = [];
     
+
     useEffect(() => {
-        if (address !== undefined && fetcher.data === undefined && fetcher.type === "init") {
+        // Load portfolio data when user connects wallet or changes account
+        if (isConnected) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
         }
 
-        if (fetcher.data !== undefined && status === 'connected') {
-            const data = fetcher.data.data;
-            if (data === undefined) {
-                setReloadData(true);
-                return; 
-            }
-            setProjects(data.projects);
-            setBadges(data.badges);
-            setInvestedAmount(shortenNumber(data.global.total));
-            setInvestedProjects(projects);
-            setCollectedBadges(badges);
-            setNumberOfProjects((_.filter(projects, (project) => project.tokens.length > 0)).length)
-            setNumberOfNFT(_(projects).flatMap('tokens').value().length);
-        }
-    }, [fetcher, address, status, reloadData]);
-
-    useEffect(() => {
-        if (address !== undefined && status === 'connected') {
-            fetcher.load(`/portfolio/load?wallet=${address}`);
-        }
-
-        if (status === 'disconnected') {
+        // Reset portfolio data when user disconnects wallet
+        if (!isConnected) {
             setInvestedAmount("0");
             setInvestedProjects([]);
             setCollectedBadges([]);
             setNumberOfProjects(0);
             setNumberOfNFT(0);
         }
-    }, [address, status]);
+    }, [address, isConnected]);
+
+    // Set portfolio data when data is loaded
+    useEffect(() => {
+        if (isConnected && fetcher.data !== undefined) {
+            const data = fetcher.data.data;
+            if (data === undefined) {
+                setReloadData(true);
+                return;
+            }
+
+            const projects = data.projects;
+            const badges = data.badges;
+            setInvestedAmount(shortenNumber(data.global.total));
+            setInvestedProjects(projects);
+            setCollectedBadges(badges);
+            setNumberOfProjects((_.filter(projects, (project) => project.tokens.length > 0)).length)
+            setNumberOfNFT(_(projects).flatMap('tokens').value().length);
+        }
+    }, [fetcher, isConnected]);
 
     const { write, data: dataExecute } = useContractWrite({
         calls,
@@ -334,7 +330,7 @@ export default function Portfolio() {
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>
-            <PortfolioState status={status} selectedNetwork={selectedNetwork} state={fetcher.state} projects={investedProjects} badges={collectedBadges} reloadData={reloadData} setReloadData={setReloadData} handleMigrate={handleMigrate} />
+            <PortfolioState isConnected={isConnected} state={fetcher.state} projects={investedProjects} badges={collectedBadges} reloadData={reloadData} setReloadData={setReloadData} handleMigrate={handleMigrate} />
         </div>
     )
     

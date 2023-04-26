@@ -10,14 +10,14 @@ export default function NewsletterDialog({ isOpen, setIsOpen }: {isOpen: boolean
 
 
     useEffect(() => {
-        if (newsletter.type === "done" && newsletter.data.message) {
+        if (newsletter.state === "idle" && newsletter.data.message) {
           setTimeout(() => {
             ref.current?.reset();
             newsletter.data.message = undefined;
             setIsOpen(false);
         }, 2000);
         }
-      }, [newsletter, setIsOpen]);
+    }, [newsletter, setIsOpen]);
 
     const handleClose = () => {
         ref.current?.reset();

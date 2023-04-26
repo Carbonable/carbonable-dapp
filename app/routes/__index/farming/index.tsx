@@ -37,7 +37,7 @@ export default function FarmingIndex() {
     const loaderData = useLoaderData();
     const projects: any[] = loaderData[0].data;
     const connectedGlobalFetcher = useFetcher();
-    const { address, status } = useAccount();
+    const { address, isConnected } = useAccount();
     const [myFarmingAssets, setMyFarmingAssets] = useState('-');
     const [claimableAssets, setClaimableAssets] = useState('-');
     const [releasableAssets, setReleasableAssets] = useState('-');
@@ -45,20 +45,33 @@ export default function FarmingIndex() {
     const [portfolio, setPortfolio] = useState([] as any);
     
     useEffect(() => {
-        if (address !== undefined && fetcher.data === undefined && fetcher.type === "init") {
+        if (isConnected) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
+            connectedGlobalFetcher.load(`/farming/list/global?wallet=${address}`);
         }
+    }, [address, isConnected]);
 
-        if (fetcher.data !== undefined && status === 'connected') {
+    // Set portfolio data when data is loaded
+    useEffect(() => {
+        if (isConnected && fetcher.data !== undefined) {
             setPortfolio(fetcher.data.data.projects);
         }
-    }, [fetcher, address, status]);
+    }, [fetcher, isConnected]);
 
     useEffect(() => {
-        if (address !== undefined && status === 'connected') {
-            fetcher.load(`/portfolio/load?wallet=${address}`);
+        if (isConnected &&  connectedGlobalFetcher.data !== undefined) {
+            if(connectedGlobalFetcher.data === 404 || connectedGlobalFetcher.data.length === 0) {
+                setMyFarmingAssets('0');
+                setClaimableAssets('0');
+                setReleasableAssets('0');
+                return;
+            }
+            const data = connectedGlobalFetcher.data.data;
+            isNaN(data?.total_deposited) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_deposited)));
+            isNaN(data?.total_claimable) ? setClaimableAssets('0') : setClaimableAssets(shortenNumber(parseFloat(data?.total_claimable)));
+            isNaN(data?.total_releasable) ? setReleasableAssets('0') : setReleasableAssets(shortenNumber(parseFloat(data?.total_releasable)));
         }
-    }, [address, status]);
+    }, [connectedGlobalFetcher, isConnected]);
 
     const filterButtons = [
         {
@@ -87,24 +100,6 @@ export default function FarmingIndex() {
         console.log(filter);
     }
 
-    useEffect(() => {
-        if (connectedGlobalFetcher.data === undefined && connectedGlobalFetcher.type === "init" && status === "connected") {
-            connectedGlobalFetcher.load(`/farming/list/global?wallet=${address}`);
-        }
-
-        if (connectedGlobalFetcher.data !== undefined && status === "connected") {
-            if(connectedGlobalFetcher.data === 404 || connectedGlobalFetcher.data.length === 0) {
-                setMyFarmingAssets('0');
-                setClaimableAssets('0');
-                setReleasableAssets('0');
-                return;
-            }
-            const data = connectedGlobalFetcher.data.data;
-            isNaN(data?.total_deposited) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_deposited)));
-            isNaN(data?.total_claimable) ? setClaimableAssets('0') : setClaimableAssets(shortenNumber(parseFloat(data?.total_claimable)));
-            isNaN(data?.total_releasable) ? setReleasableAssets('0') : setReleasableAssets(shortenNumber(parseFloat(data?.total_releasable)));
-        }
-    }, [connectedGlobalFetcher, address, status]);
 
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
