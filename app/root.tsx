@@ -1,4 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Link,
@@ -8,8 +8,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
   useLoaderData,
+  useRouteError,
+  isRouteErrorResponse,
 } from "@remix-run/react";
 import type { Connector } from '@starknet-react/core';
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
@@ -18,11 +19,6 @@ import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
 import { db } from "./utils/db.server";
 import { useEffect, useMemo, useState } from "react";
-
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  viewport: "width=device-width,initial-scale=1",
-});
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
@@ -94,6 +90,11 @@ export default function App() {
   return (
     <html lang="en" className="bg-neutral-800 text-white">
       <head>
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1"
+        />
         <Meta />
         <Links />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -115,53 +116,33 @@ export default function App() {
   );
 }
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <html className="bg-neutral-800 text-white">
-      <head>
-        <title>Oops!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <div className="flex w-screen h-screen items-center justify-center flex-wrap">
-          <div>
-            <div className="text-9xl font-trash w-full text-center">{caught.status}</div>
-            <div className="text-7xl font-americana w-full text-center">{caught.statusText}</div>
-            <div className="text-center mt-4">
-              <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
-            </div>
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className="flex w-screen h-screen items-center justify-center flex-wrap">
+        <div>
+          <div className="text-9xl font-trash w-full text-center">{error.status}</div>
+          <div className="text-7xl font-americana w-full text-center">{error.data.message}</div>
+          <div className="text-center mt-4">
+            <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
           </div>
         </div>
-        <Scripts />
-      </body>
-    </html>
-  );
-}
+      </div>
+    );
+  }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
   return (
-    <html className="bg-neutral-800 text-white">
-      <head>
-        <title>Oops!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <div className="flex w-screen h-screen items-center justify-center flex-wrap">
-          <div>
-            <div className="text-6xl font-trash w-full text-center">Oops!</div>
-            <div className="text-4xl font-americana w-full text-center">We are working on fixing this issue</div>
-            <div className="text-center mt-4">
-              <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
-            </div>
-          </div>
+    <div className="flex w-screen h-screen items-center justify-center flex-wrap">
+      <div>
+        <div className="text-6xl font-trash w-full text-center">Oops!</div>
+        <div className="text-4xl font-americana w-full text-center">We are working on fixing this issue</div>
+        <div className="text-center mt-4">
+          <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
         </div>
-        <Scripts />
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
-

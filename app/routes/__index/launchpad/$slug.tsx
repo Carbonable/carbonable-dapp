@@ -1,5 +1,5 @@
 import { db } from "~/utils/db.server";
-import type { LoaderFunction, MetaFunction} from "@remix-run/node";
+import type { LoaderFunction, V2_MetaFunction} from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -60,33 +60,33 @@ export const loader: LoaderFunction = async ({
     }
 };
 
-export const meta: MetaFunction = ({ data }) => {
-  if(data === undefined || data.content.length === 0 ) return {};
+export const meta: V2_MetaFunction = ({ data }) => {
+  if(data === undefined || data.content.length === 0 ) return [];
 
   const content: SanityContent = data.content[0];
   const tags = content.seo.ogarticletag.split(" ") || [];
 
-  return {
-    title: content.seo.title,
-    description: content.seo.description,
-    keywords: content.seo.keywords,
-    image: urlFor(content.seo.image).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg",
-    "og:title": content.seo.ogtitle,
-    "og:description": content.seo.ogdescription,
-    "og:image": urlFor(content.seo.ogimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg",
-    "og:url": content.seo.ogurl || `https://app.carbonable.io/launchpad/${content.slug.current}`,
-    "og:type": content.seo.ogtype,
-    "og:article:author": content.seo.ogarticleauthor,
-    "og:article:published_time": content.seo.ogarticlepublishedtime,
-    "og:article:section": content.seo.ogarticlesection,
-    "og:article:tag": tags.map((tag) => tag),
-    "twitter:card": content.seo.twittercard,
-    "twitter:domain": content.seo.twitterdomain,
-    "twitter:title": content.seo.twittertitle,
-    "twitter:description": content.seo.twitterdescription,
-    "twitter:image": urlFor(content.seo.twitterimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg",
-    "twitter:url": content.seo.twitterurl || `https://app.carbonable.io/launchpad/${content.slug.current}`
-  };
+  return [
+    { title:  content.seo.title},
+    { name: "description", content: content.seo.description},
+    { name: "keywords", content: content.seo.keywords},
+    { name: "image", content: urlFor(content.seo.image).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { property: "og:title", content: content.seo.ogtitle},
+    { property: "og:description", content: content.seo.ogdescription},
+    { property: "og:image", content: urlFor(content.seo.ogimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { property: "og:url", content: content.seo.ogurl || `https://app.carbonable.io/launchpad/${content.slug.current}`},
+    { property: "og:type", content: content.seo.ogtype},
+    { property: "og:article:author", content: content.seo.ogarticleauthor},
+    { property: "og:article:published_time", content: content.seo.ogarticlepublishedtime},
+    { property: "og:article:section", content: content.seo.ogarticlesection},
+    { property: "og:article:tag", content: tags.map((tag) => tag)},
+    { property: "twitter:card", content: content.seo.twittercard},
+    { property: "twitter:domain", content: content.seo.twitterdomain},
+    { property: "twitter:title", content: content.seo.twittertitle},
+    { property: "twitter:description", content: content.seo.twitterdescription},
+    { property: "twitter:image", content: urlFor(content.seo.twitterimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { property: "twitter:url", content: content.seo.twitterurl || `https://app.carbonable.io/launchpad/${content.slug.current}`}
+  ]
 };
 
 export default function ProjectPage() {

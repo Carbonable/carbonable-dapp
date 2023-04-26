@@ -88,23 +88,19 @@ export default function FarmingPage() {
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
 
-    console.log(overview, carbonCredits, assetsAllocation)
-
     useEffect(() => {
-        if (address !== undefined && fetcherPortfolio.data === undefined && fetcherPortfolio.type === "init") {
+        if (isConnected) {
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
-        }
-
-        if (fetcherPortfolio.data !== undefined && isConnected) {
-            setPortfolio(fetcherPortfolio.data.projects);
-        }
-    }, [fetcherPortfolio, address, isConnected]);
-
-    useEffect(() => {
-        if (address !== undefined && isConnected) {
-            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
+            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
         }
     }, [address, isConnected]);
+
+    // Set portfolio data when data is loaded
+    useEffect(() => {
+        if (isConnected && fetcherPortfolio.data !== undefined) {
+            setPortfolio(fetcherPortfolio.data.data.projects);
+        }
+    }, [fetcherPortfolio, isConnected]);
 
     useEffect(() => {
         if (isConnected === undefined || isConnected || isConnectDialogOpen) { return; }
@@ -113,18 +109,13 @@ export default function FarmingPage() {
     }, [isConnected]);
 
     useEffect(() => {
-        if (fetcher.data === undefined && fetcher.type === "init" && isConnected) {
-            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
-        }
-
-        if (fetcher.data !== undefined && fetcher.data !== null && isConnected) {
-            console.log(fetcher.data)
+        if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
         }
-    }, [fetcher, address, isConnected, slug]);
+    }, [fetcher, isConnected,]);
 
     useEffect(() => {
         if (portfolio?.length > 0) {
