@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */ 
 module.exports = {
   content: [
-    "./app/**/*.{ts,tsx,js}",
+    "./app/**/*.{ts,tsx,js}"
   ],
   safelist: [
     'bg-farming-border-green',

@@ -1,4 +1,4 @@
-import { IPFS_GATEWAY } from "./links";
+import { IPFS_GATEWAY, STARKNET_ID_INDEXER_MAINNET, STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "./links";
 
 /**
  * Validate user email format
@@ -78,4 +78,22 @@ export async function getImageUrlFromMetadata(url: string): Promise<string> {
     const response = await fetch(url);
     const data = await response.json();
     return data.image;
+}
+
+/**
+ * Get starkscan url for a network
+ * @param network
+ * @returns string
+ */
+export function getStarkscanUrl(network: string): string {
+    switch (network) {
+        case "mainnet":
+            return STARKSCAN_MAINNET;
+        case "testnet":
+            return STARKSCAN_TESTNET;
+        case "testnet2":
+            return STARKSCAN_TESTNET2;
+        default:
+            return STARKSCAN_MAINNET;
+    }
 }

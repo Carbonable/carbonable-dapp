@@ -4,11 +4,20 @@ import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useWaitForTransaction } from "@starknet-react/core";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
+import { ToastContainer, toast } from "react-toastify";
+import { useNotifications } from "~/root";
+import Transaction from "~/components/Notifications/Transaction";
+import { useNotificationCenter } from "react-toastify/addons/use-notification-center"
+import _ from "lodash";
+import { TxStatus } from "~/utils/blockchain/status";
+import { CheckCircleIcon, DocumentCheckIcon, InboxArrowDownIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { Provider } from 'starknet';
+import { NotificationSource } from "~/utils/notifications/sources";
 
 function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
     const input = starknetId !== undefined ? starknetId : address;
@@ -41,7 +50,6 @@ export const loader: LoaderFunction = async ({
     } catch {
         return json([]);
     }
-    
   };
   
 
@@ -50,7 +58,7 @@ export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
     const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
-   
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration } = useNotifications();
 
     async function getStarnetId() {
         const id = await getStarknetId(address, networks.defautlNetwork);
@@ -89,8 +97,97 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet />
+                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration }} />
+                <Notifications />
             </main>
         </div>
+    )
+}
+
+function Notifications() {
+    const { notifs, setNotifs, defaultProvider, setMustReloadMigration } = useNotifications();
+    const { notifications } = useNotificationCenter();
+    const iconCssGreen = 'w-[32px] h-[32px] rounded-full p-[6px] bg-greenish-500 text-white flex items-center justify-center';
+    const iconCssRed = 'w-[32px] h-[32px] rounded-full p-[6px] bg-darkRed text-white flex items-center justify-center';
+    
+    useEffect(() => {
+        // If the notification is not already displayed, display it
+        if (notifs.length > 0 && _.find(notifications, { toastId: notifs[notifs.length - 1].txHash }) === undefined) {
+            const lastNotification = notifs[notifs.length - 1];
+            toast(<Transaction title={lastNotification.message.title} description={lastNotification.message.message} link={lastNotification.message.link} />, 
+                {
+                    toastId: lastNotification.txHash,
+                    type: toast.TYPE.INFO,
+                    hideProgressBar: false,
+                    autoClose: false,
+                    closeOnClick: false,
+                    progress: 0.1,
+                    data: {
+                        project: lastNotification.project
+                    },
+                }
+            );
+        }
+    }, [notifs]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Check transaction status for each notification
+           
+            notifs.forEach(async (notif) => {
+                const dataTx = await defaultProvider?.getTransactionReceipt(notif.txHash);
+                const message = 'Your transaction is ' + dataTx?.status
+
+                if (dataTx?.status === TxStatus.RECEIVED) {
+                    toast.update(notif.txHash, {
+                        render: <Transaction title={notif.message.title} description={message} link={notif.message.link} />,
+                        type: toast.TYPE.SUCCESS,
+                        progress: 0.33,
+                        icon: <div className={iconCssGreen}><InboxArrowDownIcon /></div>
+                    });
+                }
+        
+                if (dataTx?.status === TxStatus.PENDING) {
+                    toast.update(notif.txHash, {
+                        render: <Transaction title={notif.message.title} description={message} link={notif.message.link} />,
+                        type: toast.TYPE.SUCCESS,
+                        progress: 0.66,
+                        icon: <div className={iconCssGreen}><DocumentCheckIcon /></div>
+                    });
+                }
+        
+                if (dataTx?.status === TxStatus.ACCEPTED_ON_L2 || dataTx?.status === TxStatus.ACCEPTED_ON_L1) {
+                    toast.update(notif.txHash, {
+                        render: <Transaction title={notif.message.title} description={message} link={notif.message.link} />,
+                        type: toast.TYPE.SUCCESS,
+                        progress: 1,
+                        icon: <div className={iconCssGreen}><CheckCircleIcon /></div>
+                    });
+
+                    setMustReloadMigration(notif.source === NotificationSource.MIGRATION);
+                    setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
+                    toast.done(notif.txHash);
+                }
+        
+                if (dataTx?.status === TxStatus.REJECTED) {
+                    toast.update(notif.txHash, {
+                        render: <Transaction title={notif.message.title} description={message} link={notif.message.link} />,
+                        type: toast.TYPE.ERROR,
+                        progress: 0.99,
+                        icon: <div className={iconCssRed}><XCircleIcon /></div>
+                    });
+
+                    setMustReloadMigration(notif.source === NotificationSource.MIGRATION);
+                    setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
+                    toast.done(notif.txHash);
+                }
+            });
+        }, 6000);
+
+        return () => clearInterval(interval);
+    });
+
+    return (
+        <ToastContainer position="bottom-right" newestOnTop limit={4} theme="dark" />
     )
 }
