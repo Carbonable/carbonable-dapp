@@ -1,17 +1,20 @@
-import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
+import { useContractWrite } from "@starknet-react/core";
 import { useAccount } from "@starknet-react/core";
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
 import { db } from "~/utils/db.server";
 import { json } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import Disconnected from "~/components/Portfolio/Disconnected";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { ASPECT_LINK, IPFS_GATEWAY, MINTSQUARE_LINK } from "~/utils/links";
-import { getImageUrlFromMetadata, ipfsUrl, shortenNumber } from "~/utils/utils";
+import { getImageUrlFromMetadata, getStarkscanUrl, ipfsUrl, shortenNumber } from "~/utils/utils";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import NewsletterDialog from "~/components/Newsletter/Newsletter";
+import { TxStatus } from "~/utils/blockchain/status";
+import { useNotifications } from "~/root";
+import { NotificationSource } from "~/utils/notifications/sources";
 import { num } from "starknet";
 
 export const loader: LoaderFunction = async ({
@@ -26,6 +29,7 @@ export const loader: LoaderFunction = async ({
               ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
             }
         });
+
         return json(selectedNetwork);
     } catch (e) {
         console.log(e)
@@ -96,7 +100,7 @@ function LoaderBadges() {
     )
 }
 
-function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate: any}) {
+function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: any[], selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
     const migratedProjects = _.filter(projects, project => project.tokens.some((token: any) => token.hasOwnProperty("value")));
     const projectsToMigrate = _.filter(projects, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
     const [isOpen, setIsOpen] = useState(false);
@@ -118,7 +122,7 @@ function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate
                     <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-2">Assets to migrate</div>
                     <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {projectsToMigrate.map((project) => (
-                            <ProjectCard key={project.id} project={project} toMigrate={true} handleMigrate={handleMigrate} />
+                            <ProjectCard key={project.id} project={project} toMigrate={true} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
                         ))}
                     </div>
                 </>
@@ -128,7 +132,7 @@ function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate
                     {projectsToMigrate.length > 0 && <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-8">Migrated assets</div> }
                     <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {migratedProjects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
+                            <ProjectCard key={project.id} project={project} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
                         ))}
                     </div>
                 </>
@@ -138,9 +142,28 @@ function ProjectsList({projects, handleMigrate}: {projects: any[], handleMigrate
     )
 }
 
-function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigrate?: boolean, handleMigrate?: any}) {
+function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {project: any, toMigrate?: boolean, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
     const shares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
     const [imageSrc, setImageSrc] = useState("");
+    const calls: any = [];
+    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(selectedNetwork.id));
+    const [txHash, setTxHash] = useState<string | undefined>("");
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration } = useNotifications();
+
+    // check if project is in notification list
+    const [isMigrating, setIsMigrating] = useState(false);
+
+    useEffect(() => {
+        setIsMigrating(_.some(notifs, (notification: any) => notification.project === project.id && notification.source === NotificationSource.MIGRATION));
+    }, [notifs]);
+
+    useEffect(() => {
+        if (mustReloadMigration === true) { 
+            setRefreshData(true);
+            setMustReloadMigration(false);
+        }
+        
+    }, [mustReloadMigration]);
 
     useEffect(() => {
         if (project.tokens[0].image) {
@@ -149,6 +172,61 @@ function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigra
             });
         }
     }, [project.tokens]);
+
+    const { write, data: dataExecute } = useContractWrite({
+        calls,
+        metadata: {
+            method: 'Approve migration, migrate tokens then revoke approval',
+            message: 'Migrate ERC-721 tokens to ERC-3525 tokens',
+        }
+    });
+
+    const handleMigrate = (project: any) => {
+        
+        calls.push( { contractAddress: project.address,
+            entrypoint: 'setApprovalForAll',
+            calldata: [project.minter_address, 1]
+        });
+
+        /* project.tokens.forEach((token: any) => {
+            calls.push( {
+                contractAddress: project.minter_address,
+                entrypoint: 'migrate',
+                calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
+            }
+        )}); */
+        calls.push( {
+            contractAddress: project.address,
+            entrypoint: 'setApprovalForAll',
+            calldata: [project.minter_address, 0]
+        });
+        
+        write();
+        return;
+    }
+
+    useEffect(() => {
+        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
+    }, [dataExecute]);
+
+    useEffect(() => {
+        // When txHash is set, add toast notification
+        if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
+            setNotifs([...notifs, {
+                txHash: txHash,
+                project: project.id,
+                source: NotificationSource.MIGRATION,
+                txStatus: TxStatus.NOT_RECEIVED,
+                message: {
+                    title: `Migrating ${project.name}`, 
+                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    link: `${starkscanUrl}/tx/${txHash}`
+                }
+            }]);
+
+            setIsMigrating(true);
+        }
+    }, [txHash]);
 
     return (
         <div className="w-full flex flex-wrap" >
@@ -169,7 +247,8 @@ function ProjectCard({project, toMigrate, handleMigrate}: {project: any, toMigra
                     {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shortenNumber(shares)} {shares > 1 ? 'shares' : 'share'}</div>}
                 </div>
             </div>
-            {toMigrate && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
+            {toMigrate && isMigrating === false && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
+            {toMigrate && isMigrating === true && <GreenButton className="w-full mt-2 cursor-not-allowed bg-greenish-800 text-neutral-300 hover:bg-greenish-800" disabled={true}>Migrating...</GreenButton> }
         </div>
         
     )
@@ -197,7 +276,8 @@ function BadgesList({badges}: {badges: any[]}) {
     )
 }
 
-function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, handleMigrate}: {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, handleMigrate: any}) {
+function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, selectedNetwork, setRefreshData}:
+    {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
 
     if (!isConnected) {
         return <Disconnected />
@@ -218,7 +298,7 @@ function PortfolioState({isConnected, state, projects, badges, reloadData, setRe
         <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
             {state === 'loading' && <LoaderProjects /> }
-            {state !== 'loading' && <ProjectsList projects={projects} handleMigrate={handleMigrate} />}
+            {state !== 'loading' && <ProjectsList projects={projects} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />}
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl mt-16">My badges</div>
             {state === 'loading' && <LoaderBadges /> }
             {state !== 'loading' && <BadgesList badges={badges} />}
@@ -244,16 +324,15 @@ export default function Portfolio() {
     const [numberOfProjects, setNumberOfProjects] = useState(0);
     const [numberOfNFT, setNumberOfNFT] = useState(0);
     const fetcher = useFetcher();
-    const [txHash, setTxHash] = useState("");
     const [reloadData, setReloadData] = useState(false);
-    const { data: dataTx } = useWaitForTransaction({ hash: txHash, watch: true });
-    const calls: any = [];
-    
+    const [refreshData, setRefreshData] = useState(true);
+    const selectedNetwork = useLoaderData();
 
     useEffect(() => {
         // Load portfolio data when user connects wallet or changes account
         if (isConnected) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
+            setRefreshData(false);
         }
 
         // Reset portfolio data when user disconnects wallet
@@ -264,7 +343,7 @@ export default function Portfolio() {
             setNumberOfProjects(0);
             setNumberOfNFT(0);
         }
-    }, [address, isConnected]);
+    }, [address, isConnected, refreshData]);
 
     // Set portfolio data when data is loaded
     useEffect(() => {
@@ -285,41 +364,6 @@ export default function Portfolio() {
         }
     }, [fetcher, isConnected]);
 
-    const { write, data: dataExecute } = useContractWrite({
-        calls,
-        metadata: {
-            method: 'Approve migration, migrate tokens then revoke approval',
-            message: 'Migrate ERC-721 tokens to ERC-3525 tokens',
-        }
-    });
-
-    const handleMigrate = (project: any) => {
-        calls.push( {
-            contractAddress: project.address,
-            entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 1]
-        });
-
-        project.tokens.forEach((token: any) => {
-            calls.push( {
-                contractAddress: project.minter_address,
-                entrypoint: 'migrate',
-                calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
-            }
-        )});
-        calls.push( {
-            contractAddress: project.address,
-            entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 0]
-        });
-        write();
-        return;
-    }
-
-    useEffect(() => {
-        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
-    }, [dataExecute])
-
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-portfolio bg-cover bg-bottom rounded-3xl px-4 py-6 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
@@ -330,7 +374,16 @@ export default function Portfolio() {
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>
-            <PortfolioState isConnected={isConnected} state={fetcher.state} projects={investedProjects} badges={collectedBadges} reloadData={reloadData} setReloadData={setReloadData} handleMigrate={handleMigrate} />
+            <PortfolioState 
+                isConnected={isConnected} 
+                state={fetcher.state} 
+                projects={investedProjects} 
+                badges={collectedBadges} 
+                reloadData={reloadData} 
+                setReloadData={setReloadData} 
+                setRefreshData={setRefreshData} 
+                selectedNetwork={selectedNetwork}
+             />
         </div>
     )
     
