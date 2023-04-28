@@ -11,6 +11,7 @@ import {
   useLoaderData,
   useRouteError,
   isRouteErrorResponse,
+  useOutletContext,
 } from "@remix-run/react";
 import type { Connector } from '@starknet-react/core';
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
@@ -19,6 +20,7 @@ import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
 import { db } from "./utils/db.server";
 import { useEffect, useMemo, useState } from "react";
+import type { TxStatus } from "./utils/blockchain/status";
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
@@ -49,13 +51,15 @@ export default function App() {
 
   const [webwallet, setWebwallet] = useState<any>(null);
   const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
+  const [notifs, setNotifs] = useState<any[]>([]);
+  const [mustReloadMigration, setMustReloadMigration] = useState(false);
 
   const connectors:Connector<any>[] = useMemo(() => [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
   ], []);
 
-  const defaultProfider = new Provider({
+  const defaultProvider = new Provider({
     sequencer: {
       baseUrl: defautlNetwork.nodeUrl
     }
@@ -105,15 +109,29 @@ export default function App() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
-        <StarknetConfig defaultProvider={defaultProfider} connectors={connectors}>
-          <Outlet />
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
+        <StarknetConfig defaultProvider={defaultProvider} connectors={connectors}>
+            <Outlet context={{ notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration }} />
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
         </StarknetConfig>
       </body>
     </html>
   );
+}
+
+type Notification = {
+  txHash: string,
+  project: string,
+  source: string,
+  txStatus: TxStatus,
+  message: {title: string, message: string, link: string}
+};
+
+type ContextType = { notifs: Notification[], setNotifs: (n: Notification[]) => void, defaultProvider: Provider, mustReloadMigration: boolean, setMustReloadMigration: (b: boolean) => void };
+
+export function useNotifications() {
+  return useOutletContext<ContextType>();
 }
 
 export function ErrorBoundary() {
@@ -122,27 +140,45 @@ export function ErrorBoundary() {
   // when true, this is what used to go to `CatchBoundary`
   if (isRouteErrorResponse(error)) {
     return (
-      <div className="flex w-screen h-screen items-center justify-center flex-wrap">
-        <div>
-          <div className="text-9xl font-trash w-full text-center">{error.status}</div>
-          <div className="text-7xl font-americana w-full text-center">{error.data.message}</div>
-          <div className="text-center mt-4">
-            <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
-          </div>
+      <html className="bg-neutral-800 text-white">
+        <head>
+          <title>Oops!</title>
+          <Meta />
+          <Links />
+        </head>
+        <body>
+          <div className="flex w-screen h-screen items-center justify-center flex-wrap">
+            <div>
+              <div className="text-9xl font-trash w-full text-center">{error.status}</div>
+              <div className="text-7xl font-americana w-full text-center">{error.data.message}</div>
+              <div className="text-center mt-4">
+                <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
+              </div>
+            </div>
         </div>
-      </div>
+        </body>
+      </html>
     );
   }
 
   return (
-    <div className="flex w-screen h-screen items-center justify-center flex-wrap">
-      <div>
-        <div className="text-6xl font-trash w-full text-center">Oops!</div>
-        <div className="text-4xl font-americana w-full text-center">We are working on fixing this issue</div>
-        <div className="text-center mt-4">
-          <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
-        </div>
-      </div>
-    </div>
+    <html className="bg-neutral-800 text-white">
+        <head>
+          <title>Oops!</title>
+          <Meta />
+          <Links />
+        </head>
+        <body>
+          <div className="flex w-screen h-screen items-center justify-center flex-wrap">
+            <div>
+              <div className="text-6xl font-trash w-full text-center">Oops!</div>
+              <div className="text-4xl font-americana w-full text-center">We are working on fixing this issue</div>
+              <div className="text-center mt-4">
+                <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
+              </div>
+            </div>
+          </div>
+        </body>
+    </html>
   );
 }
