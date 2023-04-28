@@ -327,11 +327,13 @@ export default function Portfolio() {
     const [reloadData, setReloadData] = useState(false);
     const [refreshData, setRefreshData] = useState(true);
     const selectedNetwork = useLoaderData();
+    const { setMustReloadMigration } = useNotifications();
 
     useEffect(() => {
         // Load portfolio data when user connects wallet or changes account
         if (isConnected) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
+            setMustReloadMigration(false);
             setRefreshData(false);
         }
 
