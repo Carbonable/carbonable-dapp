@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
-import { useAccount, useWaitForTransaction } from "@starknet-react/core";
+import { useAccount } from "@starknet-react/core";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -16,7 +16,6 @@ import { useNotificationCenter } from "react-toastify/addons/use-notification-ce
 import _ from "lodash";
 import { TxStatus } from "~/utils/blockchain/status";
 import { CheckCircleIcon, DocumentCheckIcon, InboxArrowDownIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { Provider } from 'starknet';
 import { NotificationSource } from "~/utils/notifications/sources";
 
 function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
@@ -58,7 +57,7 @@ export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
     const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration } = useNotifications();
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork } = useNotifications();
 
     async function getStarnetId() {
         const id = await getStarknetId(address, networks.defautlNetwork);
@@ -97,7 +96,7 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration }} />
+                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork }} />
                 <Notifications />
             </main>
         </div>
@@ -177,12 +176,11 @@ function Notifications() {
                         icon: <div className={iconCssRed}><XCircleIcon /></div>
                     });
 
-                    setMustReloadMigration(notif.source === NotificationSource.MIGRATION);
                     setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
                     toast.done(notif.txHash);
                 }
             });
-        }, 6000);
+        }, 5000);
 
         return () => clearInterval(interval);
     });

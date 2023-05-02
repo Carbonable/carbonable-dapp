@@ -53,17 +53,16 @@ export default function App() {
   const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
+  const [defaultProvider, setDefaultProvider] = useState<any>(new Provider({
+    sequencer: {
+      baseUrl: defautlNetwork.nodeUrl
+    }
+  }));
 
   const connectors:Connector<any>[] = useMemo(() => [
     new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
   ], []);
-
-  const defaultProvider = new Provider({
-    sequencer: {
-      baseUrl: defautlNetwork.nodeUrl
-    }
-  })
 
   useEffect(() => {
 
@@ -109,8 +108,8 @@ export default function App() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
-        <StarknetConfig defaultProvider={defaultProvider} connectors={connectors}>
-            <Outlet context={{ notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration }} />
+        <StarknetConfig defaultProvider={defaultProvider} connectors={connectors} autoConnect>
+            <Outlet context={{ notifs, setNotifs, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration }} />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
@@ -128,7 +127,7 @@ type Notification = {
   message: {title: string, message: string, link: string}
 };
 
-type ContextType = { notifs: Notification[], setNotifs: (n: Notification[]) => void, defaultProvider: Provider, mustReloadMigration: boolean, setMustReloadMigration: (b: boolean) => void };
+type ContextType = { notifs: Notification[], setNotifs: (n: Notification[]) => void, defaultProvider: Provider, setDefaultProvider: (p: any) => void, defautlNetwork: any, mustReloadMigration: boolean, setMustReloadMigration: (b: boolean) => void };
 
 export function useNotifications() {
   return useOutletContext<ContextType>();

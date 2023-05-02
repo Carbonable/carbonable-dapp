@@ -104,6 +104,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
     const migratedProjects = _.filter(projects, project => project.tokens.some((token: any) => token.hasOwnProperty("value")));
     const projectsToMigrate = _.filter(projects, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
     const [isOpen, setIsOpen] = useState(false);
+    const { defautlNetwork } = useNotifications();
 
     if (projects.length === 0) {
         return (
@@ -115,6 +116,18 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
             </div>
         )
     }
+
+    // TODO: remove when migration is ready for mainnet
+    if (defautlNetwork.id === "mainnet") {
+        return (
+            <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
+                {projectsToMigrate.map((project) => (
+                    <ProjectCard key={project.id} project={project} toMigrate={true} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
+                ))}
+            </div>
+        )
+    }
+
     return (
         <>
             { projectsToMigrate.length > 0 && 
@@ -188,13 +201,13 @@ function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {pro
             calldata: [project.minter_address, 1]
         });
 
-        /* project.tokens.forEach((token: any) => {
+        project.tokens.forEach((token: any) => {
             calls.push( {
                 contractAddress: project.minter_address,
                 entrypoint: 'migrate',
                 calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
             }
-        )}); */
+        )});
         calls.push( {
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',

@@ -1,37 +1,29 @@
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "@remix-run/react";
-import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
+import { useAccount, useConnectors } from "@starknet-react/core";
 import { useEffect } from "react";
-import { providers } from "~/utils/blockchain/providers";
 
 import SecondaryButton from "./Buttons/ActionButton";
 import ConnectButton from "./Buttons/ConnectButton";
 import Select from "./Filters/Select";
+import { useNotifications } from "~/root";
+import { Provider } from "starknet";
 
 
 export default function Header({toggleMenu, menuOpen, addressToDisplay, networksList, selectedNetwork}: any) {
     const { status, connector } = useAccount();
     const { disconnect } = useConnectors();
-    const { library } = useStarknet();
     const navigate = useNavigate();
     const resolvedPath = useLocation();
+    const { setDefaultProvider, defautlNetwork } = useNotifications();
 
-    const asArray = Object.entries(providers);
-    const filtered = asArray.filter(([key, value]) => key === selectedNetwork.id);
-
-    // TODO: Remove as soon as possible
     useEffect(() => {
-        if(library.provider) {
-            library.provider.baseUrl = filtered[0][1].baseUrl;
-            library.provider.feederGatewayUrl = filtered[0][1].feederGatewayUrl;
-            library.provider.gatewayUrlseUrl = filtered[0][1].gatewayUrl;
-            library.provider.chainId = filtered[0][1].chainId;
-        } else {
-            library.baseUrl = filtered[0][1].baseUrl;
-            library.feederGatewayUrl = filtered[0][1].feederGatewayUrl;
-            library.gatewayUrlseUrl = filtered[0][1].gatewayUrl;
-            library.chainId = filtered[0][1].chainId;
-        }
+        const newProvider = new Provider({
+            sequencer: {
+              baseUrl: defautlNetwork.nodeUrl
+            }
+        });
+        setDefaultProvider(newProvider);
     }, [status]);
 
     return (
