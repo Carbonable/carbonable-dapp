@@ -1,7 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { userPrefs } from "~/cookie";
-import { db } from "~/utils/db.server";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -11,10 +10,11 @@ export const loader: LoaderFunction = async ({
         const cookie = (await userPrefs.parse(cookieHeader)) || {};
 
         const indexerURL = cookie.selected_network === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
+        console.log(indexerURL)
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");
         const portfolio = await fetch(`${indexerURL}/portfolio/${wallet}`, {});
+        console.log(portfolio)
         return json(await portfolio.json());
     } catch (e) {
         console.log(e)
