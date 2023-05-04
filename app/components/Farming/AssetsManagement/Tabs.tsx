@@ -1,9 +1,13 @@
 import { Tab } from "@headlessui/react";
-import type { AssetsManagementContext } from "./Dialog";
+import type { AssetsManagementContext} from "./Dialog";
+import { AssetsManagementTabs } from "./Dialog";
 import Management from "./Management";
+import type { AssetsAllocationProps, ContractsProps } from "~/routes/__index/farming/$slug";
 
-export default function Tabs({context}: {context: AssetsManagementContext}) {
-    const tabs = ["Yield", "Offset"];
+export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen}: 
+    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void}) {
+        
+    const tabs = [AssetsManagementTabs.YIELD, AssetsManagementTabs.OFFSET];
 
     return (
         <Tab.Group>
@@ -26,7 +30,7 @@ export default function Tabs({context}: {context: AssetsManagementContext}) {
                 {tabs.map((tab, idx) => (
                     <Tab.Panel key={`tab_panel_${idx}`}>
                         <div className="mt-8 w-full">
-                            <Management context={context} tab={tab} />
+                            <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} />
                         </div>
                     </Tab.Panel>
                 ))}

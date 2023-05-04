@@ -13,9 +13,10 @@ import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
 import { ipfsUrl, shortenNumber } from "~/utils/utils";
-import AssetsManagementDialog, { AssetsManagementContext } from "~/components/Farming/AssetsManagement/Dialog";
+import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
+import type { Abi } from "starknet";
 
 export interface OverviewProps {
     total_removal: NumericValueProps;
@@ -43,11 +44,24 @@ interface CarbonCreditsProps {
     yield: ClaimableProps;
 }
 
-interface AssetsAllocationProps {
+export interface AssetsAllocationProps {
     yield: NumericValueProps;
     offseted: NumericValueProps;
     total: NumericValueProps;
     undeposited: NumericValueProps;
+}
+
+export interface ContractsProps {
+    offseter: string;
+    offseter_abi: Abi;
+    yielder: string;
+    yielder_abi: Abi;
+    vester: string;
+    vester_abi: Abi;
+    payment: string;
+    payment_abi: Abi;
+    project: string;
+    project_abi: Abi;
 }
 
 export const loader: LoaderFunction = async ({
@@ -82,8 +96,10 @@ export default function FarmingPage() {
     const [overview, setOverview] = useState<OverviewProps | undefined>(undefined);
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
+    const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
+    const [tab, setTab] = useState<AssetsManagementTabs>(AssetsManagementTabs.YIELD);
     const fetcherPortfolio = useFetcher();
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
@@ -114,6 +130,7 @@ export default function FarmingPage() {
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
+            setContracts(data.contracts);
         }
     }, [fetcher, isConnected,]);
 
@@ -125,21 +142,26 @@ export default function FarmingPage() {
     }, [portfolio, project.id]);
 
     const handleClaimYield = async () => {
-        console.log("Claim Yield");
+        setContext(AssetsManagementContext.CLAIM);
+        setTab(AssetsManagementTabs.YIELD);
+        setIsAssetsManagementDialogOpen(true);
     }
 
     const handleClaimOffset = async () => {
         setContext(AssetsManagementContext.CLAIM);
+        setTab(AssetsManagementTabs.OFFSET);
         setIsAssetsManagementDialogOpen(true);
     }
 
     const handleDeposit = async () => {
         setContext(AssetsManagementContext.DEPOSIT);
+        setTab(AssetsManagementTabs.YIELD);
         setIsAssetsManagementDialogOpen(true);
     }
 
     const handleWithdraw = async () => {
         setContext(AssetsManagementContext.WITHDRAW);
+        setTab(AssetsManagementTabs.YIELD);
         setIsAssetsManagementDialogOpen(true);
     }
 
@@ -251,7 +273,7 @@ export default function FarmingPage() {
                 </div>
             </div>
             <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
-            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} />
+            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} />
         </>
     )
 }
