@@ -3,6 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import Management from "./Management";
 import Tabs from "./Tabs";
+import type { AssetsAllocationProps, ContractsProps } from "~/routes/__index/farming/$slug";
 
 export const enum AssetsManagementContext {
     DEPOSIT = "Deposit",
@@ -10,7 +11,13 @@ export const enum AssetsManagementContext {
     CLAIM = "Claim",
 }
 
-export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {isOpen: boolean, setIsOpen: any, context: AssetsManagementContext}) {
+export const enum AssetsManagementTabs {
+    YIELD = "Yield",
+    OFFSET = "Offset",
+}
+
+export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project}: 
+    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any}) {
     const handleClose = () => {
         setIsOpen(false);
     }
@@ -51,8 +58,8 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context}: {is
                         </Dialog.Title>
                         <div className="px-6">
                             <div className="text-center w-full mx-auto mt-8">
-                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} /> }
-                                {context === AssetsManagementContext.CLAIM && <Management context={context} tab={"Claim"} />}
+                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} /> }
+                                {context === AssetsManagementContext.CLAIM && <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} />}
                             </div>
                         </div>
                         </Dialog.Panel>

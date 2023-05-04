@@ -202,7 +202,6 @@ function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards, mustM
     let [isOpen, setIsOpen] = useState(false);
     const canClaimOffset = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
     const canClaimYield = parseFloat(yieldRewards) > 0;
-    console.log("canClaimOffset", canClaimOffset, "canClaimYield", canClaimYield);
     const navigate = useNavigate();
 
     const handleClick = () => {

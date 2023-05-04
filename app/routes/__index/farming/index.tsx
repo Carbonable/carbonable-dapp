@@ -26,6 +26,7 @@ export const loader: LoaderFunction = async ({
 
         const allFarms = await fetch(`${indexerURL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
+
         return json([allFarmsJson]);
     } catch (e) {
         
