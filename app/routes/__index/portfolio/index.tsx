@@ -196,19 +196,20 @@ function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {pro
 
     const handleMigrate = (project: any) => {
         
-        calls.push( { contractAddress: project.address,
+        calls.push({ 
+            contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
             calldata: [project.minter_address, 1]
         });
 
         project.tokens.forEach((token: any) => {
-            calls.push( {
+            calls.push({
                 contractAddress: project.minter_address,
                 entrypoint: 'migrate',
                 calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
             }
         )});
-        calls.push( {
+        calls.push({
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
             calldata: [project.minter_address, 0]
