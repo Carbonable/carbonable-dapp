@@ -47,6 +47,9 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
         if (unconnectedFetcher.data !== undefined) {
             const data = unconnectedFetcher.data.data;
+            
+            if (data === undefined) { return; }
+
             isNaN(data?.apr) ? setApr(data?.apr) : setApr(shortenNumber(parseFloat(data?.apr)));
             setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
             setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value) / GRAMS_PER_TON));
