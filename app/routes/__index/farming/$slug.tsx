@@ -56,8 +56,6 @@ export interface ContractsProps {
     offseter_abi: Abi;
     yielder: string;
     yielder_abi: Abi;
-    vester: string;
-    vester_abi: Abi;
     payment: string;
     payment_abi: Abi;
     project: string;
@@ -127,6 +125,7 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
+            console.log(data)
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);

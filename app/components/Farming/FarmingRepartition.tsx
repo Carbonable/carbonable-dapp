@@ -1,5 +1,5 @@
 export default function FarmingRepartition({yieldAmount, offsetAmount}: {yieldAmount: number | undefined, offsetAmount: number | undefined}) {
-    const total = yieldAmount && offsetAmount ? yieldAmount + offsetAmount : 0;
+    const total = yieldAmount !== undefined && offsetAmount !== undefined ? yieldAmount + offsetAmount : 0;
     const yieldPercentage = total > 0 && yieldAmount ? yieldAmount / total * 100 : 0;
     const offsetPercentage = total > 0 && offsetAmount ? offsetAmount / total * 100 : 0;
     
