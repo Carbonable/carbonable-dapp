@@ -57,7 +57,7 @@ export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
     const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork } = useNotifications();
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
 
     async function getStarnetId() {
         const id = await getStarknetId(address, networks.defautlNetwork);
@@ -96,7 +96,7 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork }} />
+                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage }} />
                 <Notifications />
             </main>
         </div>
@@ -104,7 +104,7 @@ export default function Index() {
 }
 
 function Notifications() {
-    const { notifs, setNotifs, defaultProvider, setMustReloadMigration } = useNotifications();
+    const { notifs, setNotifs, defaultProvider, setMustReloadMigration, setMustReloadFarmingPage } = useNotifications();
     const { notifications } = useNotificationCenter();
     const iconCssGreen = 'w-[32px] h-[32px] rounded-full p-[6px] bg-greenish-500 text-white flex items-center justify-center';
     const iconCssRed = 'w-[32px] h-[32px] rounded-full p-[6px] bg-darkRed text-white flex items-center justify-center';
@@ -164,6 +164,7 @@ function Notifications() {
                     });
 
                     setMustReloadMigration(notif.source === NotificationSource.MIGRATION);
+                    setMustReloadFarmingPage(notif.source === NotificationSource.FARMING);
                     setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
                     toast.done(notif.txHash);
                 }

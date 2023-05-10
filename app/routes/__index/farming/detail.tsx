@@ -13,6 +13,7 @@ export const loader: LoaderFunction = async ({
         const cookieHeader = request.headers.get("Cookie");
         const cookie = (await userPrefs.parse(cookieHeader)) || {};
         const indexerURL = cookie.selected_network === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        console.log(`${indexerURL}/farming/details/${wallet}/${slug}`)
 
         const userData = await fetch(`${indexerURL}/farming/details/${wallet}/${slug}`, {});
         return json(await userData.json());
