@@ -17,6 +17,7 @@ import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs }
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import type { Abi } from "starknet";
+import { useNotifications } from "~/root";
 
 export interface OverviewProps {
     total_removal: NumericValueProps;
@@ -49,6 +50,15 @@ export interface AssetsAllocationProps {
     offseted: NumericValueProps;
     total: NumericValueProps;
     undeposited: NumericValueProps;
+    tokens: TokenProps[];
+}
+
+interface TokenProps {
+    project_address: string;
+    slot: string;
+    token_id: string;
+    value: any;
+    wallet: string;
 }
 
 export interface ContractsProps {
@@ -101,6 +111,7 @@ export default function FarmingPage() {
     const fetcherPortfolio = useFetcher();
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
+    const { mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
 
     useEffect(() => {
         if (isConnected) {
@@ -125,7 +136,6 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
-            console.log(data)
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
@@ -139,6 +149,13 @@ export default function FarmingPage() {
             setMustMigrate(projectsToMigrate.find(asset => asset.id === project.id) !== undefined);
         }
     }, [portfolio, project.id]);
+
+    useEffect(() => {
+        if (mustReloadFarmingPage === true) {
+            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
+            setMustReloadFarmingPage(false);
+        }
+    }, [mustReloadFarmingPage]);
 
     const handleClaimYield = async () => {
         setContext(AssetsManagementContext.CLAIM);

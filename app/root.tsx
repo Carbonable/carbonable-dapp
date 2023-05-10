@@ -53,6 +53,7 @@ export default function App() {
   const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
+  const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
   const [defaultProvider, setDefaultProvider] = useState<any>(new Provider({
     sequencer: {
       baseUrl: defautlNetwork.nodeUrl
@@ -109,7 +110,7 @@ export default function App() {
       </head>
       <body>
         <StarknetConfig defaultProvider={defaultProvider} connectors={connectors} autoConnect>
-            <Outlet context={{ notifs, setNotifs, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration }} />
+            <Outlet context={{ notifs, setNotifs, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage }} />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
@@ -127,7 +128,17 @@ type Notification = {
   message: {title: string, message: string, link: string}
 };
 
-type ContextType = { notifs: Notification[], setNotifs: (n: Notification[]) => void, defaultProvider: Provider, setDefaultProvider: (p: any) => void, defautlNetwork: any, mustReloadMigration: boolean, setMustReloadMigration: (b: boolean) => void };
+type ContextType = { 
+  notifs: Notification[], 
+  setNotifs: (n: Notification[]) => void, 
+  defaultProvider: Provider, 
+  setDefaultProvider: (p: any) => void, 
+  defautlNetwork: any, 
+  mustReloadMigration: boolean, 
+  setMustReloadMigration: (b: boolean) => void,
+  mustReloadFarmingPage: boolean,
+  setMustReloadFarmingPage: (b: boolean) => void,
+};
 
 export function useNotifications() {
   return useOutletContext<ContextType>();
