@@ -21,17 +21,11 @@ export const loader: LoaderFunction = async ({
             }
         });
 
-        const allProjects = await db.project.findMany({
-            where: {
-                isDisplay: true,
-                network: selectedNetwork || undefined, 
-            },  
-            orderBy: [
-              {
-                saleDate: 'desc',
-              }
-            ]});
-        return json(allProjects);
+        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+
+        const allFarms = await fetch(`${indexerURL}/farming/list`, {});
+        const allProjects = await allFarms.json();
+        return json(allProjects.data);
     } catch (e) {
         console.log(e)
         return json([]);
@@ -59,6 +53,7 @@ export const meta: V2_MetaFunction = () => {
 
 export default function Launchpad() {
     const projects = useLoaderData<unknown>() as Project[];
+    console.log(projects)
 
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
