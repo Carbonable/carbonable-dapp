@@ -2,10 +2,10 @@ import { Tab } from "@headlessui/react";
 import type { AssetsManagementContext} from "./Dialog";
 import { AssetsManagementTabs } from "./Dialog";
 import Management from "./Management";
-import type { AssetsAllocationProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
 
-export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen}: 
-    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void}) {
+export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits}: 
+    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined}) {
         
     const tabs = [AssetsManagementTabs.YIELD, AssetsManagementTabs.OFFSET];
 
@@ -30,7 +30,7 @@ export default function Tabs({context, assetsAllocation, contracts, project, set
                 {tabs.map((tab, idx) => (
                     <Tab.Panel key={`tab_panel_${idx}`}>
                         <div className="mt-8 w-full">
-                            <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} />
+                            <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} carbonCredits={carbonCredits} />
                         </div>
                     </Tab.Panel>
                 ))}
