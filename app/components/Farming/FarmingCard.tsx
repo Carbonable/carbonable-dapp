@@ -121,7 +121,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                         <div className="font-inter font-medium text-neutral-100 text-lg pt-8">
                             {project.name}
                         </div>
-                        <div className="mt-4 flex items-center w-full justify-center">
+                        <div className="mt-4 flex items-center w-full justify-center min-h-[36px]">
                             <FarmStatusComponent status={farmStatus} />
                             <UndepositedComponent count={undepositedCount} />
                         </div>

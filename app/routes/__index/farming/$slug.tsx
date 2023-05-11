@@ -11,13 +11,15 @@ import FarmDetail, { FarmType } from "~/components/Farming/FarmDetail";
 import { IPFS_GATEWAY } from "~/utils/links";
 import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { useEffect, useState } from "react";
-import { useAccount } from "@starknet-react/core";
-import { ipfsUrl, shortenNumber } from "~/utils/utils";
+import { useAccount, useContractWrite } from "@starknet-react/core";
+import { getStarkscanUrl, ipfsUrl, shortenNumber } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
+import { NotificationSource } from "~/utils/notifications/sources";
+import { TxStatus } from "~/utils/blockchain/status";
 
 export interface OverviewProps {
     total_removal: NumericValueProps;
@@ -38,7 +40,7 @@ interface ClaimableProps {
     total: NumericValueProps;
 }
 
-interface CarbonCreditsProps {
+export interface CarbonCreditsProps {
     generated_credits: NumericValueProps;
     to_be_generated: NumericValueProps;
     offset: ClaimableProps;
@@ -112,6 +114,10 @@ export default function FarmingPage() {
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
     const { mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const [callData, setCallData] = useState<any>({});
+    const [txHash, setTxHash] = useState<string | undefined>("");
+    const { notifs, setNotifs, defautlNetwork } = useNotifications();
+    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     useEffect(() => {
         if (isConnected) {
@@ -136,6 +142,7 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
+
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
@@ -157,10 +164,45 @@ export default function FarmingPage() {
         }
     }, [mustReloadFarmingPage]);
 
+    const { write, data: dataExecute } = useContractWrite(callData);
+
+    useEffect(() => {
+        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
+    }, [dataExecute]);
+
+    useEffect(() => {
+        // When txHash is set, add toast notification
+        if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
+            setNotifs([...notifs, {
+                txHash: txHash,
+                project: project.id,
+                source: NotificationSource.FARMING,
+                txStatus: TxStatus.NOT_RECEIVED,
+                message: {
+                    title: `Claiming $${carbonCredits?.yield.available.value.value} in ${project.name} yield farm`, 
+                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    link: `${starkscanUrl}/tx/${txHash}`
+                }
+            }]);
+        }
+    }, [txHash]);
+
     const handleClaimYield = async () => {
-        setContext(AssetsManagementContext.CLAIM);
-        setTab(AssetsManagementTabs.YIELD);
-        setIsAssetsManagementDialogOpen(true);
+        setCallData((cd: any) => {
+
+            return {
+                calls: {
+                    contractAddress: contracts?.yielder,
+                    entrypoint: 'claim',
+                    calldata: []
+                },
+                metadata: {
+                    method: 'Claim',
+                    message: `Claim from yield farm`
+                }
+            }
+        });
+        write();
     }
 
     const handleClaimOffset = async () => {
@@ -289,7 +331,7 @@ export default function FarmingPage() {
                 </div>
             </div>
             <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
-            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} />
+            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} />
         </>
     )
 }
