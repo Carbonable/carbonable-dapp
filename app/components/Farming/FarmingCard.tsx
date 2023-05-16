@@ -116,10 +116,9 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     useEffect(() => {
         if (portfolio?.length > 0) {
             const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
-            console.log(portfolio, projectsToMigrate, project)
             setMustMigrate(projectsToMigrate.find(asset => asset.name === project.name) !== undefined);
         }
-    }, [portfolio, project.id]);
+    }, [portfolio, project.name]);
 
     const { write, data: dataExecute } = useContractWrite(callData);
 

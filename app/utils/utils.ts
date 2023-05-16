@@ -63,6 +63,8 @@ export function simplifyAddress(hex: string | undefined): string {
  * @returns string
  */
 export function ipfsUrl(url: string): string | undefined {
+    if (url === undefined) return '';
+
     return url.split("ipfs://").pop();
 }
 
