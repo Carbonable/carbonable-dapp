@@ -24,7 +24,6 @@ export const loader: LoaderFunction = async ({
         });
 
         const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
         const allFarms = await fetch(`${indexerURL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
 
@@ -61,7 +60,7 @@ export default function FarmingIndex() {
     }, [fetcher, isConnected]);
 
     useEffect(() => {
-        if (isConnected &&  connectedGlobalFetcher.data !== undefined) {
+        if (isConnected && connectedGlobalFetcher.data !== undefined) {
             if(connectedGlobalFetcher.data === 404 || connectedGlobalFetcher.data.length === 0) {
                 setMyFarmingAssets('0');
                 setClaimableAssets('0');

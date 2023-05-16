@@ -12,7 +12,7 @@ import { IPFS_GATEWAY } from "~/utils/links";
 import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite } from "@starknet-react/core";
-import { getStarkscanUrl, ipfsUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
+import { getImageUrl, getImageUrlFromMetadata, getStarkscanUrl, ipfsUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
@@ -90,7 +90,8 @@ export const loader: LoaderFunction = async ({
         });
 
         const slug = params.slug;
-        const data = await fetch(`${process.env.INDEXER_URL}/projects/${slug}`, {});
+        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        const data = await fetch(`${indexerURL}/projects/${slug}`, {});
         const project = await data.json();
 
         return json({slug, selectedNetwork, project: project.data});
@@ -119,6 +120,7 @@ export default function FarmingPage() {
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {
         if (isConnected) {
@@ -143,7 +145,6 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
-            console.log(data);
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
@@ -157,7 +158,7 @@ export default function FarmingPage() {
             const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
             setMustMigrate(projectsToMigrate.find(asset => asset.name === project.name) !== undefined);
         }
-    }, [portfolio, project.id]);
+    }, [portfolio, project.name]);
 
     useEffect(() => {
         if (mustReloadFarmingPage === true) {
@@ -227,6 +228,14 @@ export default function FarmingPage() {
         setIsAssetsManagementDialogOpen(true);
     }
 
+    useEffect(() => {
+        if (project.uri?.data.image) {
+            getImageUrl(project.uri.data.image).then((url) => {
+                setImageSrc(url);
+            });
+        }
+    }, [project]);
+
     return (
         <>
              <div className="relative w-full">
@@ -234,7 +243,7 @@ export default function FarmingPage() {
                     <div className="max-w-6xl mx-auto pl-4 xl:pl-8">
                         <div className="w-full grid grid-cols-2 gap-4 items-center">
                             <div className="col-span-2 md:col-span-1">
-                                <ProjectIdentification project={project} />
+                                <ProjectIdentification name={project.name} imageSrc={imageSrc} slug={project.slug} />
                             </div>
                             <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
                                 <FarmingRepartition 
@@ -332,7 +341,7 @@ export default function FarmingPage() {
                             {project.name}
                         </div>
                         <NavLink to={`/launchpad/${slug}`} className="font-inter text-white font-light uppercase text-xs mt-4 inline-flex items-center border border-white rounded-full px-4 py-1 md:text-sm md:py-2 hover:bg-opacityLight-5">Go to project page &nbsp;&nbsp; <span className="text-base mt-[-3px]">&gt;</span></NavLink>
-                        <img src={IPFS_GATEWAY + ipfsUrl(project.Uri.data.image)} alt={`${slug} NFT card`} className="absolute bottom-[-28px] right-2 w-28 rounded-[8.8%] md:w-[280px] md:bottom-[-80px] md:right-6 lg:w-[300px] lg:bottom-[-100px]" />
+                        <img src={imageSrc} alt={`${slug} NFT card`} className="absolute bottom-[-28px] right-2 w-28 rounded-[8.8%] md:w-[280px] md:bottom-[-80px] md:right-6 lg:w-[300px] lg:bottom-[-100px]" />
                     </div>
                 </div>
             </div>
