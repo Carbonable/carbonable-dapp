@@ -170,26 +170,26 @@ export default function Management({context, tab, assetsAllocation, contracts, p
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
                 if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("Deposit Yield Hint");
+                    setDisclaimer("Deposit shares to start earning Yield in USDC based on the absorption curve of the project. You can deposit more or withdraw your shares at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
-                    setDisclaimer("Deposit Offset Hint");
+                    setDisclaimer("Deposit shares to start offsetting your carbon footprint in TONs based on the absorption curve of the project. You can deposit more or withdraw your shares at any time.");
                 }
                 break;
             case AssetsManagementContext.WITHDRAW:
                 if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("Withdraw Yield Hint");
+                    setDisclaimer("By withdrawing shares you will earn less yield in USDC. You can withdraw more or deposit back your shares at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
-                    setDisclaimer("Withdraw Offset Hint");
+                    setDisclaimer("By withdrawing shares you will offset less carbon footprint. Be aware that you need to offset at least 1CC to claim your offset certificate. You can withdraw more or deposit back your shares at any time.");
                 }
                 break;
             case AssetsManagementContext.CLAIM:
                 if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("Claim Yield Hint");
+                    setDisclaimer("You will receive your yield in USDC. You can claim your yield at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
-                    setDisclaimer("Claim Offset Hint");
+                    setDisclaimer("By claiming your offset, the underlying carbon credits will be burnt and you will receive your offset certificate. You can claim your offset certificate when you have offset at least 1CC.");
                 }
                 break;
         }
