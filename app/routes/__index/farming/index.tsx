@@ -102,7 +102,6 @@ export default function FarmingIndex() {
         console.log(filter);
     }
 
-
     return (
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-farming bg-cover bg-[50%_22%] rounded-3xl p-8 flex items-start justify-start flex-wrap md:p-10 lg:p-12">

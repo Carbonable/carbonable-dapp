@@ -7,12 +7,12 @@ import { useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
-import { getStarkscanUrl, shortenNumber } from "~/utils/utils";
+import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
 import { num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
-export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined }) {
+export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent}: 
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: number }) {
 
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState(0);
@@ -23,7 +23,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     useEffect(() => {
-        if (assetsAllocation !== undefined && carbonCredits !== undefined) {
+        if (assetsAllocation !== undefined && carbonCredits !== undefined && tonEquivalent !== 0) {
             switch (context) {
                 case AssetsManagementContext.DEPOSIT:
                     setAvailable(parseFloat(assetsAllocation.undeposited.displayable_value));
@@ -32,7 +32,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     setAvailable(tab === AssetsManagementTabs.YIELD ? parseFloat(assetsAllocation.yield.displayable_value) : parseFloat(assetsAllocation.offseted.displayable_value));
                     break;
                 case AssetsManagementContext.CLAIM:
-                    setAvailable(parseFloat(carbonCredits.offset.available.displayable_value));
+                    setAvailable(parseFloat(carbonCredits.offset.available.displayable_value) / tonEquivalent);
                     break;
             }
         }
@@ -201,7 +201,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
             <AllocationContainer tab={tab} assetsAllocation={assetsAllocation} />
             <div className="mt-8 flex items-center justify-between font-light">
                 <div className="text-left text-neutral-200 uppercase">Select Amount</div>
-                <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumber(available)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
+                <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumberWithDigits(available, 6)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
             </div>
             <div className="mt-1 w-full relative">
                 <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300`} type="number" value={amount} name="amount" aria-label="Amount" min="0.1" onChange={handleAmountChange} />

@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnectors, useContractWrite } from "@starknet-react/core";
 import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
-import { getImageUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
+import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import { num } from "starknet";
+import type { ContractsProps } from "~/routes/__index/farming/$slug";
+import { useNotifications } from "~/root";
+import { NotificationSource } from "~/utils/notifications/sources";
+import { TxStatus } from "~/utils/blockchain/status";
 
 const enum CardLocation {
     HEADER = "header",
@@ -33,6 +37,12 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [canClaimYield, setCanClaimYield] = useState(false);
     const [canClaimOffset, setCanClaimOffset] = useState(false);
     const [imageSrc, setImageSrc] = useState("");
+    const [callData, setCallData] = useState<any>({});
+    const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
+    const [txHash, setTxHash] = useState<string | undefined>("");
+    const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [claimContext, setClaimContext] = useState<any>("Yield");
 
     useEffect(() => {
         if (project.uri?.data.image) {
@@ -65,6 +75,15 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     }, [address, isConnected]);
 
     useEffect(() => {
+        if (mustReloadFarmingPage === true) {
+            setTimeout(() => {
+                connectedUserFetcher.load(`/farming/list/customer?wallet=${address}&slug=${project.slug}`);
+                setMustReloadFarmingPage(false);
+            }, 1000);
+        }
+    }, [mustReloadFarmingPage]);
+
+    useEffect(() => {
         if (isConnected && connectedUserFetcher.data !== undefined) {
             if(connectedUserFetcher.data === 404 || connectedUserFetcher.data.length === 0) {
                 setMyStake('0');
@@ -75,13 +94,14 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             }
 
             const data = connectedUserFetcher.data.data;
-            console.log(data)
+
             isNaN(data?.customer_investment.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_investment.displayable_value)));
             isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
             isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(num.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(num.hexToDecimalString(data.ton_equivalent)), 6));
             isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
             setCanClaimYield(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
             setCanClaimOffset(parseFloat(data?.absorption_to_claim.displayable_value) > data?.min_to_claim.displayable_value);
+            setContracts(data.contracts);
         }
 
         if (!isConnected) {
@@ -95,10 +115,72 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
     useEffect(() => {
         if (portfolio?.length > 0) {
-            const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
-            setMustMigrate(projectsToMigrate.find(asset => asset.id === project.id) !== undefined);
+            const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
+            console.log(portfolio, projectsToMigrate, project)
+            setMustMigrate(projectsToMigrate.find(asset => asset.name === project.name) !== undefined);
         }
     }, [portfolio, project.id]);
+
+    const { write, data: dataExecute } = useContractWrite(callData);
+
+    useEffect(() => {
+        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
+    }, [dataExecute]);
+
+    useEffect(() => {
+        // When txHash is set, add toast notification
+        if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
+            setNotifs([...notifs, {
+                txHash: txHash,
+                project: project.id,
+                source: NotificationSource.FARMING,
+                txStatus: TxStatus.NOT_RECEIVED,
+                message: {
+                    title: claimContext === 'Yield' ? `Claiming $${yieldRewards} in ${project.name} yield farm` : `Claiming ${offsetRewards}t in ${project.name} offset farm`, 
+                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    link: `${starkscanUrl}/tx/${txHash}`
+                }
+            }]);
+        }
+    }, [txHash]);
+
+    const handleClaimYield = async () => {
+        setClaimContext("Yield");
+        setCallData((cd: any) => {
+
+            return {
+                calls: {
+                    contractAddress: contracts?.yielder,
+                    entrypoint: 'claim',
+                    calldata: []
+                },
+                metadata: {
+                    method: 'Claim',
+                    message: `Claim from yield farm`
+                }
+            }
+        });
+        write();
+    }
+
+    const handleClaimOffset = async () => {
+        setClaimContext("Offset");
+        setCallData((cd: any) => {
+
+            return {
+                calls: {
+                    contractAddress: contracts?.offseter,
+                    entrypoint: 'claimAll',
+                    calldata: []
+                },
+                metadata: {
+                    method: 'Claim',
+                    message: `Claim from offset farm`
+                }
+            }
+        });
+        write();
+    }
 
     return (
         <div className={`relative rounded-3xl p-[1px] max-w-md min-w-[350px] ${printFarmingColorClass(color, CardLocation.BORDER)} hover:brightness-[108%]`}>
@@ -149,7 +231,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 </div>
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
-                <ActionButtons canClaimYield={canClaimYield} canClaimOffset={canClaimOffset} mustMigrate={mustMigrate} />
+                <ActionButtons canClaimYield={canClaimYield} canClaimOffset={canClaimOffset} mustMigrate={mustMigrate} handleClaimYield={handleClaimYield} handleClaimOffset={handleClaimOffset} />
             </div>
         </div>
     )
@@ -199,7 +281,7 @@ function Tag({text, color, count}: {text: string, color: string, count?: number}
     )
 }
 
-function ActionButtons({canClaimYield, canClaimOffset, mustMigrate}: {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean}) {
+function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimYield, handleClaimOffset}: {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimYield: () => void, handleClaimOffset: () => void}) {
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
@@ -226,9 +308,9 @@ function ActionButtons({canClaimYield, canClaimOffset, mustMigrate}: {canClaimYi
 
         return (
             <div className="flex gap-x-2">
-                {canClaimYield && <FarmingButton className="w-1/2 rounded-xl">Claim Yield</FarmingButton>}
+                {canClaimYield && <FarmingButton className="w-1/2 rounded-xl" onClick={handleClaimYield}>Claim Yield</FarmingButton>}
                 {canClaimYield === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield}>Claim Yield</FarmingButton>}
-                {canClaimOffset && <FarmingButton className="w-1/2 rounded-xl">Claim Offset</FarmingButton>}
+                {canClaimOffset && <FarmingButton className="w-1/2 rounded-xl" onClick={handleClaimOffset}>Claim Offset</FarmingButton>}
                 {canClaimOffset === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset}>Claim Offset</FarmingButton>}
             </div>
         )
