@@ -115,10 +115,9 @@ export default function FarmingPage() {
     const fetcherPortfolio = useFetcher();
     const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
-    const { mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, defautlNetwork } = useNotifications();
+    const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     useEffect(() => {
@@ -156,7 +155,7 @@ export default function FarmingPage() {
     useEffect(() => {
         if (portfolio?.length > 0) {
             const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
-            setMustMigrate(projectsToMigrate.find(asset => asset.id === project.id) !== undefined);
+            setMustMigrate(projectsToMigrate.find(asset => asset.name === project.name) !== undefined);
         }
     }, [portfolio, project.id]);
 
@@ -325,7 +324,7 @@ export default function FarmingPage() {
                             handleDeposit={handleDeposit} 
                             handleWithdraw={handleWithdraw} 
                             mustMigrate={mustMigrate} 
-                        /> 
+                        />
                     </div>
                     <div className="relative bg-farming-footer bg-no-repeat bg-center bg-cover px-8 py-12 mt-12 rounded-2xl overflow-hidden md:p-16">
                         <div className="font-inter font-bold text-white text-3xl md:text-4xl">
@@ -338,7 +337,7 @@ export default function FarmingPage() {
                 </div>
             </div>
             <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
-            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} />
+            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} />
         </>
     )
 }

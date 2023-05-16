@@ -1,9 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from "react";
-import { useConnectors } from "@starknet-react/core";
+import { Fragment, useEffect } from "react";
+import { useAccount, useConnectors } from "@starknet-react/core";
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
     const { connectors, connect } = useConnectors();
+    const { isConnected } = useAccount();
 
     const handleClick = (wallet: any) => {
         connect(wallet);
@@ -13,6 +14,12 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
     const handleClose = () => {
         setIsOpen(false);
     }
+
+    useEffect(() => {
+        if (isConnected) {
+            setIsOpen(false);
+        }
+    }, [isConnected]);
     
     return (
         <Transition appear show={isOpen} as={Fragment}>
