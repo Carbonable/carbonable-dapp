@@ -11,7 +11,7 @@ export const enum Color {
 
 export const enum FarmStatus {
     UPCOMING = "Upcoming",
-    ACTIVE = "Active",
+    LIVE = "Live",
     PAUSED = "Paused",
     STOPPED = "Stopped",
     ENDED = "Ended",
@@ -25,6 +25,6 @@ export const enum FarmStatus {
 */
 export function getTraitValue(traits: any[] | undefined, key: string) {
     if (undefined === traits) { return ''; }
-    
+
     return traits.filter(trait => trait.trait_type === key)[0].value;
 }

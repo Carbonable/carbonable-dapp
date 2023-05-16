@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
 import { userPrefs } from "~/cookie";
+import { GRAMS_PER_TON } from "~/utils/constant";
 import { db } from "~/utils/db.server";
-import { shortenNumber } from "~/utils/utils";
+import { shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -68,9 +69,9 @@ export default function FarmingIndex() {
                 return;
             }
             const data = connectedGlobalFetcher.data.data;
-            isNaN(data?.total_deposited) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_deposited)));
-            isNaN(data?.total_claimable) ? setClaimableAssets('0') : setClaimableAssets(shortenNumber(parseFloat(data?.total_claimable)));
-            isNaN(data?.total_releasable) ? setReleasableAssets('0') : setReleasableAssets(shortenNumber(parseFloat(data?.total_releasable)));
+            isNaN(data?.total_investment.displayable_value) ? setMyFarmingAssets('0') : setMyFarmingAssets(shortenNumber(parseFloat(data?.total_investment.displayable_value)));
+            isNaN(data?.total_yielder_claimable.displayable_value) ? setClaimableAssets('0') : setClaimableAssets(shortenNumberWithDigits(parseFloat(data?.total_yielder_claimable.displayable_value), 6));
+            isNaN(data?.total_offseter_claimable.displayable_value) ? setReleasableAssets('0') : setReleasableAssets(shortenNumberWithDigits(parseFloat(data?.total_offseter_claimable.displayable_value) / GRAMS_PER_TON, 6));
         }
     }, [connectedGlobalFetcher, isConnected]);
 

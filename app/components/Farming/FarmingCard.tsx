@@ -3,11 +3,12 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
-import { getImageUrl, shortenNumber } from "~/utils/utils";
+import { getImageUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
+import { num } from "starknet";
 
 const enum CardLocation {
     HEADER = "header",
@@ -28,8 +29,9 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [yieldRewards, setYieldRewards] = useState('-');
     const [offsetRewards, setOffsetRewards] = useState('-');
     const [undepositedCount, setUndepositedCount] = useState(0);
-    const [minAbsorbtionToClaim, setMinAbsorbtionToClaim] = useState(1);
     const [mustMigrate, setMustMigrate] = useState(false);
+    const [canClaimYield, setCanClaimYield] = useState(false);
+    const [canClaimOffset, setCanClaimOffset] = useState(false);
     const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {
@@ -50,7 +52,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             
             if (data === undefined) { return; }
 
-            isNaN(data?.apr) ? setApr(data?.apr) : setApr(shortenNumber(parseFloat(data?.apr)));
+            isNaN(parseFloat(data?.apr)) ? setApr('-') : setApr(shortenNumber(parseFloat(data?.apr)));
             setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
             setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value) / GRAMS_PER_TON));
         }
@@ -69,17 +71,17 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 setYieldRewards('0');
                 setOffsetRewards('0');
                 setUndepositedCount(0);
-                setMinAbsorbtionToClaim(1);
                 return;
             }
 
             const data = connectedUserFetcher.data.data;
-            isNaN(data?.customer_stake.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_stake.displayable_value)));
-            isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumber(parseFloat(data?.vesting_to_claim.displayable_value)));
-            isNaN(data?.absorption_to_claim.displayable_value) ? setOffsetRewards('0') : setOffsetRewards(shortenNumber(parseFloat(data?.absorption_to_claim.displayable_value)));
+            console.log(data)
+            isNaN(data?.customer_investment.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_investment.displayable_value)));
+            isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
+            isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(num.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(num.hexToDecimalString(data.ton_equivalent)), 6));
             isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
-            isNaN(data?.min_to_claim.displayable_value) ? setMinAbsorbtionToClaim(1000000) : setMinAbsorbtionToClaim(data?.min_to_claim.displayable_value);
-
+            setCanClaimYield(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
+            setCanClaimOffset(parseFloat(data?.absorption_to_claim.displayable_value) > data?.min_to_claim.displayable_value);
         }
 
         if (!isConnected) {
@@ -87,7 +89,6 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             setYieldRewards('-');
             setOffsetRewards('-');
             setUndepositedCount(0);
-            setMinAbsorbtionToClaim(1);
             return;
         }
     }, [connectedUserFetcher.data, isConnected]);
@@ -141,14 +142,14 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                             </div>
                             <div className="text-right">
                                 <div className={`${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>$</span>{yieldRewards}</div>
-                                <div className={`${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>t</span>{offsetRewards}</div>
+                                <div className={`${offsetRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>t</span>{offsetRewards}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
-                <ActionButtons minAbsorbtionToClaim={minAbsorbtionToClaim} offsetRewards={offsetRewards} yieldRewards={yieldRewards} mustMigrate={mustMigrate} />
+                <ActionButtons canClaimYield={canClaimYield} canClaimOffset={canClaimOffset} mustMigrate={mustMigrate} />
             </div>
         </div>
     )
@@ -167,7 +168,7 @@ function printFarmingColorClass(color: Color, location: CardLocation) {
 
 function FarmStatusComponent({status}: {status: string}) {
     switch (status) {
-        case FarmStatus.ACTIVE:
+        case FarmStatus.LIVE:
             return <Tag text="Live" color="text-greenish-500" />;
         case FarmStatus.UPCOMING:
             return <Tag text="Upcoming" color="text-blue-light" />;
@@ -182,29 +183,26 @@ function FarmStatusComponent({status}: {status: string}) {
 }
 
 function UndepositedComponent({count}: {count: number}) {
-    if (count === 0) { return null; }
+    if (count <= 0) { return null; }
 
     return (
         <Tag text="Undeposited" color="text-darkRed" count={count} />
     )
 }
 
-
 function Tag({text, color, count}: {text: string, color: string, count?: number}) {
     return (
-        <div className={`flex items-center justify-center rounded-3xl pl-3 ${(count !==  undefined && count > 0) ? "pr-1" : "pr-3"} py-1 ${color}  font-inter font-light text-sm bg-opacityLight-5 ${count !== undefined ? "ml-2" : ""}`}>
+        <div className={`flex items-center justify-center rounded-3xl pl-4 min-h-[36px] ${(count !==  undefined && count > 0) ? "pr-1" : "pr-4"} py-1 ${color} font-inter font-light text-sm bg-opacityLight-5 ${count !== undefined ? "ml-2" : ""}`}>
             <div>{text}</div>
-            { (count !==  undefined && count > 0) && <div className="bg-opacityLight-10 rounded-full min-w-[24px] min-h-[24px] ml-2 flex justify-center items-center">{shortenNumber(count)}</div>}
+            { (count !==  undefined && count > 0) && <div className="bg-opacityLight-10 rounded-full min-w-[28px] min-h-[24px] ml-2 flex justify-center items-center p-[4px]">{shortenNumber(count)}</div>}
         </div>
     )
 }
 
-function ActionButtons({minAbsorbtionToClaim, offsetRewards, yieldRewards, mustMigrate}: {minAbsorbtionToClaim: number, offsetRewards: string, yieldRewards: string, mustMigrate: boolean}) {
+function ActionButtons({canClaimYield, canClaimOffset, mustMigrate}: {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean}) {
     const { connect, available } = useConnectors();
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
-    const canClaimOffset = parseFloat(offsetRewards) >= minAbsorbtionToClaim;
-    const canClaimYield = parseFloat(yieldRewards) > 0;
     const navigate = useNavigate();
 
     const handleClick = () => {
