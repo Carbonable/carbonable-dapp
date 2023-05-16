@@ -54,6 +54,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const { write, data: dataExecute } = useContractWrite(callData);
 
     const handleAction = useCallback(() => {
+
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
                 setCallData((cd: any) => {
