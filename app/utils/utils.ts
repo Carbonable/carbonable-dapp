@@ -33,6 +33,20 @@ export function shortenNumber(number: number | bigint | undefined): string {
 }
 
 /**
+ * Shorten number to display
+ * 
+ * @param {number} number
+ * @returns {string} Shorten value
+ */
+export function shortenNumberWithDigits(number: number | bigint | undefined, digits: number): string {
+    if (undefined === number) { return '-'; }
+    return Intl.NumberFormat('en-US', {
+        notation: "compact",
+        maximumFractionDigits: digits
+      }).format(number);
+}
+
+/**
  * Simplify hex address
  * @param hex 
  * @returns string
