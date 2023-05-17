@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useContractWrite } from "@starknet-react/core";
 import { getImageUrl, getImageUrlFromMetadata, getStarkscanUrl, ipfsUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
-import _ from "lodash";
+import _, { isNumber } from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
@@ -110,7 +110,7 @@ export default function FarmingPage() {
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
-    const [tonEquivalent, setTonEquivalent] = useState(1000000);
+    const [tonEquivalent, setTonEquivalent] = useState(GRAMS_PER_TON);
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
     const [tab, setTab] = useState<AssetsManagementTabs>(AssetsManagementTabs.YIELD);
@@ -127,6 +127,7 @@ export default function FarmingPage() {
         if (isConnected) {
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
             fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
+            setMustReloadFarmingPage(false);
         }
     }, [address, isConnected]);
 
@@ -166,7 +167,7 @@ export default function FarmingPage() {
             setTimeout(() => {
                 fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
                 setMustReloadFarmingPage(false);
-            }, 1000);
+            }, 4000);
         }
     }, [mustReloadFarmingPage]);
 
@@ -289,7 +290,7 @@ export default function FarmingPage() {
                                 <div className="w-full md:col-span-2 md:mt-2">
                                     <KPI 
                                         title="Generated to date" 
-                                        value={carbonCredits?.generated_credits.displayable_value ? shortenNumberWithDigits(parseFloat(carbonCredits?.generated_credits.displayable_value) / tonEquivalent, 2) : "-"} 
+                                        value={carbonCredits?.generated_credits.displayable_value && isNumber(tonEquivalent) ? shortenNumberWithDigits(parseFloat(carbonCredits?.generated_credits.displayable_value) / tonEquivalent, 2) : "-"} 
                                         unit="CC" 
                                         large={false} 
                                     />
@@ -297,7 +298,7 @@ export default function FarmingPage() {
                                 <div className="w-full md:col-span-2 md:mt-12">
                                     <KPI 
                                         title="To be generated" 
-                                        value={carbonCredits?.to_be_generated.displayable_value ? shortenNumberWithDigits(parseFloat(carbonCredits?.to_be_generated.displayable_value) / tonEquivalent, 2) : "-"} 
+                                        value={carbonCredits?.to_be_generated.displayable_value && isNumber(tonEquivalent) ? shortenNumberWithDigits(parseFloat(carbonCredits?.to_be_generated.displayable_value) / tonEquivalent, 2) : "-"} 
                                         unit="CC" 
                                         large={false} 
                                     />
@@ -316,8 +317,8 @@ export default function FarmingPage() {
                                 <div className="mt-12">
                                     <FarmDetail 
                                         type={FarmType.OFFSET} 
-                                        total={carbonCredits?.offset.total.displayable_value ? shortenNumber(parseFloat(carbonCredits?.offset.total.displayable_value) / tonEquivalent) : "-"} 
-                                        available={carbonCredits?.offset.available.displayable_value ? shortenNumberWithDigits(parseFloat(carbonCredits?.offset.available.displayable_value) / tonEquivalent, 6) : "-"}
+                                        total={carbonCredits?.offset.total.displayable_value && isNumber(tonEquivalent) ? shortenNumber(parseFloat(carbonCredits?.offset.total.displayable_value) / tonEquivalent) : "-"} 
+                                        available={carbonCredits?.offset.available.displayable_value && isNumber(tonEquivalent) ? shortenNumberWithDigits(parseFloat(carbonCredits?.offset.available.displayable_value) / tonEquivalent, 6) : "-"}
                                         canClaim={carbonCredits ? parseFloat(carbonCredits?.offset.available.displayable_value) > parseFloat(carbonCredits?.min_to_claim.displayable_value): false}
                                         handleClaim={handleClaimOffset} 
                                     />

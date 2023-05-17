@@ -79,7 +79,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             setTimeout(() => {
                 connectedUserFetcher.load(`/farming/list/customer?wallet=${address}&slug=${project.slug}`);
                 setMustReloadFarmingPage(false);
-            }, 1000);
+            }, 4000);
         }
     }, [mustReloadFarmingPage]);
 
@@ -203,10 +203,17 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                         <div className="font-inter font-medium text-neutral-100 text-lg pt-8">
                             {project.name}
                         </div>
-                        <div className="mt-4 flex items-center w-full justify-center min-h-[36px]">
-                            <FarmStatusComponent status={farmStatus} />
-                            <UndepositedComponent count={undepositedCount} />
-                        </div>
+                        {(unconnectedFetcher.state !== 'loading' && connectedUserFetcher.state !== 'loading') && 
+                            <div className="mt-4 flex items-center w-full justify-center min-h-[36px]">
+                                <FarmStatusComponent status={farmStatus} />
+                                <UndepositedComponent count={undepositedCount} />
+                            </div>
+                        }
+                        {(unconnectedFetcher.state === 'loading' || connectedUserFetcher.state === 'loading') && 
+                            <div className="mt-4 flex items-center w-full justify-center min-h-[36px]">
+                                <Tag text="Loading ..." color="text-neutral-400" animatedText={true} />
+                            </div>
+                        }
                         <div className="grid grid-cols-2 mt-8 font-inter text-sm px-2">
                             <div className="text-left text-neutral-100">
                                 <div>Total Value Locked</div>
@@ -271,10 +278,10 @@ function UndepositedComponent({count}: {count: number}) {
     )
 }
 
-function Tag({text, color, count}: {text: string, color: string, count?: number}) {
+function Tag({text, color, count, animatedText}: {text: string, color: string, count?: number, animatedText?: boolean}) {
     return (
         <div className={`flex items-center justify-center rounded-3xl pl-4 min-h-[36px] ${(count !==  undefined && count > 0) ? "pr-1" : "pr-4"} py-1 ${color} font-inter font-light text-sm bg-opacityLight-5 ${count !== undefined ? "ml-2" : ""}`}>
-            <div>{text}</div>
+            <div className={animatedText ? 'animatedLoading' : ''}>{text}</div>
             { (count !==  undefined && count > 0) && <div className="bg-opacityLight-10 rounded-full min-w-[28px] min-h-[24px] ml-2 flex justify-center items-center p-[4px]">{shortenNumber(count)}</div>}
         </div>
     )
