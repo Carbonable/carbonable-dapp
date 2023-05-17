@@ -114,6 +114,12 @@ module.exports = {
         'dark-40': 'rgba(11, 13, 19, 0.4);',
         'undeposited': '#292A2B',
         'farming-card-bg': '#15171e',
+      },
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '200%': '200% auto',
       }
     }
   },

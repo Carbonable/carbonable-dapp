@@ -4,7 +4,7 @@ import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { useContractWrite } from "@starknet-react/core";
-import _ from "lodash";
+import _, { isNumber } from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
 import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
@@ -23,7 +23,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     useEffect(() => {
-        if (assetsAllocation !== undefined && carbonCredits !== undefined && tonEquivalent !== 0) {
+        if (assetsAllocation !== undefined && carbonCredits !== undefined) {
             switch (context) {
                 case AssetsManagementContext.DEPOSIT:
                     setAvailable(parseFloat(assetsAllocation.undeposited.displayable_value));
@@ -32,7 +32,9 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     setAvailable(tab === AssetsManagementTabs.YIELD ? parseFloat(assetsAllocation.yield.displayable_value) : parseFloat(assetsAllocation.offseted.displayable_value));
                     break;
                 case AssetsManagementContext.CLAIM:
-                    setAvailable(parseFloat(carbonCredits.offset.available.displayable_value) / tonEquivalent);
+                    if (isNumber(tonEquivalent) && tonEquivalent !== 0) {
+                        setAvailable(parseFloat(carbonCredits.offset.available.displayable_value) / tonEquivalent);
+                    }
                     break;
             }
         }
@@ -61,26 +63,26 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     const callsData = [];
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
-                    let amountToDeposit = 0;
+                    let amountDeposited = 0;
 
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
                     for (const token of filteredTokens) {
-                        if (amountToDeposit >= amount) { break; }
-
+                        if (amountDeposited >= amount) { break; }
                         const tokenValue = parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals);
-                        amountToDeposit += tokenValue <= (amount - amountToDeposit) ? tokenValue : amount - amountToDeposit;
+                        const amountToDepositByToken = tokenValue <= (amount - amountDeposited) ? tokenValue : amount - amountDeposited;
+                        amountDeposited += amountToDepositByToken;
 
                         // Allow deposit on yielder or offseter contract
                         callsData.push({
                             contractAddress:contracts?.project,
                             entrypoint: 'approveValue',
-                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
 
                         callsData.push({
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
                             entrypoint: 'deposit',
-                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
                     }
 
