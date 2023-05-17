@@ -136,6 +136,21 @@ input::-webkit-inner-spin-button {
   width: 10%;
 }
 
+.infiniteProgress {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: indeterminate-progress-bar;
+}
+
+@keyframes indeterminate-progress-bar {
+    from {
+        left: -50%;
+    }
+    to {
+        left: 100%;
+    }
+}
+
 @media screen and (min-width: 360px) {
   .preventOverflow .slick-list {
     height: 100px;
