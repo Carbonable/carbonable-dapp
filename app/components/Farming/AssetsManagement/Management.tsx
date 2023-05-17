@@ -74,13 +74,13 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         callsData.push({
                             contractAddress:contracts?.project,
                             entrypoint: 'approveValue',
-                            calldata: [parseInt(token.token_id), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
                         });
 
                         callsData.push({
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
                             entrypoint: 'deposit',
-                            calldata: [parseInt(token.token_id), 0, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, amountToDeposit * Math.pow(10, token.value.value_decimals), 0]
                         });
                     }
 

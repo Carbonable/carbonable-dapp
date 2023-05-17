@@ -20,6 +20,7 @@ import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
+import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
 
 export interface OverviewProps {
     total_removal: NumericValueProps;
@@ -279,6 +280,7 @@ export default function FarmingPage() {
                         </div>
                     </div>
                 </div>
+                { (fetcher.state === "loading" || fetcherPortfolio.state === "loading" ) && <InfiniteProgress />}
                 <div className="relative w-full px-4 py-10 md:py-16 max-w-6xl lg:px-8 mx-auto 2xl:px-0">
                     <div className="md:pl-4 xl:pl-8">
                         <div className="font-inter font-semibold uppercase text-neutral-100 text-lg md:text-xl">Carbon credits</div>
