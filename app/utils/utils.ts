@@ -40,6 +40,7 @@ export function shortenNumber(number: number | bigint | undefined): string {
  */
 export function shortenNumberWithDigits(number: number | bigint | undefined, digits: number): string {
     if (undefined === number) { return '-'; }
+    
     return Intl.NumberFormat('en-US', {
         notation: "compact",
         maximumFractionDigits: digits
