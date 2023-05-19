@@ -156,7 +156,8 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
 }
 
 function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {project: any, toMigrate?: boolean, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
-    const shares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
+    const walletShares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
+    const shares = walletShares + parseFloat(project.total_deposited_value.displayable_value);
     const [imageSrc, setImageSrc] = useState("");
     const calls: any = [];
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(selectedNetwork.id));
@@ -195,7 +196,8 @@ function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {pro
     });
 
     const handleMigrate = (project: any) => {
-        
+        const migrateData = [project.tokens.length];
+
         calls.push({ 
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
@@ -203,12 +205,15 @@ function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {pro
         });
 
         project.tokens.forEach((token: any) => {
-            calls.push({
-                contractAddress: project.minter_address,
-                entrypoint: 'migrate',
-                calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0]
-            }
-        )});
+            migrateData.push(parseInt(num.hexToDecimalString(token.token_id)), 0);
+        });
+
+        calls.push({
+            contractAddress: project.minter_address,
+            entrypoint: 'migrate',
+            calldata: migrateData
+        });
+
         calls.push({
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
@@ -339,7 +344,7 @@ export default function Portfolio() {
     const [numberOfNFT, setNumberOfNFT] = useState(0);
     const fetcher = useFetcher();
     const [reloadData, setReloadData] = useState(false);
-    const [refreshData, setRefreshData] = useState(true);
+    const [refreshData, setRefreshData] = useState(false);
     const selectedNetwork = useLoaderData();
     const { setMustReloadMigration } = useNotifications();
 
@@ -359,7 +364,18 @@ export default function Portfolio() {
             setNumberOfProjects(0);
             setNumberOfNFT(0);
         }
-    }, [address, isConnected, refreshData]);
+    }, [address, isConnected]);
+
+    useEffect(() => {
+        // Load portfolio data when user connects wallet or changes account
+        if (refreshData) {
+            setTimeout(() => {
+                fetcher.load(`/portfolio/load?wallet=${address}`);
+                setMustReloadMigration(false);
+                setRefreshData(false);
+            }, 4000);
+        }
+    }, [refreshData]);
 
     // Set portfolio data when data is loaded
     useEffect(() => {

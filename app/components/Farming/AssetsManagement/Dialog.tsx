@@ -17,7 +17,7 @@ export const enum AssetsManagementTabs {
 }
 
 export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project, carbonCredits, tonEquivalent}: 
-    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: number}) {
+    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string}) {
     const handleClose = () => {
         setIsOpen(false);
     }

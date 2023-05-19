@@ -5,7 +5,7 @@ import Management from "./Management";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
 
 export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent}: 
-    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: number}) {
+    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string}) {
         
     const tabs = [AssetsManagementTabs.YIELD, AssetsManagementTabs.OFFSET];
 
