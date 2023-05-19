@@ -12,7 +12,7 @@ import { num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
 export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: number }) {
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string }) {
 
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState(0);
@@ -32,8 +32,8 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     setAvailable(tab === AssetsManagementTabs.YIELD ? parseFloat(assetsAllocation.yield.displayable_value) : parseFloat(assetsAllocation.offseted.displayable_value));
                     break;
                 case AssetsManagementContext.CLAIM:
-                    if (isNumber(tonEquivalent) && tonEquivalent !== 0) {
-                        setAvailable(parseFloat(carbonCredits.offset.available.displayable_value) / tonEquivalent);
+                    if (tonEquivalent !== '0') {
+                        setAvailable(parseFloat(carbonCredits.offset.available.displayable_value) / parseInt(tonEquivalent));
                     }
                     break;
             }
