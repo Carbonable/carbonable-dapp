@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
 import { useNotifications } from "~/root";
 import { useContractWrite } from "@starknet-react/core";
 import _, { isNumber } from "lodash";

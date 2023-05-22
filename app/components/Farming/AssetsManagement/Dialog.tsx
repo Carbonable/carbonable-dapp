@@ -3,7 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import Management from "./Management";
 import Tabs from "./Tabs";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
 
 export const enum AssetsManagementContext {
     DEPOSIT = "Deposit",
