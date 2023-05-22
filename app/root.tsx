@@ -146,7 +146,7 @@ export function useNotifications() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-
+  console.log(error);
   // when true, this is what used to go to `CatchBoundary`
   if (isRouteErrorResponse(error)) {
     return (
@@ -165,7 +165,7 @@ export function ErrorBoundary() {
                 <Link to={"/launchpad"} className="text-green text-center">Go to launchpad</Link>
               </div>
             </div>
-        </div>
+          </div>
         </body>
       </html>
     );

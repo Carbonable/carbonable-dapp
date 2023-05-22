@@ -2,7 +2,7 @@ import { Tab } from "@headlessui/react";
 import type { AssetsManagementContext} from "./Dialog";
 import { AssetsManagementTabs } from "./Dialog";
 import Management from "./Management";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
 
 export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent}: 
     {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string}) {
