@@ -58,7 +58,7 @@ export const meta: V2_MetaFunction = () => {
 
 function LoaderProjects() {
     return (
-        <div className="grid grid-cols-4 gap-4 mt-2 md:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <div className="flex justify-start items-center border-2 border-neutral-500 p-2 bg-transparent rounded-2xl col-span-4 md:col-span-1 w-full h-[96vw] md:h-[200px] xl:h-[240px]">
                 <div className="w-full h-full bg-neutral-500 rounded-2xl animate-pulse"></div>
             </div>
@@ -122,7 +122,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
         return (
             <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                 {projectsToMigrate.map((project) => (
-                    <ProjectCard key={project.id} project={project} toMigrate={true} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
+                    <ProjectCard key={project.id} project={project} toMigrate={false} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
                 ))}
             </div>
         )
@@ -133,7 +133,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
             { projectsToMigrate.length > 0 && 
                 <>
                     <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-2">Assets to migrate</div>
-                    <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {projectsToMigrate.map((project) => (
                             <ProjectCard key={project.id} project={project} toMigrate={true} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
                         ))}
@@ -143,7 +143,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
             { migratedProjects.length > 0 && 
                 <>
                     {projectsToMigrate.length > 0 && <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-8">Migrated assets</div> }
-                    <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {migratedProjects.map((project) => (
                             <ProjectCard key={project.id} project={project} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
                         ))}
@@ -157,7 +157,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
 
 function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {project: any, toMigrate?: boolean, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
     const walletShares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
-    const shares = walletShares + parseFloat(project.total_deposited_value.displayable_value);
+    const shares = walletShares + parseFloat(project.total_deposited_value?.displayable_value) ?? 0;
     const [imageSrc, setImageSrc] = useState("");
     const calls: any = [];
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(selectedNetwork.id));
@@ -329,7 +329,7 @@ function KPI({title, value}: {title: string, value: string}) {
     return (
         <div className="flex flex-col items-start justify-start text-neutral-100 font-trash">
             <h1 className="font-bold uppercase text-xs md:text-sm lg:text-lg">{title}</h1>
-            <div className="text-2xl mt-3 lg:text-4xl">{value}</div>
+            <div className="text-xl mt-3 md:text-2xl lg:text-4xl">{value}</div>
         </div>
     )
 }
