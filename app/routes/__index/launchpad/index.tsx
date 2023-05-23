@@ -23,9 +23,9 @@ export const loader: LoaderFunction = async ({
 
         const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
 
-        const allFarms = await fetch(`${indexerURL}/farming/list`, {});
-        const allProjects = await allFarms.json();
-        return json(allProjects.data);
+        const projects = await fetch(`${indexerURL}/launchpad/list`, {});
+        const projectsJson = await projects.json();
+        return json(projectsJson);
     } catch (e) {
         console.log(e)
         return json([]);
