@@ -146,7 +146,7 @@ export function useNotifications() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  console.log(error);
+  console.error(error);
   // when true, this is what used to go to `CatchBoundary`
   if (isRouteErrorResponse(error)) {
     return (
