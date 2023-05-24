@@ -1,11 +1,12 @@
-import type { Project } from "@prisma/client";
 import { GreenLinkButton } from "~/components/Buttons/LinkButton";
 import ComingSoon from "./ComingSoon";
 import Mint from "./Mint";
 import { SaleStatusType } from "./ProjectOverview";
+import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 
-export default function Actions({projectState, project, priceToDisplay, whitelist, refreshProjectTotalSupply, refreshProjectReservedSupplyForMint, network, hasReports}: 
-                                {projectState: SaleStatusType, project: Project, priceToDisplay: number, whitelist: any, refreshProjectTotalSupply: () => void, refreshProjectReservedSupplyForMint: () => void, network: string, hasReports: boolean}) {
+export default function Actions({projectState, project, launchpad, mint, priceToDisplay, whitelist, hasReports}: 
+                                {projectState: SaleStatusType, project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any, hasReports: boolean}) {
+
     if (projectState === SaleStatusType.Soldout && hasReports) {
         return (
             <GreenLinkButton href="#impactreports" className="w-full">View Impact Reports</GreenLinkButton>
@@ -26,7 +27,7 @@ export default function Actions({projectState, project, priceToDisplay, whitelis
 
     if (projectState === SaleStatusType.Public || projectState === SaleStatusType.Whitelist) {
         return (
-            <Mint project={project} priceToDisplay={priceToDisplay} whitelist={whitelist} refreshProjectTotalSupply={refreshProjectTotalSupply} refreshProjectReservedSupplyForMint={refreshProjectReservedSupplyForMint} network={network} />
+            <Mint project={project} launchpad={launchpad} mint={mint} priceToDisplay={priceToDisplay} whitelist={whitelist} />
         );
     }
     return null;

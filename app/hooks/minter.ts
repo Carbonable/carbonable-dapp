@@ -60,8 +60,7 @@ export function useSoldout(contractAddress: string, network: string): any {
  * @param { string } contractAddress
  * @returns { any } is soldout
  */
-export function useReservedSupplyForMint(contractAddress: string, network: string): any {
-    const abi = useMinterContract(network);
+export function useReservedSupplyForMint(contractAddress: string, abi: Abi): any {
     const { data, error } = useContractRead({ abi, address: contractAddress, functionName: 'getReservedSupplyForMint', args: [] });
     const reservedSupply = data ? data[0] : undefined;
     return { projectReservedSupplyForMint: reservedSupply?.low.toString(), errorProjectReservedSupplyForMint: error };
