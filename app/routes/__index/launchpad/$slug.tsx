@@ -2,14 +2,16 @@ import { db } from "~/utils/db.server";
 import type { LoaderFunction, V2_MetaFunction} from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
-import type { Network, Project, ProjectWhitelist } from "@prisma/client";
+import type { ProjectWhitelist } from "@prisma/client";
 import { userPrefs } from "~/cookie";
 import { client } from "~/utils/sanity/client";
 import ContentContainer from "~/components/Project/Content/ContentWrapper";
 import type { SanityContent } from "~/utils/sanity/types";
 import { urlFor } from "~/utils/sanity/image";
+import type { LaunchpadProps, MintProps, ProjectProps } from ".";
+import { useEffect, useState } from "react";
 
 export const loader: LoaderFunction = async ({
     params, request
@@ -25,16 +27,13 @@ export const loader: LoaderFunction = async ({
           }
       });
 
-      // Find the project by slug and network.
-      const project = await db.project.findFirst({
-        where: {
-          slug: params.slug,
-          network: selectedNetwork || undefined, 
-        },  
-      });
+      const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+
+      const projects = await fetch(`${indexerURL}/launchpad/details/${params.slug}`, {});
+      const project = await projects.json();
 
       // If the project is not found, or is not display, throw a 404.
-      if (project === null || project.isDisplay === false){
+      if (project === null || project === undefined){
         throw new Response("Not Found", {status: 404})
       }
 
@@ -44,7 +43,7 @@ export const loader: LoaderFunction = async ({
           whitelist: true,
         },
         where: {
-          projectId: project.id,
+          projectId: project.data.project.id,
         },
       });
 
@@ -53,7 +52,7 @@ export const loader: LoaderFunction = async ({
         { slug: params.slug }
       );
   
-      return json({project, content, whitelist, selectedNetwork});
+      return json({project, content, whitelist});
 
     } catch (e) {
       throw new Response("Not Found", {status: 404})
@@ -91,14 +90,31 @@ export const meta: V2_MetaFunction = ({ data }) => {
 
 export default function ProjectPage() {
   const data = useLoaderData();
-  const project: Project = data.project;
+  const [project, setProject] = useState<ProjectProps>(data.project.data.project);
+  const [launchpad, setLaunchpad] = useState<LaunchpadProps>(data.project.data.launchpad);
+  const [mint, setMint] = useState<MintProps>(data.project.data.mint);
   const content: SanityContent = data.content[0];
   const whitelist: ProjectWhitelist = data.whitelist?.whitelist;
-  const selectedNetwork: Network = data.selectedNetwork;
+  const fetcher = useFetcher();
+
+  useEffect(() => {
+        setTimeout(() => {
+          fetcher.load(`/launchpad/refresh?slug=${project.slug}`);
+        }, 4000);
+  }, []);
+
+  useEffect(() => {
+    if (fetcher.data === undefined) return;
+
+    const data = fetcher.data.data;
+    setProject(data.project);
+    setLaunchpad(data.launchpad);
+    setMint(data.mint);
+  }, [fetcher.data]);
 
   return (
       <div className="w-full">
-        <ProjectOverview project={project} whitelist={whitelist} selectedNetwork={selectedNetwork} hasReports={content?.reports.length > 0} />
+        <ProjectOverview project={project} launchpad={launchpad} mint={mint} whitelist={whitelist} hasReports={content?.reports.length > 0} />
         <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
           { content !== undefined && <ContentContainer content={content} /> }
         </div>
