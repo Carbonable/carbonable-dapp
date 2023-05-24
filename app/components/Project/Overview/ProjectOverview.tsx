@@ -1,10 +1,8 @@
-import type { Network, Project } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { useReservedSupplyForMint, useSoldout } from "~/hooks/minter";
-import { useProjectTotalSupply } from "~/hooks/project";
-import { IPFS_GATEWAY } from "~/utils/links";
 import Actions from "./Actions";
 import ProjectInformation from "./ProjectInformation";
+import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
+import { getImageUrlFromMetadata } from "~/utils/utils";
 
 export enum SaleStatusType {
     Loading,
@@ -14,45 +12,39 @@ export enum SaleStatusType {
     Soldout
 }
 
-export default function ProjectOverview({project, whitelist, selectedNetwork, hasReports}: {project: Project, whitelist: any, selectedNetwork: Network, hasReports: boolean}) {
-    const [priceToDisplay, setPriceToDisplay] = useState(0);
-    const { projectTotalSupply, refreshProjectTotalSupply } = useProjectTotalSupply(project.projectContract, project.networkId);
-    const { projectReservedSupplyForMint, refreshProjectReservedSupplyForMint } = useReservedSupplyForMint(project.minterContract, project.networkId);
-    const { soldout } = useSoldout(project.minterContract, project.networkId);
-    const [isSoldout, setIsSoldout] = useState(false);
+export default function ProjectOverview({project, launchpad, mint, whitelist, hasReports}: {project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, whitelist: any, hasReports: boolean}) {
     const [projectState, setProjectState] = useState(SaleStatusType.Loading);
-    useEffect(() => {
-        setIsSoldout(soldout || project.isSoldout);
-    }, [soldout, project.isSoldout]);
+    const [imageSrc, setImageSrc] = useState<string>("/assets/images/backgrounds/bg-farming-card.png");
 
     useEffect(() => {
-        if (project.paymentTokenDecimals === undefined || project.unitPrice === undefined) { return; }
-        const price = project.unitPrice / Math.pow(10, project.paymentTokenDecimals);
-
-        setPriceToDisplay(Math.round(price) !== price ? parseFloat(price.toFixed(2)) : price);
-    }, [project.paymentTokenDecimals, project.unitPrice]);
-
+        if (project.uri.uri) {
+            getImageUrlFromMetadata(project.uri.uri).then((url) => {
+                setImageSrc(url);
+            });
+        }
+    }, [project.uri.uri]);
+    
     useEffect(() => {
-        if (isSoldout) {
+        if (launchpad.is_sold_out) {
             setProjectState(SaleStatusType.Soldout);
             return;
         }
     
-        if (project.publicSaleOpen) {
+        if (launchpad.public_sale_open) {
             setProjectState(SaleStatusType.Public);
             return;
         }
     
-        if (project.whitelistedSaleOpen) {
+        if (launchpad.whitelisted_sale_open) {
             setProjectState(SaleStatusType.Whitelist);
             return;
         }
     
-        if (!project.publicSaleOpen && !project.whitelistedSaleOpen) {
+        if (!launchpad.public_sale_open && !launchpad.whitelisted_sale_open) {
             setProjectState(SaleStatusType.ComingSoon);
             return;
         }
-    }, [project, isSoldout]);
+    }, [launchpad]);
 
     return (
         <div className="w-full bg-mint p-4">
@@ -60,18 +52,17 @@ export default function ProjectOverview({project, whitelist, selectedNetwork, ha
                 <div className="font-inter text-neutral-100 font-bold text-lg uppercase md:text-2xl">{project.name}</div>
                 <div className="flex flex-wrap justify-start items-center mt-4 md:gap-6 md:items-start">
                     <div className="w-full mx-auto md:w-[41%] md:order-2">
-                        <img src={IPFS_GATEWAY + project.imageIpfs} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
+                        <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
                     </div>
                     <div className="flex flex-wrap mt-8 w-full mx-auto md:w-[55%] md:order-1 md:mt-0">
-                        <ProjectInformation project={project} priceToDisplay={priceToDisplay} projectTotalSupply={projectTotalSupply} isSoldout={isSoldout} selectedNetwork={selectedNetwork} projectState={projectState} projectReservedSupplyForMint={projectReservedSupplyForMint} />
+                        <ProjectInformation project={project} launchpad={launchpad} mint={mint} priceToDisplay={project.payment_token.displayable_value} projectState={projectState} />
                         <div className="mt-4 w-full flex items-center justify-center">
                             <Actions projectState={projectState} 
-                                     project={project} 
-                                     priceToDisplay={priceToDisplay} 
+                                     project={project}
+                                     launchpad={launchpad}
+                                     mint={mint}
+                                     priceToDisplay={project.payment_token.displayable_value} 
                                      whitelist={whitelist} 
-                                     refreshProjectTotalSupply={refreshProjectTotalSupply} 
-                                     refreshProjectReservedSupplyForMint={refreshProjectReservedSupplyForMint} 
-                                     network={selectedNetwork.id}
                                      hasReports={hasReports}
                              />
                         </div>

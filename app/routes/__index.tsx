@@ -163,7 +163,7 @@ function Notifications() {
                         icon: <div className={iconCssGreen}><CheckCircleIcon /></div>
                     });
 
-                    setMustReloadMigration(notif.source === NotificationSource.MIGRATION);
+                    setMustReloadMigration(notif.source === NotificationSource.MIGRATION || notif.source === NotificationSource.MINT);
                     setMustReloadFarmingPage(notif.source === NotificationSource.FARMING);
                     setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
                     toast.done(notif.txHash);

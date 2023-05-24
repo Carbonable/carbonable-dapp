@@ -4,7 +4,7 @@ import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
 import { useNotifications } from "~/root";
 import { useContractWrite } from "@starknet-react/core";
-import _, { isNumber } from "lodash";
+import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
 import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
