@@ -10,12 +10,12 @@ import { useNotifications } from "~/root";
 export default function NavMenu({addressToDisplay, closeMenu}: any) {
     const { defautlNetwork } = useNotifications();
     return (
-        <div className="bg-neutral-900 h-screen text-left pt-[30px]">
+        <div className="bg-neutral-900 h-screen text-left pt-[24px]">
             <div className="w-full text-left pl-[36px]">
                 <img className="w-8/12" src="/assets/images/common/logo.svg" alt="Logo Carbonable"/>
             </div>
             <div className="w-full mt-4 pl-[36px] overflow-x-hidden text-ellipsis font-trash lg:hidden">{addressToDisplay}</div>
-            <div className="mt-12 w-full">
+            <div className="mt-6 lg:mt-12 w-full">
                 {links.map((link) => (      
                     <div key={`${link.label}_mobile`} >
                         {link.outsideLink && <NavLinkOutside link={link} />}

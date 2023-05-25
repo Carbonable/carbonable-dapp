@@ -57,7 +57,7 @@ export default function Index() {
             </div>
             <header className="pb-2 fixed top-0 w-full z-10 bg-neutral-800">
                 { defautlNetwork.id === 'testnet' && 
-                    <div className="w-[calc(100%_-_280px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[280px]">
+                    <div className="w-full lg:w-[calc(100%_-_280px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[280px]">
                         You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>
                     </div>
                 }
