@@ -8,10 +8,8 @@ export const loader: LoaderFunction = async ({
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");
         const slug = url.searchParams.get("slug");
-
-        const indexerURL = process.env.NETWORK === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
-        const customer = await fetch(`${indexerURL}/farming/list/${wallet}/${slug}`, {});
+        
+        const customer = await fetch(`${process.env.INDEXER_URL}/farming/list/${wallet}/${slug}`, {});
         return json(await customer.json());
     } catch (e) {
         console.log(e)

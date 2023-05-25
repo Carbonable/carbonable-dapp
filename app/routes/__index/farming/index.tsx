@@ -6,19 +6,13 @@ import { useEffect, useState } from "react";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { db } from "~/utils/db.server";
 import { shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 
 export const loader: LoaderFunction = async ({
     request, 
   }) => {
     try {
-
-
-        const selectedNetwork = process.env.NETWORK;
-        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
-        const allFarms = await fetch(`${indexerURL}/farming/list`, {});
+        const allFarms = await fetch(`${process.env.INDEXER_URL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
 
         return json([allFarmsJson]);

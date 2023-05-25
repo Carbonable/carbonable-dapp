@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import Header from "~/components/Header";
 import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";

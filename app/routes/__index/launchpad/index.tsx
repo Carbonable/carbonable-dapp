@@ -42,10 +42,7 @@ export interface LaunchpadLoaderData {
 
 export const loader: LoaderFunction = async () => {
     try {
-        const selectedNetwork = process.env.NETWORK;
-        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
-        const projects = await fetch(`${indexerURL}/launchpad/list`, {});
+        const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/list`, {});
         const projectsJson = await projects.json();
         return json(projectsJson);
     } catch (e) {

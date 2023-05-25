@@ -5,11 +5,10 @@ export const loader: LoaderFunction = async ({
     request, 
   }) => {
     try {
-        const indexerURL = process.env.NETWORK === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");
-        
-        const portfolio = await fetch(`${indexerURL}/portfolio/${wallet}`, {});
+
+        const portfolio = await fetch(`${process.env.INDEXER_URL}/portfolio/${wallet}`, {});
 
         return json(await portfolio.json());
     } catch (e) {
