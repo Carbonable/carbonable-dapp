@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
@@ -63,6 +63,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     const callsData = [];
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
+                    console.log(filteredTokens)
                     let amountDeposited = 0;
 
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
@@ -104,7 +105,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         calls: {
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
                             entrypoint: tokens.length === 0 ? 'withdrawTo' : 'withdrawToToken',
-                            calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(tokens[tokens.length - 1].token_id), 0, amount * UINT256_DECIMALS, 0]
+                            calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
                         },
                         metadata: {
                             method: 'Withdraw',
