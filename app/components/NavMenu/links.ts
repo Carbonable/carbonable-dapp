@@ -14,7 +14,7 @@ export const links = [
     {
         href: '/farming',
         label: 'Farming',
-        isOpen: false,
+        isOpen: true,
         outsideLink: false
     },
     {

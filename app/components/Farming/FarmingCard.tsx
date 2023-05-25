@@ -9,7 +9,7 @@ import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import { num } from "starknet";
-import type { ContractsProps } from "~/routes/__index/farming-coming-soon/$slug";
+import type { ContractsProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
