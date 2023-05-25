@@ -1,10 +1,7 @@
 import { useContractWrite } from "@starknet-react/core";
 import { useAccount } from "@starknet-react/core";
-import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
-import { userPrefs } from "~/cookie";
-import { db } from "~/utils/db.server";
-import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import type { V2_MetaFunction } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
 import Disconnected from "~/components/Portfolio/Disconnected";
 import { useEffect, useState } from "react";
 import _ from "lodash";
@@ -16,26 +13,6 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { num } from "starknet";
-
-export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
-    try {
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
-
-        return json(selectedNetwork);
-    } catch (e) {
-        console.log(e)
-        return json([]);
-    }
-};
 
 export const meta: V2_MetaFunction = () => {
     return [
@@ -100,11 +77,10 @@ function LoaderBadges() {
     )
 }
 
-function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: any[], selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
+function ProjectsList({projects, setRefreshData}: {projects: any[], setRefreshData: (b: boolean) => void}) {
     const migratedProjects = _.filter(projects, project => project.tokens.some((token: any) => token.hasOwnProperty("value")));
     const projectsToMigrate = _.filter(projects, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
     const [isOpen, setIsOpen] = useState(false);
-    const { defautlNetwork } = useNotifications();
 
     if (projects.length === 0) {
         return (
@@ -117,17 +93,6 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
         )
     }
 
-    // TODO: remove when migration is ready for mainnet
-    if (defautlNetwork.id === "mainnet") {
-        return (
-            <div className="grid grid-cols-4 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
-                {projectsToMigrate.map((project) => (
-                    <ProjectCard key={project.id} project={project} toMigrate={false} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
-                ))}
-            </div>
-        )
-    }
-
     return (
         <>
             { projectsToMigrate.length > 0 && 
@@ -135,7 +100,7 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
                     <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-2">Assets to migrate</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {projectsToMigrate.map((project) => (
-                            <ProjectCard key={project.id} project={project} toMigrate={true} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
+                            <ProjectCard key={project.id} project={project} toMigrate={true} setRefreshData={setRefreshData} />
                         ))}
                     </div>
                 </>
@@ -145,24 +110,23 @@ function ProjectsList({projects, selectedNetwork, setRefreshData}: {projects: an
                     {projectsToMigrate.length > 0 && <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-8">Migrated assets</div> }
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
                         {migratedProjects.map((project) => (
-                            <ProjectCard key={project.id} project={project} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />
+                            <ProjectCard key={project.id} project={project} setRefreshData={setRefreshData} />
                         ))}
                     </div>
                 </>
             }
         </>
-        
     )
 }
 
-function ProjectCard({project, toMigrate, selectedNetwork, setRefreshData}: {project: any, toMigrate?: boolean, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
+function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigrate?: boolean, setRefreshData: (b: boolean) => void}) {
     const walletShares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
     const shares = walletShares + parseFloat(project.total_deposited_value?.displayable_value) ?? 0;
     const [imageSrc, setImageSrc] = useState("");
     const calls: any = [];
-    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(selectedNetwork.id));
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     // check if project is in notification list
     const [isMigrating, setIsMigrating] = useState(false);
@@ -295,8 +259,8 @@ function BadgesList({badges}: {badges: any[]}) {
     )
 }
 
-function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, selectedNetwork, setRefreshData}:
-    {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, selectedNetwork: any, setRefreshData: (b: boolean) => void}) {
+function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, setRefreshData}:
+    {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, setRefreshData: (b: boolean) => void}) {
 
     if (!isConnected) {
         return <Disconnected />
@@ -317,7 +281,7 @@ function PortfolioState({isConnected, state, projects, badges, reloadData, setRe
         <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
             {state === 'loading' && <LoaderProjects /> }
-            {state !== 'loading' && <ProjectsList projects={projects} selectedNetwork={selectedNetwork} setRefreshData={setRefreshData} />}
+            {state !== 'loading' && <ProjectsList projects={projects} setRefreshData={setRefreshData} />}
             <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl mt-16">My badges</div>
             {state === 'loading' && <LoaderBadges /> }
             {state !== 'loading' && <BadgesList badges={badges} />}
@@ -345,7 +309,6 @@ export default function Portfolio() {
     const fetcher = useFetcher();
     const [reloadData, setReloadData] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
-    const selectedNetwork = useLoaderData();
     const { setMustReloadMigration } = useNotifications();
 
     useEffect(() => {
@@ -413,8 +376,7 @@ export default function Portfolio() {
                 badges={collectedBadges} 
                 reloadData={reloadData} 
                 setReloadData={setReloadData} 
-                setRefreshData={setRefreshData} 
-                selectedNetwork={selectedNetwork}
+                setRefreshData={setRefreshData}
              />
         </div>
     )

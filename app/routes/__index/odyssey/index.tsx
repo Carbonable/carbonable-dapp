@@ -6,7 +6,6 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { Badge, BadgeContract } from "@prisma/client";
-import { userPrefs } from "~/cookie";
 
 export const loader: LoaderFunction = async ({
     request, 
@@ -14,25 +13,19 @@ export const loader: LoaderFunction = async ({
     try {
         const allBadges = await db.badge.findMany({
             orderBy: [
-            {
-                token_id: 'desc',
-            }
-            ]});
-
-
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-                ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
+                {
+                    token_id: 'desc',
+                }
+            ]
         });
+
+        const selectedNetwork = process.env.NETWORK;
 
         const contract = await db.badgeContract.findFirst({
             where: {
-                network: selectedNetwork || undefined, 
-            }});
+                networkId: selectedNetwork, 
+            }
+        });
         return json({allBadges, contract});
     } catch (e) {
         console.log(e)

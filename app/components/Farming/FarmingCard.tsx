@@ -41,7 +41,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
-    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
     const [claimContext, setClaimContext] = useState<any>("Yield");
 
     useEffect(() => {

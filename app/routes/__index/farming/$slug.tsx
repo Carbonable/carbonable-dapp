@@ -3,8 +3,6 @@ import { json } from "@remix-run/node";
 import { NavLink, useFetcher, useLoaderData } from "@remix-run/react";
 import FarmingRepartition from "~/components/Farming/FarmingRepartition";
 import ProjectIdentification from "~/components/Farming/ProjectIdentification";
-import { userPrefs } from "~/cookie";
-import { db } from "~/utils/db.server";
 import FarmingAllocation from "~/components/Farming/FarmingAllocation";
 import KPI from "~/components/Farming/FarmKPI";
 import FarmDetail, { FarmType } from "~/components/Farming/FarmDetail";
@@ -13,9 +11,10 @@ import { useEffect, useState } from "react";
 import { useAccount, useContractWrite } from "@starknet-react/core";
 import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
-import _, { isNumber } from "lodash";
+import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { Abi, num } from "starknet";
+import { num } from "starknet";
+import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
@@ -76,21 +75,13 @@ export interface ContractsProps {
 }
 
 export const loader: LoaderFunction = async ({
-    params, request
+    params
   }) => {
     try {
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-        // If the user has selected a network, use that. Otherwise, use the default network.
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-                ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
-
+        const selectedNetwork = process.env.NETWORK;
         const slug = params.slug;
-        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+
         const data = await fetch(`${indexerURL}/projects/${slug}`, {});
         const project = await data.json();
 
@@ -119,7 +110,7 @@ export default function FarmingPage() {
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
-    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
     const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {

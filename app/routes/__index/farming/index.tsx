@@ -5,7 +5,6 @@ import { useAccount } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
-import { userPrefs } from "~/cookie";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import { db } from "~/utils/db.server";
 import { shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
@@ -14,22 +13,17 @@ export const loader: LoaderFunction = async ({
     request, 
   }) => {
     try {
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
 
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
 
-        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        const selectedNetwork = process.env.NETWORK;
+        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+
         const allFarms = await fetch(`${indexerURL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
 
         return json([allFarmsJson]);
     } catch (e) {
-        
+        console.error(e);
         return json({});
     }
 };

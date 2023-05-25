@@ -1,30 +1,20 @@
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "@remix-run/react";
 import { useAccount, useConnectors } from "@starknet-react/core";
-import { useEffect } from "react";
 
 import SecondaryButton from "./Buttons/ActionButton";
 import ConnectButton from "./Buttons/ConnectButton";
-import Select from "./Filters/Select";
 import { useNotifications } from "~/root";
-import { Provider } from "starknet";
+import Select from "./Filters/Select";
+import { networksList } from "./NavMenu/networks";
 
 
-export default function Header({toggleMenu, menuOpen, addressToDisplay, networksList, selectedNetwork}: any) {
+export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
     const { status, connector } = useAccount();
     const { disconnect } = useConnectors();
     const navigate = useNavigate();
     const resolvedPath = useLocation();
-    const { setDefaultProvider, defautlNetwork } = useNotifications();
-
-    useEffect(() => {
-        const newProvider = new Provider({
-            sequencer: {
-              baseUrl: defautlNetwork.nodeUrl
-            }
-        });
-        setDefaultProvider(newProvider);
-    }, [status]);
+    const { defautlNetwork } = useNotifications();
 
     return (
         <>
@@ -38,7 +28,7 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
                     { resolvedPath.pathname.split( '/' ).length > 2 && <div className="items-center hidden lg:block absolute left-[300px]"><span className="flex cursor-pointer text-neutral-200 hover:text-neutral-400" onClick={() => navigate(`/${resolvedPath.pathname.split( '/' )[1]}`)}><ArrowLeftIcon className="w-4 mr-2" />Back</span></div>}
                     <div className="hidden lg:flex justify-end">
-                        <div className="mr-6 w-fit">{networksList?.length > 0 && <Select values={networksList} selectedValue={selectedNetwork} action="/network/preference" />}</div>
+                        <div className="mr-6 w-fit">{<Select values={networksList} selectedValue={defautlNetwork} action="/network/preference" />}</div>
                     </div>
                     {status === 'disconnected' && <ConnectButton displayIcon={true} /> }
 
@@ -46,7 +36,7 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay, networks
                         <>
                             <span className="mr-12 font-trash hidden lg:flex items-center justify-center">
                                 {addressToDisplay}
-                                {connector?.id() === 'argentWebWallet' && <a href={selectedNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
+                                {connector?.id() === 'argentWebWallet' && <a href={defautlNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
                             </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>

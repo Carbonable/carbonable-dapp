@@ -5,7 +5,6 @@ import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
 import type { ProjectWhitelist } from "@prisma/client";
-import { userPrefs } from "~/cookie";
 import { client } from "~/utils/sanity/client";
 import ContentContainer from "~/components/Project/Content/ContentWrapper";
 import type { SanityContent } from "~/utils/sanity/types";
@@ -17,17 +16,8 @@ export const loader: LoaderFunction = async ({
     params, request
   }) => {
     try {
-      const cookieHeader = request.headers.get("Cookie");
-      const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-      // If the user has selected a network, use that. Otherwise, use the default network.
-      const selectedNetwork = await db.network.findFirst({
-          where: {
-            ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-          }
-      });
-
-      const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+      const selectedNetwork = process.env.NETWORK;
+      const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
 
       const projects = await fetch(`${indexerURL}/launchpad/details/${params.slug}`, {});
       const project = await projects.json();

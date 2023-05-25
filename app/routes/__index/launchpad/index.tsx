@@ -1,9 +1,6 @@
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import { db } from "~/utils/db.server";
-
-import { userPrefs } from "~/cookie";
 import LaunchpadCard from "~/components/Project/Overview/ProjectCard";
 
 export interface ProjectProps {
@@ -43,26 +40,16 @@ export interface LaunchpadLoaderData {
 }
 
 
-export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
+export const loader: LoaderFunction = async () => {
     try {
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-        const selectedNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-        });
-
-        const indexerURL = selectedNetwork?.id === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
+        const selectedNetwork = process.env.NETWORK;
+        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
 
         const projects = await fetch(`${indexerURL}/launchpad/list`, {});
         const projectsJson = await projects.json();
         return json(projectsJson);
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };
