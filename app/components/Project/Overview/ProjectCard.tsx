@@ -21,7 +21,7 @@ export default function LaunchpadCard(project: LaunchpadLoaderData) {
     }, [project.launchpad.public_sale_open, project.launchpad.whitelisted_sale_open]);
 
     return (
-        <div className="relative  min-h-[320px]">
+        <div className="relative  min-h-[300px]">
             <img src={imageSrc} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" />
             { (project.launchpad.is_sold_out || saleIsOpen === false) && 
                 <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[10%]"></div>

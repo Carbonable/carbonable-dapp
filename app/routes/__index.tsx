@@ -5,10 +5,6 @@ import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
 import { getStarknetId } from "~/utils/starknetId";
 import { useAccount } from "@starknet-react/core";
-import { db } from "~/utils/db.server";
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { userPrefs } from "~/cookie";
 import { ToastContainer, toast } from "react-toastify";
 import { useNotifications } from "~/root";
 import Transaction from "~/components/Notifications/Transaction";
@@ -25,42 +21,14 @@ function minifyAddressOrStarknetId(address: string | undefined, starknetId: stri
     return input.length > 24 ? `${input.substring(0, 5)} ... ${input.substring(input.length - 5, input.length)}` : input;
 }
 
-
-export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
-    try {
-        const networks = await db.network.findMany({
-          orderBy: {
-            order: 'asc'
-          }
-        });
-
-        const cookieHeader = request.headers.get("Cookie");
-        const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-        const defautlNetwork = await db.network.findFirst({
-            where: {
-              ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-            }
-          });
-        
-        return json({ networks, defautlNetwork });
-    } catch {
-        return json([]);
-    }
-  };
-  
-
 export default function Index() {
-    const networks = useLoaderData();
     const [menuOpen, setMenuOpen] = useState(false);
     const { status, address, account } = useAccount();
     const [addressToDisplay, setAddressToDisplay] = useState("");
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const { notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
 
     async function getStarnetId() {
-        const id = await getStarknetId(address, networks.defautlNetwork);
+        const id = await getStarknetId(address, defautlNetwork);
         setAddressToDisplay(minifyAddressOrStarknetId(address, id));
     }
 
@@ -85,18 +53,23 @@ export default function Index() {
     return (
         <div className="mx-auto flex" id="outer-container">
             <div className="fixed z-50 top-0 left-0 lg:hidden">
-                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
+                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
             </div>
-            <header className="py-7 fixed top-0 w-full z-10 bg-neutral-800">
-                <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
+            <header className="pb-2 fixed top-0 w-full z-10 bg-neutral-800">
+                { defautlNetwork.id === 'testnet' && 
+                    <div className="w-[calc(100%_-_280px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[280px]">
+                        You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>
+                    </div>
+                }
+                <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} />
             </header>
             <nav className='hidden lg:block z-20'>
-                <div className="sticky top-0 left-0 lg:w-[280px] ">
-                    <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} networksList={networks.networks} selectedNetwork={networks.defautlNetwork} />
+                <div className="sticky top-0 left-0 lg:w-[280px]">
+                    <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} />
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage }} />
+                <Outlet context={{ notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage }} />
                 <Notifications />
             </main>
         </div>

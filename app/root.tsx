@@ -16,9 +16,7 @@ import {
 import type { Connector } from '@starknet-react/core';
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
 import { Provider } from "starknet";
-import { userPrefs } from "./cookie";
 import styles from "./styles/app.css";
-import { db } from "./utils/db.server";
 import { useEffect, useMemo, useState } from "react";
 import type { TxStatus } from "./utils/blockchain/status";
 
@@ -27,19 +25,9 @@ export function links() {
 }
 
 
-export const loader: LoaderFunction = async ({
-  request, 
-}) => {
+export const loader: LoaderFunction = async () => {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookie = (await userPrefs.parse(cookieHeader)) || {};
-
-    const defautlNetwork = await db.network.findFirst({
-      where: {
-        ...(cookie.selected_network !== undefined ? { id: cookie.selected_network } : { isDefault: true }), 
-      }
-    });
-    return json(defautlNetwork);
+    return json({id: process.env.NETWORK, node_url: process.env.NODE_URL});
   } catch {
       return json([]);
   }
@@ -48,15 +36,14 @@ export const loader: LoaderFunction = async ({
 
 export default function App() {
   const defautlNetwork = useLoaderData();
-
   const [webwallet, setWebwallet] = useState<any>(null);
   const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
-  const [defaultProvider, setDefaultProvider] = useState<any>(new Provider({
+  const [defaultProvider] = useState<any>(new Provider({
     sequencer: {
-      baseUrl: defautlNetwork.nodeUrl
+      baseUrl: defautlNetwork.node_url
     }
   }));
 
@@ -110,7 +97,7 @@ export default function App() {
       </head>
       <body>
         <StarknetConfig defaultProvider={defaultProvider} connectors={connectors} autoConnect>
-            <Outlet context={{ notifs, setNotifs, defaultProvider, setDefaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage }} />
+            <Outlet context={{ notifs, setNotifs, defaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage }} />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
@@ -130,9 +117,8 @@ type Notification = {
 
 type ContextType = { 
   notifs: Notification[], 
-  setNotifs: (n: Notification[]) => void, 
-  defaultProvider: Provider, 
-  setDefaultProvider: (p: any) => void, 
+  setNotifs: (n: Notification[]) => void,
+  defaultProvider: any,
   defautlNetwork: any, 
   mustReloadMigration: boolean, 
   setMustReloadMigration: (b: boolean) => void,
