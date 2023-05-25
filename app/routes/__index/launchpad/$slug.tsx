@@ -16,10 +16,7 @@ export const loader: LoaderFunction = async ({
     params, request
   }) => {
     try {
-      const selectedNetwork = process.env.NETWORK;
-      const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
-      const projects = await fetch(`${indexerURL}/launchpad/details/${params.slug}`, {});
+      const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/details/${params.slug}`, {});
       const project = await projects.json();
 
       // If the project is not found, or is not display, throw a 404.

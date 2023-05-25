@@ -80,9 +80,8 @@ export const loader: LoaderFunction = async ({
     try {
         const selectedNetwork = process.env.NETWORK;
         const slug = params.slug;
-        const indexerURL = selectedNetwork === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
 
-        const data = await fetch(`${indexerURL}/projects/${slug}`, {});
+        const data = await fetch(`${process.env.INDEXER_URL}/projects/${slug}`, {});
         const project = await data.json();
 
         return json({slug, selectedNetwork, project: project.data});

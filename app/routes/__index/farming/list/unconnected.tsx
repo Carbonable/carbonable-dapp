@@ -8,9 +8,7 @@ export const loader: LoaderFunction = async ({
         const url = new URL(request.url);
         const slug = url.searchParams.get("slug");
 
-        const indexerURL = process.env.NETWORK === 'testnet' ? process.env.INDEXER_TESTNET_URL : process.env.INDEXER_URL;
-
-        const farms = await fetch(`${indexerURL}/farming/list/unconnected/${slug}`, {});
+        const farms = await fetch(`${process.env.INDEXER_URL}/farming/list/unconnected/${slug}`, {});
         return json(await farms.json());
     } catch (e) {
         console.log(e)
