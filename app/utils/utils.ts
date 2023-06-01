@@ -1,4 +1,5 @@
-import { IPFS_GATEWAY, STARKNET_ID_INDEXER_MAINNET, STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "./links";
+import { IPFS_GATEWAY, STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "./links";
+import metadataTest from "../../public/test/metadata.txt";
 
 /**
  * Validate user email format
@@ -87,14 +88,30 @@ export async function getImageUrl(url: string): Promise<string> {
  * @param url
  * @returns string
  */
-export async function getImageUrlFromMetadata(url: string): Promise<string> {
+export async function getImageUrlFromMetadata(url: string): Promise<any> {
+    url = metadataTest;
+    if (url.startsWith("data:application/json")) {
+        const jsonData = JSON.parse(url.split("data:application/json,").pop() || "");
+        const image = jsonData.image;
+        return { 
+            imgUrl: image.split("data:image/svg+xml,").pop() || "",
+            isSvg: true
+        };
+    }
+   
     if (url.startsWith("ipfs://")) {
-        return IPFS_GATEWAY + ipfsUrl(url);
+        return { 
+            imgUrl: IPFS_GATEWAY + ipfsUrl(url),
+            isSvg: false
+        };
     }
 
     const response = await fetch(url);
     const data = await response.json();
-    return data.image;
+    return {
+        imgUrl: data.image,
+        isSvg: false
+    }
 }
 
 /**
