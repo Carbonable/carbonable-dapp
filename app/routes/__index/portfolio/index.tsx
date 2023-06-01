@@ -13,6 +13,7 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { num } from "starknet";
+import SVGMetadata from "~/components/Images/SVGMetadata";
 
 export const meta: V2_MetaFunction = () => {
     return [
@@ -122,7 +123,8 @@ function ProjectsList({projects, setRefreshData}: {projects: any[], setRefreshDa
 function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigrate?: boolean, setRefreshData: (b: boolean) => void}) {
     const walletShares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
     const shares = walletShares + parseFloat(project.total_deposited_value?.displayable_value) ?? 0;
-    const [imageSrc, setImageSrc] = useState("");
+    const [imageSrc, setImageSrc] = useState<string>("");
+    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
     const calls: any = [];
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
@@ -146,10 +148,12 @@ function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigr
     useEffect(() => {
         if (project.tokens[0].image) {
             getImageUrlFromMetadata(project.tokens[0].image).then((url) => {
-                setImageSrc(url);
+                setImageSrc(url.imgUrl);
+                setIsRawSVG(url.isSvg);
             });
         }
     }, [project.tokens]);
+
 
     const { write, data: dataExecute } = useContractWrite({
         calls,
@@ -215,7 +219,8 @@ function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigr
         <div className="w-full flex flex-wrap" >
             <div className="flex justify-start items-center flex-wrap col-span-4 md:col-span-1">
                 <div className="relative group">
-                    <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
+                    {isRawSVG === false && <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
+                    {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc}/></div>}
                     <div className="absolute invisible top-0 left-0 bg-transparent group-hover:bg-dark-40 group-hover:visible w-full h-[100%] rounded-[8.8%]">
                         <div className="relative w-full h-100%">
                             <a href={`${defautlNetwork.id === 'testnet' ? ASPECT_TESTNET_LINK : ASPECT_LINK}/asset/${project.address}/${num.hexToDecimalString(project.tokens[0].token_id)}`} rel="noreferrer" target="_blank" className="absolute top-6 right-16 md:top-4 w-10 h-10 rounded-full p-2 flex items-center justify-center bg-black/20 backdrop-blur-md cursor-pointer border border-neutral-300 hover:bg-black/5 hover:backdrop-blur-lg">
