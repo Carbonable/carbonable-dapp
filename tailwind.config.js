@@ -68,7 +68,12 @@ module.exports = {
           10: 'rgba(208, 209, 214, 0.1)',
         },
         opacityDark: {
-          40: 'rgba(11, 13, 19, 0.4)'
+          40: 'rgba(11, 13, 19, 0.4)',
+          50: 'rgba(11, 13, 19, 0.5)',
+          60: 'rgba(11, 13, 19, 0.6)',
+          70: 'rgba(11, 13, 19, 0.7)',
+          80: 'rgba(11, 13, 19, 0.8)',
+          90: 'rgba(11, 13, 19, 0.9)',
         },
         undeposited: '#DA7575',
         undepositedBorder: 'rgba(218, 117, 117, 0.3)',
@@ -106,7 +111,8 @@ module.exports = {
         'farming-separator-brown': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
         'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');",
         'allocation-yield': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
-        'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);"
+        'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);",
+        'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',

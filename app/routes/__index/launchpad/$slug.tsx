@@ -11,12 +11,14 @@ import type { SanityContent } from "~/utils/sanity/types";
 import { urlFor } from "~/utils/sanity/image";
 import type { LaunchpadProps, MintProps, ProjectProps } from ".";
 import { useEffect, useState } from "react";
+import { Dmrv } from "~/types/dmrv";
 
 export const loader: LoaderFunction = async ({
     params, request
   }) => {
     try {
       const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/details/${params.slug}`, {});
+      console.log(projects)
       const project = await projects.json();
 
       // If the project is not found, or is not display, throw a 404.
@@ -38,8 +40,11 @@ export const loader: LoaderFunction = async ({
         `*[_type == "project" && slug.current == $slug]`,
         { slug: params.slug }
       );
+
+      const dmrv = await fetch(`${process.env.DMRV_API}/${params.slug}`, {});
+      const dmrvJSON = await dmrv.json();
   
-      return json({project, content, whitelist});
+      return json({project, content, whitelist, dmrvJSON, mapboxKey: process.env.MAPBOX});
 
     } catch (e) {
       throw new Response("Not Found", {status: 404})
@@ -83,11 +88,15 @@ export default function ProjectPage() {
   const content: SanityContent = data.content[0];
   const whitelist: ProjectWhitelist = data.whitelist?.whitelist;
   const fetcher = useFetcher();
+  const mapboxKey = data.mapboxKey;
+  const dmrv: Dmrv = data.dmrvJSON;
 
   useEffect(() => {
-        setTimeout(() => {
-          fetcher.load(`/launchpad/refresh?slug=${project.slug}`);
-        }, 4000);
+    if (fetcher.data === undefined) return;
+
+    setTimeout(() => {
+      fetcher.load(`/launchpad/refresh?slug=${project.slug}`);
+    }, 4000);
   }, []);
 
   useEffect(() => {
@@ -103,7 +112,7 @@ export default function ProjectPage() {
       <div className="w-full">
         <ProjectOverview project={project} launchpad={launchpad} mint={mint} whitelist={whitelist} hasReports={content?.reports.length > 0} />
         <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
-          { content !== undefined && <ContentContainer content={content} /> }
+          { content !== undefined && <ContentContainer content={content} mapboxKey={mapboxKey} dmrv={dmrv} /> }
         </div>
       </div>
   )

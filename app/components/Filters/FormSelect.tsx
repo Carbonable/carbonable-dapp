@@ -9,7 +9,7 @@ interface ValueProps {
     isDefault?: boolean
 }
 
-export default function Select({values, selectedValue, action}: any) {
+export default function FormSelect({values, selectedValue, action}: any) {
     const select = useFetcher();
     const [selected, setSelected] = useState(values.filter((value: any) => value.id === selectedValue.id)[0]);
 

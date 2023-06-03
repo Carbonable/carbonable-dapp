@@ -8,9 +8,7 @@ import FilterButton from "~/components/Filters/FilterButton";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import { shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 
-export const loader: LoaderFunction = async ({
-    request, 
-  }) => {
+export const loader: LoaderFunction = async () => {
     try {
         const allFarms = await fetch(`${process.env.INDEXER_URL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
