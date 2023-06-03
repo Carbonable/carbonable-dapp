@@ -4,7 +4,7 @@ import { DISCORD_LINK, LINKEDIN_LINK, MEDIUM_LINK, TWITTER_LINK } from "~/utils/
 import { LinkFooter } from "../Buttons/LinkButton";
 import NavLinkInside from "./NavLinkInside";
 import NavLinkOutside from "./NavLinkOutside";
-import Select from "../Filters/Select";
+import FormSelect from "../Filters/FormSelect";
 import { useNotifications } from "~/root";
 
 export default function NavMenu({addressToDisplay, closeMenu}: any) {
@@ -25,7 +25,7 @@ export default function NavMenu({addressToDisplay, closeMenu}: any) {
             </div>
             <div className="absolute bottom-4 items-center justify-center w-full font-inter font-bold">
                 <div className="lg:hidden w-9/12 mx-auto mb-6">
-                    <Select values={networksList} selectedValue={defautlNetwork} action="/network/preference" />
+                    <FormSelect values={networksList} selectedValue={defautlNetwork} action="/network/preference" />
                 </div>
                 <div className="w-full flex flex-wrap items-center justify-center px-4">
                     <LinkFooter className="w-[50px] m-1" href={TWITTER_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/twitter-icon.svg" alt="twitter" /></LinkFooter>

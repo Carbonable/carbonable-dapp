@@ -5,7 +5,7 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import SecondaryButton from "./Buttons/ActionButton";
 import ConnectButton from "./Buttons/ConnectButton";
 import { useNotifications } from "~/root";
-import Select from "./Filters/Select";
+import FormSelect from "./Filters/FormSelect";
 import { networksList } from "./NavMenu/networks";
 
 
@@ -28,7 +28,7 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
                     { resolvedPath.pathname.split( '/' ).length > 2 && <div className="items-center hidden lg:block absolute left-[300px]"><span className="flex cursor-pointer text-neutral-200 hover:text-neutral-400" onClick={() => navigate(`/${resolvedPath.pathname.split( '/' )[1]}`)}><ArrowLeftIcon className="w-4 mr-2" />Back</span></div>}
                     <div className="hidden lg:flex justify-end">
-                        <div className="mr-6 w-fit">{<Select values={networksList} selectedValue={defautlNetwork} action="/network/preference" />}</div>
+                        <div className="mr-6 w-fit">{<FormSelect values={networksList} selectedValue={defautlNetwork} action="/network/preference" />}</div>
                     </div>
                     {status === 'disconnected' && <ConnectButton displayIcon={true} /> }
 

@@ -1,4 +1,5 @@
 @import "toastify.css";
+@import 'mapbox-gl/dist/mapbox-gl.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -172,6 +173,10 @@ input::-webkit-inner-spin-button {
   to {
     background-position: -200% center;
   }
+}
+
+.mapContainer {
+  height: 33vh;
 }
 
 @media screen and (min-width: 360px) {
