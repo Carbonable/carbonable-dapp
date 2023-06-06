@@ -4,6 +4,8 @@ import MapSelect from "~/components/Filters/MapSelect";
 import type { Dmrv } from "~/types/dmrv";
 import type { ValueProps } from "~/types/select";
 import TrackingSlider from "./TrackingSlider";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import moment from "moment";
 
 export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dmrv}) {
     mapboxgl.accessToken = mapboxKey;
@@ -15,29 +17,10 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
     const [rgbs] = useState<any[]>(dmrv.rgbs);
     const [selectedIndicator, setSelectedIndicator] = useState<ValueProps | undefined>(undefined);
     const [selectIndicators, setSelectIndicators] = useState<any[]>([]);
-    const [selectedImageIndex, setSelectedImageIndex] = useState<string>((ndvis.length - 1).toString());
+    const [mapLoaded, setMapLoaded] = useState<boolean>(true);
+    const [selectedDateIndex, setSelectedDateIndex] = useState<number>(dmrv.ndvis.length - 1);
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(dmrv.ndvis.length - 1);
 
-    const updatelayer = () => {
-        const source = map.current?.getSource('data-viz') as mapboxgl.ImageSource;
-        if (source === undefined) return;
-
-        switch (selectedIndicator?.id) {
-            case "ndvi":
-                source.updateImage({url: ndvis[parseInt(selectedImageIndex)].image});
-                break;
-            case "rgb":
-                source.updateImage({url: rgbs[parseInt(selectedImageIndex)].url});
-                break;
-            default:
-                break;
-        }
-    }
-
-    const handleChange = (event: any) => {
-        if (isNaN(event.target.value)) return;
-
-        setSelectedImageIndex(event.target.value);
-    }
 
     useEffect(() => {
         const selectData = [];
@@ -60,15 +43,15 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
 
         switch (selectedIndicator.id) {
             case "ndvi":
-                source.updateImage({url: ndvis[parseInt(selectedImageIndex)].image});
+                source.updateImage({url: ndvis[selectedImageIndex].image});
                 break;
             case "rgb":
-                source.updateImage({url: rgbs[parseInt(selectedImageIndex)].url});
+                source.updateImage({url: rgbs[selectedImageIndex].url});
                 break;
             default:
                 break;
         }
-    }, [selectedIndicator]);
+    }, [selectedIndicator, selectedImageIndex]);
 
 
     useEffect(() => {
@@ -87,6 +70,10 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
                 map.current.resize();
             }
         }, 50);
+
+        setTimeout(() => {
+            setMapLoaded(true);
+        }, 5000);
 
         map.current.on('load', () => {
             if (map.current === null) return;
@@ -135,7 +122,7 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
             // Add a source for the data viz
             map.current.addSource('data-viz', {
                 'type': 'image',
-                'url': ndvis[parseInt(selectedImageIndex)].image,
+                'url': ndvis[selectedImageIndex].image,
                 'coordinates': [
                   [minLon, maxLat],
                   [maxLon, maxLat],
@@ -158,14 +145,30 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
 
     return (
         <>
-            <div ref={mapContainer} className="mapContainer w-full">
-                <div className="absolute top-4 left-4 w-fit z-50">
-                    { selectedIndicator !== undefined && <MapSelect values={selectIndicators} selectedValue={selectedIndicator} setSelectedValue={setSelectedIndicator} /> }
+            <div className="relative">
+                <div ref={mapContainer} className="mapContainer w-full">
+                    <div className="absolute top-4 left-4 w-fit z-50">
+                        { selectedIndicator !== undefined && <MapSelect values={selectIndicators} selectedValue={selectedIndicator} setSelectedValue={setSelectedIndicator} /> }
+                    </div>
+                    {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-40">
+                        <TrackingSlider data={dmrv.ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
+                    </div>}
                 </div>
-                <div className="absolute bottom-0 left-0 w-full z-50">
-                    <TrackingSlider />
-                </div>
+                {mapLoaded && 
+                    <div className="absolute bottom-[-12px] w-full z-50">
+                        <div className="w-[24px] h-[24px] flex justify-center items-center bg-opacityLight-80 rounded-full mx-auto">
+                            <ChevronLeftIcon className="w-[20px] text-neutral-900" />
+                            <ChevronRightIcon className="w-[20px]  text-neutral-900" />
+                        </div>
+                    </div>
+                }
             </div>
+            {mapLoaded && 
+                <div className="w-fit mx-auto mt-6 py-2 pl-3 pr-2 border border-neutral-300 bg-opacityLight-10 rounded-xl text-sm">
+                    {moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")} <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">🌳 {Math.round(ndvis[selectedDateIndex].value * 100)}%</span>
+                </div>
+            }
         </>
+       
     )
 }

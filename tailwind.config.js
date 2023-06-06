@@ -66,6 +66,7 @@ module.exports = {
         opacityLight: {
           5: 'rgba(208, 209, 214, 0.05)',
           10: 'rgba(208, 209, 214, 0.1)',
+          80: 'rgba(208, 209, 214, 0.8)',
         },
         opacityDark: {
           40: 'rgba(11, 13, 19, 0.4)',

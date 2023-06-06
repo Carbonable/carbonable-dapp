@@ -18,7 +18,6 @@ export const loader: LoaderFunction = async ({
   }) => {
     try {
       const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/details/${params.slug}`, {});
-      console.log(projects)
       const project = await projects.json();
 
       // If the project is not found, or is not display, throw a 404.
@@ -103,6 +102,7 @@ export default function ProjectPage() {
     if (fetcher.data === undefined) return;
 
     const data = fetcher.data.data;
+
     setProject(data.project);
     setLaunchpad(data.launchpad);
     setMint(data.mint);
