@@ -12,7 +12,7 @@ import { useAccount, useContractWrite } from "@starknet-react/core";
 import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
-import { GRAMS_PER_TON } from "~/utils/constant";
+import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
 import { num } from "starknet";
 import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
@@ -136,6 +136,7 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
+
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
@@ -175,7 +176,7 @@ export default function FarmingPage() {
                 source: NotificationSource.FARMING,
                 txStatus: TxStatus.NOT_RECEIVED,
                 message: {
-                    title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value))} in ${project.name} yield farm`, 
+                    title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }

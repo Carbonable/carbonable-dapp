@@ -63,7 +63,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     const callsData = [];
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
-                    console.log(filteredTokens)
                     let amountDeposited = 0;
 
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
@@ -150,7 +149,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     title = `${_.capitalize(context)} ${amount} shares from ${project.name} ${tab} farm`;
                     break;
                 case AssetsManagementContext.CLAIM:
-                    title = `${_.capitalize(context)} ${amount} tons from ${project.name} ${tab} farm`;
+                    title = `${_.capitalize(context)} ${amount / parseInt(tonEquivalent)} tons from ${project.name} ${tab} farm`;
                     break;
             }
 
