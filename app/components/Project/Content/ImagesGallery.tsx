@@ -28,7 +28,7 @@ export default function ImageGallery({gallery}: {gallery: any[]}) {
       
     return (
         <div className="preventOverflow mb-12">
-            <Slider ref={slider => (slidz = slider)} {...settings} className="flex  overflow-hidden">
+            <Slider ref={slider => (slidz = slider)} {...settings} className="flex overflow-hidden">
                 {gallery.map((image, index) => (
                     <div key={`image_${index}`} className="pr-1 ml-12 md:ml-32 xl:ml-40 2xl:ml-48 outline-none">
                         <img src={urlFor(image).width(500).url()} alt={`image_${index}`} className={`w-full max-h-[98px] md:max-h-[196px] lg:max-h-[194px] xl:max-h-[214px] 2xl:max-h-[239px] object-cover outline-none ${index === activeSlide ? "brightness-110" : "brightness-[0.4] cursor-pointer"}` } onClick={() => handleClick(index)} />

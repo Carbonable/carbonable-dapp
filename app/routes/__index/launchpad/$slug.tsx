@@ -11,7 +11,7 @@ import type { SanityContent } from "~/utils/sanity/types";
 import { urlFor } from "~/utils/sanity/image";
 import type { LaunchpadProps, MintProps, ProjectProps } from ".";
 import { useEffect, useState } from "react";
-import { Dmrv } from "~/types/dmrv";
+import type { Dmrv } from "~/types/dmrv";
 
 export const loader: LoaderFunction = async ({
     params, request

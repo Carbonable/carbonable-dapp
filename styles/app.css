@@ -208,3 +208,31 @@ input::-webkit-inner-spin-button {
     height: 292px;
   }
 }
+
+
+.scrollable-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.scrollable-content {
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.draggable {
+  display: flex;
+}
+
+.scrollable-bar {
+  width: 40px;
+  height: 100px;
+  background-color: green;
+  margin: 0 10px;
+}
+
+.selected {
+  border: 2px solid red;
+}
