@@ -34,6 +34,7 @@
     "react": "^18.2.0",
     "react-burger-menu": "^3.0.8",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "react-slick": "^0.29.0",
     "react-toastify": "^9.1.2",
     "starknet": "^5.9.0",
