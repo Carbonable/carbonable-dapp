@@ -3,7 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import Management from "./Management";
 import Tabs from "./Tabs";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps } from "~/routes/__index/farming/$slug";
 
 export const enum AssetsManagementContext {
     DEPOSIT = "Deposit",
@@ -16,8 +16,8 @@ export const enum AssetsManagementTabs {
     OFFSET = "Offset",
 }
 
-export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project, carbonCredits, tonEquivalent}: 
-    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string}) {
+export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project, carbonCredits, tonEquivalent, unitPrice}: 
+    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined}) {
     const handleClose = () => {
         setIsOpen(false);
     }
@@ -58,8 +58,8 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab,
                         </Dialog.Title>
                         <div className="px-6">
                             <div className="text-center w-full mx-auto mt-8">
-                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} /> }
-                                {context === AssetsManagementContext.CLAIM && <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} />}
+                                {context !== AssetsManagementContext.CLAIM && <Tabs context={context} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} unitPrice={unitPrice} /> }
+                                {context === AssetsManagementContext.CLAIM && <Management context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} setIsOpen={setIsOpen} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} unitPrice={unitPrice} />}
                             </div>
                         </div>
                         </Dialog.Panel>
