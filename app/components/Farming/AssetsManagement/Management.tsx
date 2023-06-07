@@ -21,7 +21,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
-    console.log(project)
+    
     useEffect(() => {
         if (assetsAllocation !== undefined && carbonCredits !== undefined) {
             switch (context) {
