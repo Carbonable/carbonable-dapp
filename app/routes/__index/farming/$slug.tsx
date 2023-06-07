@@ -137,7 +137,6 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
-            console.log(data)
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
