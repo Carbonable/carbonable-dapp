@@ -223,7 +223,7 @@ function AllocationContainer({tab, assetsAllocation, unitPrice}: {tab: string, a
     const [value, setValue] = useState(0);
 
     useEffect(() => {
-        const readablePrice = unitPrice === undefined ? 1 : parseInt(unitPrice.value.displayable_value);
+        const readablePrice = unitPrice === undefined ? 1 : parseInt(unitPrice.displayable_value);
         if (assetsAllocation !== undefined) {
             switch (tab) {
                 case AssetsManagementTabs.YIELD:
