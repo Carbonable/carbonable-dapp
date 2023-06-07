@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
@@ -11,8 +11,8 @@ import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
 import { num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
-export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string }) {
+export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice}: 
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined }) {
 
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState(0);
@@ -21,7 +21,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
     const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
-
+    console.log(project)
     useEffect(() => {
         if (assetsAllocation !== undefined && carbonCredits !== undefined) {
             switch (context) {
@@ -201,7 +201,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
 
     return (
         <div className="relative w-full">
-            <AllocationContainer tab={tab} assetsAllocation={assetsAllocation} />
+            <AllocationContainer tab={tab} assetsAllocation={assetsAllocation} unitPrice={unitPrice} />
             <div className="mt-8 flex items-center justify-between font-light">
                 <div className="text-left text-neutral-200 uppercase">Select Amount</div>
                 <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumberWithDigits(available, 6)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
@@ -218,20 +218,21 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     )
 }
 
-function AllocationContainer({tab, assetsAllocation}: {tab: string, assetsAllocation: AssetsAllocationProps | undefined}) {
+function AllocationContainer({tab, assetsAllocation, unitPrice}: {tab: string, assetsAllocation: AssetsAllocationProps | undefined, unitPrice: NumericValueProps | undefined}) {
     const [shares, setShares] = useState(0);
     const [value, setValue] = useState(0);
 
     useEffect(() => {
+        const readablePrice = unitPrice === undefined ? 1 : parseInt(num.hexToDecimalString(unitPrice.value.value));
         if (assetsAllocation !== undefined) {
             switch (tab) {
                 case AssetsManagementTabs.YIELD:
                     setShares(parseFloat(assetsAllocation.yield.displayable_value));
-                    setValue(parseFloat(assetsAllocation.yield.displayable_value));
+                    setValue(parseFloat(assetsAllocation.yield.displayable_value) * readablePrice);
                     break;
                 case AssetsManagementTabs.OFFSET:
                     setShares(parseFloat(assetsAllocation.offseted.displayable_value));
-                    setValue(parseFloat(assetsAllocation.offseted.displayable_value));
+                    setValue(parseFloat(assetsAllocation.offseted.displayable_value) * readablePrice);
                     break;
             }
         }

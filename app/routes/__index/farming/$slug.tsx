@@ -28,7 +28,7 @@ export interface OverviewProps {
     total_offseted: NumericValueProps;
 }
 
-interface NumericValueProps {
+export interface NumericValueProps {
     displayable_value: string;
     type: string;
     value: any;
@@ -99,6 +99,7 @@ export default function FarmingPage() {
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
+    const [unitPrice, setUnitPrice] = useState<NumericValueProps | undefined>(undefined);
     const [tonEquivalent, setTonEquivalent] = useState<string>('0');
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
@@ -136,11 +137,12 @@ export default function FarmingPage() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             const data = fetcher.data.data;
-
+            console.log(data)
             setOverview(data.overview);
             setCarbonCredits(data.carbon_credits);
             setAssetsAllocation(data.allocation);
             setContracts(data.contracts);
+            setUnitPrice(data.unit_price);
             setTonEquivalent(data.ton_equivalent);
         }
     }, [fetcher, isConnected,]);
@@ -339,7 +341,7 @@ export default function FarmingPage() {
                 </div>
             </div>
             <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
-            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} />
+            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} unitPrice={unitPrice} />
         </>
     )
 }
