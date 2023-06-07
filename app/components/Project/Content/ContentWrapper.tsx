@@ -10,9 +10,6 @@ import Tracking from "./Tracking";
 
 export default function ContentWrapper({content, mapboxKey, dmrv}: {content: SanityContent, mapboxKey: string, dmrv: Dmrv}) {
     
-
-    
-
     return (
         <div className="mb-20">
             <div className="font-inter font-bold text-neutral-100 text-lg uppercase flex flex-wrap items-center pb-2">
@@ -32,13 +29,17 @@ export default function ContentWrapper({content, mapboxKey, dmrv}: {content: San
             { content.projectOverview && content.projectOverview.sections.length > 0 && content.projectOverview.sections.map((section, index) => (
                 <Section key={`section_${index}`} section={section}></Section>
             ))}
-            <div className="font-inter font-bold text-neutral-100 text-lg mt-12 flex items-center">
-                🌱 <span className="ml-2 uppercase">Tracking</span>
-                <span className="px-3 py-1 ml-3 bg-beta-button text-xs rounded-md font-light">Beta version</span>
-            </div>
-            <div className="mt-4 pt-8 border-t border-neutral-500">
-                <Tracking mapboxKey={mapboxKey} dmrv={dmrv} />
-            </div>
+            {dmrv.hasOwnProperty('ndvis') &&
+                <>
+                    <div className="font-inter font-bold text-neutral-100 text-lg mt-12 flex items-center">
+                        🌱 <span className="ml-2 uppercase">Tracking</span>
+                        <span className="px-3 py-1 ml-3 bg-beta-button text-xs rounded-md font-light">Beta version</span>
+                    </div>
+                    <div className="mt-4 pt-8 border-t border-neutral-500">
+                        <Tracking mapboxKey={mapboxKey} dmrv={dmrv} />
+                    </div>
+                </>
+            }
             { (content.imagesGallery?.length > 0 || content.reports?.length > 0) && <div className="font-inter font-bold text-neutral-100 text-lg uppercase mt-12">✨ <span className="ml-2">Impact</span></div>}
             { content.imagesGallery?.length > 0 && <div className="mt-4 pt-8 border-t border-neutral-500">
                 <div className="font-inter font-bold text-neutral-300 uppercase">Images gallery</div>
