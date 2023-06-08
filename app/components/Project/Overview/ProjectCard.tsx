@@ -1,17 +1,20 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { PlusIconBlack } from "~/components/Icons/PlusIcon";
+import SVGMetadata from "~/components/Images/SVGMetadata";
 import type { LaunchpadLoaderData } from "~/routes/__index/launchpad";
 import { getImageUrlFromMetadata } from "~/utils/utils";
 
 export default function LaunchpadCard(project: LaunchpadLoaderData) {
     const [saleIsOpen, setSaleIsOpen] = useState(false);
     const [imageSrc, setImageSrc] = useState<string>("/assets/images/backgrounds/bg-farming-card.png");
+    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {
         if (project.project.uri.uri) {
             getImageUrlFromMetadata(project.project.uri.uri).then((url) => {
-                setImageSrc(url);
+                setImageSrc(url.imgUrl);
+                setIsRawSVG(url.isSvg);
             });
         }
     }, [project.project.uri.uri]);
@@ -21,10 +24,12 @@ export default function LaunchpadCard(project: LaunchpadLoaderData) {
     }, [project.launchpad.public_sale_open, project.launchpad.whitelisted_sale_open]);
 
     return (
-        <div className="relative  min-h-[300px]">
-            <img src={imageSrc} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" />
+        <div className="relative">
+            {isRawSVG === false && <img src={imageSrc} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" /> }
+            {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc}/></div>}
+            
             { (project.launchpad.is_sold_out || saleIsOpen === false) && 
-                <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[10%]"></div>
+                <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[8.8%]"></div>
             }
             { project.launchpad.is_sold_out && 
                 <div className="absolute uppercase font-inter font-bold bg-beaige text-black top-[6%] left-[6%] py-1 px-2 text-[8px] md:text-xs lg:px-3 rounded-lg">Soldout</div>

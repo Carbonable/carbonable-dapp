@@ -3,6 +3,7 @@ import Actions from "./Actions";
 import ProjectInformation from "./ProjectInformation";
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { getImageUrlFromMetadata } from "~/utils/utils";
+import SVGMetadata from "~/components/Images/SVGMetadata";
 
 export enum SaleStatusType {
     Loading,
@@ -15,11 +16,13 @@ export enum SaleStatusType {
 export default function ProjectOverview({project, launchpad, mint, whitelist, hasReports}: {project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, whitelist: any, hasReports: boolean}) {
     const [projectState, setProjectState] = useState(SaleStatusType.Loading);
     const [imageSrc, setImageSrc] = useState<string>("/assets/images/backgrounds/bg-farming-card.png");
+    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {
         if (project.uri.uri) {
             getImageUrlFromMetadata(project.uri.uri).then((url) => {
-                setImageSrc(url);
+                setImageSrc(url.imgUrl);
+                setIsRawSVG(url.isSvg);
             });
         }
     }, [project.uri.uri]);
@@ -52,7 +55,8 @@ export default function ProjectOverview({project, launchpad, mint, whitelist, ha
                 <div className="font-inter text-neutral-100 font-bold text-lg uppercase md:text-2xl">{project.name}</div>
                 <div className="flex flex-wrap justify-start items-center mt-4 md:gap-6 md:items-start">
                     <div className="w-full mx-auto md:w-[41%] md:order-2">
-                        <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" />
+                        {isRawSVG === false && <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
+                        {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc}/></div>}
                     </div>
                     <div className="flex flex-wrap mt-8 w-full mx-auto md:w-[55%] md:order-1 md:mt-0">
                         <ProjectInformation project={project} launchpad={launchpad} mint={mint} priceToDisplay={project.payment_token.displayable_value} projectState={projectState} />
