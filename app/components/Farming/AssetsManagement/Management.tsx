@@ -50,7 +50,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
 
         setAmount(value > available ? available : value.replace(/^0+/, ''));
     }
-    console.log(amount)
 
     const handleSetMax = () => {
         setAmount(available);
