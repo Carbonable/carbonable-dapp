@@ -146,6 +146,7 @@ function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigr
     }, [mustReloadMigration]);
 
     useEffect(() => {
+        console.log(project)
         if (project.tokens[0].image) {
             getImageUrlFromMetadata(project.tokens[0].image).then((url) => {
                 setImageSrc(url.imgUrl);

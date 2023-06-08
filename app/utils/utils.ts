@@ -1,5 +1,4 @@
 import { IPFS_GATEWAY, STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "./links";
-import metadataTest from "../../public/test/metadata.txt";
 
 /**
  * Validate user email format
@@ -89,7 +88,6 @@ export async function getImageUrl(url: string): Promise<string> {
  * @returns string
  */
 export async function getImageUrlFromMetadata(url: string): Promise<any> {
-    url = metadataTest;
     if (url.startsWith("data:application/json")) {
         const jsonData = JSON.parse(url.split("data:application/json,").pop() || "");
         const image = jsonData.image;
