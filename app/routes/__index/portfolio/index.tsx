@@ -19,18 +19,18 @@ export const meta: V2_MetaFunction = () => {
     return [
         {title: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
         { name: "description", content: "Manage your assets and badges from your Carbonable portfolio."},
-        { name: "image", content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { name: "image", content: "https://carbonable.github.io/socials/social.jpg"},
         { property: 'og:url', content: "https://app.carbonable.io/portfolio"},
         { property: 'og:type', content: "website"},
         { property: 'og:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
         { property: 'og:description', content: "Manage your assets and badges from your Carbonable portfolio."},
-        { property: 'og:image', content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { property: 'og:image', content: "https://carbonable.github.io/socials/social.jpg"},
         { property: 'twitter:domain', content: "carbonable.io"},
         { property: 'twitter:url', content: "https://app.carbonable.io/portfolio"},
         { property: 'twitter:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
         { property: 'twitter:description', content: "Manage your assets and badges from your Carbonable portfolio."},
         { property: 'twitter:card', content: "summary_large_image"},
-        { property: 'twitter:image', content: "https://carbonable.io/assets/images/social/social.jpg"}
+        { property: 'twitter:image', content: "https://carbonable.github.io/socials/social.jpg"}
     ]
 };
 

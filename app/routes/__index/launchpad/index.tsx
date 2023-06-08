@@ -55,18 +55,18 @@ export const meta: V2_MetaFunction = () => {
     return [
         { title: "Carbonable - Web3 powered end-to-end carbon removal platform" },
         { name: "description", content:"The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
-        { name: "image", content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { name: "image", content: "https://carbonable.github.io/socials/social.jpg"},
         { property: 'og:url', content:"https://app.carbonable.io"},
         { property: 'og:type', content: "website"},
         { property: 'og:title', content: "Carbonable - Web3 powered end-to-end carbon removal platform"},
         { property: 'og:description', content: "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
-        { property: 'og:image', content: "https://carbonable.io/assets/images/social/social.jpg"},
+        { property: 'og:image', content: "https://carbonable.github.io/socials/social.jpg"},
         { property: 'twitter:domain', content: "carbonable.io"},
         { property: 'twitter:url', content: "https://app.carbonable.io"},
         { property: 'twitter:title', content: "Carbonable - Web3 powered end-to-end carbon removal platform"},
         { property: 'twitter:description', content: "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
         { property: 'twitter:card', content: "summary_large_image"},
-        { property: 'twitter:image', content: "https://carbonable.io/assets/images/social/social.jpg"}
+        { property: 'twitter:image', content: "https://carbonable.github.io/socials/social.jpg"}
     ]
 };
 

@@ -56,10 +56,10 @@ export const meta: V2_MetaFunction = ({ data }) => {
     { title:  content.seo.title},
     { name: "description", content: content.seo.description},
     { name: "keywords", content: content.seo.keywords},
-    { name: "image", content: urlFor(content.seo.image).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { name: "image", content: urlFor(content.seo.image).width(500).url() || "https://carbonable.github.io/socials/social.jpg"},
     { property: "og:title", content: content.seo.ogtitle},
     { property: "og:description", content: content.seo.ogdescription},
-    { property: "og:image", content: urlFor(content.seo.ogimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { property: "og:image", content: urlFor(content.seo.ogimage).width(500).url() || "https://carbonable.github.io/socials/social.jpg"},
     { property: "og:url", content: content.seo.ogurl || `https://app.carbonable.io/launchpad/${content.slug.current}`},
     { property: "og:type", content: content.seo.ogtype},
     { property: "og:article:author", content: content.seo.ogarticleauthor},
@@ -70,7 +70,7 @@ export const meta: V2_MetaFunction = ({ data }) => {
     { property: "twitter:domain", content: content.seo.twitterdomain},
     { property: "twitter:title", content: content.seo.twittertitle},
     { property: "twitter:description", content: content.seo.twitterdescription},
-    { property: "twitter:image", content: urlFor(content.seo.twitterimage).width(500).url() || "https://carbonable.io/assets/images/social/social.jpg"},
+    { property: "twitter:image", content: urlFor(content.seo.twitterimage).width(500).url() || "https://carbonable.github.io/socials/social.jpg"},
     { property: "twitter:url", content: content.seo.twitterurl || `https://app.carbonable.io/launchpad/${content.slug.current}`}
   ]
 };
