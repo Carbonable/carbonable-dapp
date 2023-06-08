@@ -15,7 +15,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined }) {
 
     const [available, setAvailable] = useState(0);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState<number>(0);
     const [disclaimer, setDisclaimer] = useState("");
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
@@ -41,13 +41,16 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     }, [assetsAllocation, tab, carbonCredits, context]);
     
     const handleAmountChange = (e: any) => {
-        if (isNaN(e.target.value) || e.target.value < 0) {
-            setAmount(0.1);
+        let value = e.target.value;
+
+        if (isNaN(value) || value < 0) {
+            setAmount(0);
             return;
         }
 
-        setAmount(e.target.value > available ? available : isNaN(parseFloat(e.target.value)) ? 0 : parseFloat(e.target.value));
+        setAmount(value > available ? available : value.replace(/^0+/, ''));
     }
+    console.log(amount)
 
     const handleSetMax = () => {
         setAmount(available);
@@ -207,7 +210,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumberWithDigits(available, 6)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
             </div>
             <div className="mt-1 w-full relative">
-                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300`} type="number" value={amount} name="amount" aria-label="Amount" min="0.1" onChange={handleAmountChange} />
+                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300`} type="number" value={amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
                 <div className="absolute right-4 top-3 text-neutral-300 cursor-pointer font-bold font-sm" onClick={handleSetMax}>MAX</div>
             </div>
             <div className="mt-8 px-8 py-6 bg-neutral-800 rounded-xl border border-opacityLight-10 text-left text-sm">{disclaimer}</div>
