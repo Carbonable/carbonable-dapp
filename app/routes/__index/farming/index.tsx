@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useAccount } from "@starknet-react/core";
@@ -21,6 +21,26 @@ export const loader: LoaderFunction = async ({
         return json({});
     }
 };
+
+export const meta: V2_MetaFunction = () => {
+    return [
+        { title: "Carbonable - Web3 powered end-to-end carbon removal platform" },
+        { name: "description", content:"The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
+        { name: "image", content: "https://carbonable.github.io/socials/social.jpg"},
+        { property: 'og:url', content:"https://app.carbonable.io"},
+        { property: 'og:type', content: "website"},
+        { property: 'og:title', content: "Carbonable - Web3 powered end-to-end carbon removal platform"},
+        { property: 'og:description', content: "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
+        { property: 'og:image', content: "https://carbonable.github.io/socials/social.jpg"},
+        { property: 'twitter:domain', content: "carbonable.io"},
+        { property: 'twitter:url', content: "https://app.carbonable.io"},
+        { property: 'twitter:title', content: "Carbonable - Web3 powered end-to-end carbon removal platform"},
+        { property: 'twitter:description', content: "The simplest and smartest way to reach Net Zero. Invest in the best nature-based solutions. Manage your assets and drive your strategy efficiently."},
+        { property: 'twitter:card', content: "summary_large_image"},
+        { property: 'twitter:image', content: "https://carbonable.github.io/socials/social.jpg"}
+    ]
+};
+
 
 export default function FarmingIndex() {
     const loaderData = useLoaderData();

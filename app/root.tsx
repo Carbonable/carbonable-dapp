@@ -59,8 +59,12 @@ export default function App() {
         setWebwallet(new WebWalletConnector());
       }
 
-      if (defautlNetwork.id === 'testnet2') { 
+      if (defautlNetwork.id === 'testnet') { 
         setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }));
+      }
+
+      if (defautlNetwork.id === 'testnet2') { 
+        setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.dev.argent47.net" }));
       }
     });
     
