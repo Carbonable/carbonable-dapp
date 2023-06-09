@@ -27,7 +27,13 @@ export function links() {
 
 export const loader: LoaderFunction = async () => {
   try {
-    return json({id: process.env.NETWORK, node_url: process.env.NODE_URL});
+    const defautlNetwork = {
+      id: process.env.NETWORK,
+      node_url: process.env.NODE_URL
+    };
+    const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
+
+    return json({ defautlNetwork, webWalletEnabled });
   } catch {
       return json([]);
   }
@@ -35,7 +41,9 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function App() {
-  const defautlNetwork = useLoaderData();
+  const data = useLoaderData();
+  const defautlNetwork = data.defautlNetwork;
+  const webWalletEnabled = data.webWalletEnabled;
   const [webwallet, setWebwallet] = useState<any>(null);
   const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
@@ -53,18 +61,24 @@ export default function App() {
   ], []);
 
   useEffect(() => {
+    if (!webWalletEnabled) { return; }
 
     import("@argent/starknet-react-webwallet-connector").then(({ WebWalletConnector }) => {
+
       if (defautlNetwork.id === 'mainnet') { 
         setWebwallet(new WebWalletConnector());
       }
 
-      if (defautlNetwork.id === 'testnet2') { 
+      if (defautlNetwork.id === 'testnet') { 
         setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }));
+      }
+
+      if (defautlNetwork.id === 'testnet2') { 
+        setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.dev.argent47.net" }));
       }
     });
     
-  }, [defautlNetwork]);
+  }, [defautlNetwork, webWalletEnabled]);
 
   useEffect(() => {
     if (connectors.length > 2) { return; }
