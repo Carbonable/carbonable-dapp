@@ -27,7 +27,7 @@ export default function MapSelect({values, selectedValue, setSelectedValue}: {va
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-[120px] overflow-auto font-inter rounded-md bg-opacityDark-70 py-0 text-sm shadow-lg focus:outline-none px-0 border border-neutral-500 top-100 p-6">
+                <Listbox.Options className="absolute mt-1 max-h-60 w-[120px] overflow-auto font-inter rounded-md bg-opacityDark-70 text-sm shadow-lg focus:outline-none px-0 border border-neutral-500 top-100 p-6">
                 {values.map((value: ValueProps) => (
                     <Listbox.Option
                     key={value.id}

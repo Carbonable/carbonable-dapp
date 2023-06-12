@@ -4,8 +4,15 @@ import MapSelect from "~/components/Filters/MapSelect";
 import type { Dmrv } from "~/types/dmrv";
 import type { ValueProps } from "~/types/select";
 import TrackingSlider from "./TrackingSlider";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
+import { MapButton } from "~/components/Buttons/ActionButton";
+import TrackingModal from "./TrackingModal";
+
+export enum TrackingIndicator {
+    NDVI = "ndvi",
+    RGB = "rgb"
+}
 
 export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dmrv}) {
     mapboxgl.accessToken = mapboxKey;
@@ -20,6 +27,7 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
     const [mapLoaded, setMapLoaded] = useState<boolean>(true);
     const [selectedDateIndex, setSelectedDateIndex] = useState<number>(dmrv.ndvis.length - 1);
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(dmrv.ndvis.length - 1);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -42,10 +50,10 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
         if (source === undefined) return;
 
         switch (selectedIndicator.id) {
-            case "ndvi":
+            case TrackingIndicator.NDVI:
                 source.updateImage({url: ndvis[selectedImageIndex].image});
                 break;
-            case "rgb":
+            case TrackingIndicator.RGB:
                 source.updateImage({url: rgbs[selectedImageIndex].url});
                 break;
             default:
@@ -146,9 +154,22 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
     return (
         <>
             <div className="relative">
-                <div ref={mapContainer} className="mapContainer w-full">
+                <div className="text-neutral-100">
+                    <p className="mt-2">
+                        We're excited to release the Beta version of our digital Monitoring feature. Utilizing satellite imagery and artificial intelligence, this innovative tool offers real-time data and sophisticated analysis on the performance and evolution of carbon removal projects.
+                        Through the implementation of this feature (dMRV), our aim is to enhance the integrity and accountability of carbon removal initiatives. Our collaboration with independent third-party providers ensures precision and transparency, maintaining an unbiased approach.
+                    </p>
+                    <p className="mt-2">Please note, as a Beta feature, digital Monitoring is a work in progress. It represents our commitment to constant improvement and evolution, as we refine this solution to optimally serve our clients and the environment. Our objective is to deliver comprehensive tracking and reporting on the carbon sequestration and biodiversity protection across all Carbonable projects.</p>
+                    <p className="mt-2">In interpreting the data, it's important to consider the effects of seasonal changes on vegetation and leaf growth. Year-on-year comparisons typically provide a more accurate view of carbon removal dynamics than month-to-month comparisons. Given that weather conditions can significantly vary from year to year, examining broader trends, rather than strict comparisons, is key to a robust understanding of these dynamics.</p>
+                    <p className="mt-2">Also, when it comes to monitoring Blue Carbon Projects - initiatives that focus on carbon sequestration in coastal ecosystems such as mangroves, salt marshes, and seagrass meadows - current metrics might not be as directly applicable due to their tidal nature. Vegetation and water levels can fluctuate dramatically throughout the day  affecting considerably the indicator readings. </p>
+                </div>
+            
+                <div ref={mapContainer} className="mapContainer w-full mt-8">
                     <div className="absolute top-4 left-4 w-fit z-50">
                         { selectedIndicator !== undefined && <MapSelect values={selectIndicators} selectedValue={selectedIndicator} setSelectedValue={setSelectedIndicator} /> }
+                    </div>
+                    <div className="absolute top-4 right-4 w-fit z-50">
+                        { selectedIndicator !== undefined && <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>Learn More <QuestionMarkCircleIcon className="w-5 ml-2" /></MapButton> }
                     </div>
                     {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-40">
                         <TrackingSlider data={dmrv.ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
@@ -168,6 +189,7 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
                     {moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")} <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">🌳 {Math.round(ndvis[selectedDateIndex].value * 100)}%</span>
                 </div>
             }
+            <TrackingModal isOpen={isOpen} setIsOpen={setIsOpen} indicator={selectedIndicator} />
         </>
        
     )

@@ -5,7 +5,7 @@ import type { Ndvi } from "~/types/dmrv";
   
   export default function TrackingSlider({data, setSelectedImageIndex, selectedDateIndex, setSelectedDateIndex}: {data: Ndvi[], setSelectedImageIndex: (index: number) => void, selectedDateIndex: number, setSelectedDateIndex: (index: number) => void}) {
     const [activeDrags, setActiveDrags] = useState(0);
-    const [width, setWidth] = useState(data.length * 8 / 2 - 4);
+    const [width] = useState(data.length * 8 / 2 - 4);
     const [deltaPosition, setDeltaPosition] = useState({x: 0, y: 0});
     
 
