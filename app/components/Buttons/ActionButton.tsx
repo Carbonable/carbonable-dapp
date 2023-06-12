@@ -34,3 +34,7 @@ export function GreenButton({ children, className, onClick }: ButtonProps) {
 export function FarmingButton({ children, className, onClick, disabled }: ButtonProps) {
     return <button className={`font-inter text-sm rounded-lg bg-opacityLight-5 px-4 py-3 hover:bg-opacityLight-5/10 ${disabled ? "cursor-not-allowed bg-transparent border border-neutral-700 hover:bg-transparent text-neutral-500 " : "text-white "} ` + className} onClick={onClick}>{children}</button>;
 }
+
+export function MapButton({ children, className, onClick }: ButtonProps) {
+    return <button className={`font-inter rounded-lg text-neutral-50 py-2 px-4 text-center focus:outline-none border border-neutral-500 bg-opacityDark-70 hover:bg-opacityDark-60 ` + className} onClick={onClick}>{children}</button>;
+}

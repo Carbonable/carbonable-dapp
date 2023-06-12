@@ -46,6 +46,7 @@ export const loader: LoaderFunction = async ({
       return json({project, content, whitelist, dmrvJSON, mapboxKey: process.env.MAPBOX});
 
     } catch (e) {
+      console.log(e)
       throw new Response("Not Found", {status: 404})
     }
 };
