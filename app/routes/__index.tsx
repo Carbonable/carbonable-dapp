@@ -55,7 +55,7 @@ export default function Index() {
             <div className="fixed z-50 top-0 left-0 lg:hidden">
                 <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
             </div>
-            <header className="pb-2 fixed top-0 w-full z-10 bg-neutral-800">
+            <header className="pb-2 fixed top-0 w-full bg-neutral-800 z-50">
                 { defautlNetwork.id === 'testnet' && 
                     <div className="w-full lg:w-[calc(100%_-_280px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[280px]">
                         You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>

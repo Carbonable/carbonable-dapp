@@ -165,13 +165,13 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
                 </div>
             
                 <div ref={mapContainer} className="mapContainer w-full mt-8">
-                    <div className="absolute top-4 left-4 w-fit z-50">
+                    <div className="absolute top-4 left-4 w-fit z-10">
                         { selectedIndicator !== undefined && <MapSelect values={selectIndicators} selectedValue={selectedIndicator} setSelectedValue={setSelectedIndicator} /> }
                     </div>
-                    <div className="absolute top-4 right-4 w-fit z-50">
+                    <div className="absolute top-4 right-4 w-fit z-10">
                         { selectedIndicator !== undefined && <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>Learn More <QuestionMarkCircleIcon className="w-5 ml-2" /></MapButton> }
                     </div>
-                    {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-40">
+                    {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-10">
                         <TrackingSlider data={dmrv.ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
                     </div>}
                 </div>
