@@ -8,7 +8,7 @@ import type { Dmrv } from "~/types/dmrv";
 import Tracking from "./Tracking";
 
 
-export default function ContentWrapper({content, mapboxKey, dmrv}: {content: SanityContent, mapboxKey: string, dmrv: Dmrv}) {
+export default function ContentWrapper({content, mapboxKey, dmrv, trackingActivated}: {content: SanityContent, mapboxKey: string, dmrv: Dmrv, trackingActivated: boolean}) {
     
     return (
         <div className="mb-20">
@@ -29,8 +29,8 @@ export default function ContentWrapper({content, mapboxKey, dmrv}: {content: San
             { content.projectOverview && content.projectOverview.sections.length > 0 && content.projectOverview.sections.map((section, index) => (
                 <Section key={`section_${index}`} section={section}></Section>
             ))}
-            {dmrv.hasOwnProperty('ndvis') &&
-                <>
+            { trackingActivated && dmrv.hasOwnProperty('ndvis') &&
+                <div className="hidden md:block">
                     <div className="font-inter font-bold text-neutral-100 text-lg mt-12 flex items-center">
                         🌱 <span className="ml-2 uppercase">Tracking</span>
                         <span className="px-3 py-1 ml-3 bg-beta-button text-xs rounded-md font-light">Beta version</span>
@@ -38,7 +38,7 @@ export default function ContentWrapper({content, mapboxKey, dmrv}: {content: San
                     <div className="mt-4 pt-8 border-t border-neutral-500">
                         <Tracking mapboxKey={mapboxKey} dmrv={dmrv} />
                     </div>
-                </>
+                </div>
             }
             { (content.imagesGallery?.length > 0 || content.reports?.length > 0) && <div className="font-inter font-bold text-neutral-100 text-lg uppercase mt-12">✨ <span className="ml-2">Impact</span></div>}
             { content.imagesGallery?.length > 0 && <div className="mt-4 pt-8 border-t border-neutral-500">

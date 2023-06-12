@@ -43,7 +43,7 @@ export const loader: LoaderFunction = async ({
       const dmrv = await fetch(`${process.env.DMRV_API}/${params.slug}`, {});
       const dmrvJSON = await dmrv.json();
   
-      return json({project, content, whitelist, dmrvJSON, mapboxKey: process.env.MAPBOX});
+      return json({project, content, whitelist, dmrvJSON, mapboxKey: process.env.MAPBOX, trackingActivated: process.env.TRACKING_ACTIVATED === "true"});
 
     } catch (e) {
       console.log(e)
@@ -90,6 +90,7 @@ export default function ProjectPage() {
   const fetcher = useFetcher();
   const mapboxKey = data.mapboxKey;
   const dmrv: Dmrv = data.dmrvJSON;
+  const trackingActivated: boolean = data.trackingActivated;
 
   useEffect(() => {
     if (fetcher.data === undefined) return;
@@ -113,7 +114,7 @@ export default function ProjectPage() {
       <div className="w-full">
         <ProjectOverview project={project} launchpad={launchpad} mint={mint} whitelist={whitelist} hasReports={content?.reports.length > 0} />
         <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
-          { content !== undefined && <ContentContainer content={content} mapboxKey={mapboxKey} dmrv={dmrv} /> }
+          { content !== undefined && <ContentContainer content={content} mapboxKey={mapboxKey} dmrv={dmrv} trackingActivated={trackingActivated} /> }
         </div>
       </div>
   )
