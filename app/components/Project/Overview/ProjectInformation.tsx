@@ -5,8 +5,7 @@ import { shortenNumber } from "~/utils/utils";
 import { SaleStatusType } from "./ProjectOverview";
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { useNotifications } from "~/root";
-import { num } from "starknet";
-import { UINT256_DECIMALS } from "~/utils/constant";
+import { number } from "starknet";
 
 export function Tag({label, type}: {label: string, type:SaleStatusType}) {
     return (
@@ -60,9 +59,9 @@ function SaleStatusComponent({launchpad, projectState}: {launchpad: LaunchpadPro
 
 export default function ProjectInformation({project, launchpad, mint, priceToDisplay, projectState}: 
                                              {project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, projectState: SaleStatusType}) {
-    const [maxSupplyForMint, setMaxSupplyForMint] = useState(parseInt(mint.max_value.displayable_value));
-    const [projectTotalSupply, setProjectTotalSupply] = useState(parseInt(num.hexToDecimalString(project.total_value)) / Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))));
-    const [reservedSupply, setReservedSupply] = useState(parseInt(mint.reserved_value.displayable_value));
+    const [maxSupplyForMint] = useState(parseInt(mint.max_value.displayable_value));
+    const [projectTotalSupply] = useState(parseInt(number.hexToDecimalString(project.total_value)) / Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals))));
+    const [reservedSupply] = useState(parseInt(mint.reserved_value.displayable_value));
     const [supplyLeft, setSupplyLeft] = useState(launchpad.is_sold_out ? 0 : (maxSupplyForMint - reservedSupply - projectTotalSupply));
 
     const { defautlNetwork } = useNotifications();

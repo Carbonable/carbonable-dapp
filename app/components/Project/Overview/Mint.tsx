@@ -5,7 +5,7 @@ import { getStarkscanUrl, simplifyAddress } from "~/utils/utils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import ConnectDialog from "~/components/Connection/ConnectDialog"
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
-import { num } from "starknet";
+import { number } from "starknet";
 import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -22,13 +22,13 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     const isWhitelisted = !launchpad.public_sale_open && whitelistInfo ? true : false;
     const canBuy: boolean = (isWhitelisted || launchpad.public_sale_open) && status === "connected";
 
-    const [minBuy, setMinBuy] = useState(parseInt(mint.min_value_per_tx.displayable_value));
-    const [maxBuy, setMaxBuy] = useState(parseInt(mint.max_value_per_tx.displayable_value));
+    const [minBuy] = useState(parseInt(mint.min_value_per_tx.displayable_value));
+    const [maxBuy] = useState(parseInt(mint.max_value_per_tx.displayable_value));
 
     const [txHash, setTxHash] = useState("");
     const [amount, setAmount] = useState(minBuy);
     let [isConnectOpen, setIsConnectOpen] = useState(false);
-    const [starkscanUrl, setStarkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     const handleAmountChange = (e: any) => {
 
@@ -69,12 +69,12 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         {
             contractAddress: mint.payment_token_address,
             entrypoint: 'approve',
-            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
+            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
         },
         {
             contractAddress: launchpad.minter_contract.address,
             entrypoint: launchpad.public_sale_open ? 'publicBuy' : 'preBuy',
-            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
+            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
 

@@ -13,7 +13,7 @@ import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } 
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
-import { num } from "starknet";
+import { number } from "starknet";
 import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -177,7 +177,7 @@ export default function FarmingPage() {
                 source: NotificationSource.FARMING,
                 txStatus: TxStatus.NOT_RECEIVED,
                 message: {
-                    title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
+                    title: `Claiming $${parseFloat(number.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
