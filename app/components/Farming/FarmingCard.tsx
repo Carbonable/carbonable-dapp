@@ -8,7 +8,7 @@ import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { num } from "starknet";
+import { number } from "starknet";
 import type { ContractsProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -97,7 +97,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
             isNaN(data?.customer_investment.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_investment.displayable_value)));
             isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
-            isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(num.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(num.hexToDecimalString(data.ton_equivalent)), 6));
+            isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(number.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(number.hexToDecimalString(data.ton_equivalent)), 6));
             isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
             setCanClaimYield(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
             setCanClaimOffset(parseFloat(data?.absorption_to_claim.displayable_value) > data?.min_to_claim.displayable_value);
