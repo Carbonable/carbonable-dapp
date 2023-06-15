@@ -20,16 +20,20 @@ export async function getStarknetId(address: string | undefined, network: any): 
     const indexer = network.id === "mainnet" ? STARKNET_ID_INDEXER_MAINNET : STARKNET_ID_INDEXER_TESTNET;  
    
     // Call inddexer and check if there is a prefered domain
-    const domain = await fetch(indexer + "/addr_to_domain?addr=" + feltAddr);
-    const domainJSON = await domain.json();
+    try {
+        const domain = await fetch(indexer + "/addr_to_domain?addr=" + feltAddr);
+        const domainJSON = await domain.json();
+        if (domainJSON.domain) {
+            return domainJSON.domain;
+        }
 
-    if (domainJSON.domain) {
-        return domainJSON.domain;
+        // If no prefered domain, check if there are non prefered domains
+        const domains = await fetch(indexer + "/addr_to_full_ids?addr=" + feltAddr);
+        const domainsJSON = await domains.json();
+
+        return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0].domain;
+    } catch (e) {
+        console.log(e);
+        return undefined;
     }
-
-    // If no prefered domain, check if there are non prefered domains
-    const domains = await fetch(indexer + "/addr_to_full_ids?addr=" + feltAddr);
-    const domainsJSON = await domains.json();
-
-    return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0].domain;
 }
