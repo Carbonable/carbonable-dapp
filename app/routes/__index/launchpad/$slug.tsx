@@ -39,11 +39,8 @@ export const loader: LoaderFunction = async ({
         `*[_type == "project" && slug.current == $slug]`,
         { slug: params.slug }
       );
-
-      const dmrv = await fetch(`${process.env.DMRV_API}/${params.slug}`, {});
-      const dmrvJSON = await dmrv.json();
   
-      return json({project, content, whitelist, dmrvJSON, mapboxKey: process.env.MAPBOX, trackingActivated: process.env.TRACKING_ACTIVATED === "true"});
+      return json({project, content, whitelist, mapboxKey: process.env.MAPBOX, trackingActivated: process.env.TRACKING_ACTIVATED === "true"});
 
     } catch (e) {
       console.log(e)
@@ -88,8 +85,9 @@ export default function ProjectPage() {
   const content: SanityContent = data.content[0];
   const whitelist: ProjectWhitelist = data.whitelist?.whitelist;
   const fetcher = useFetcher();
+  const fetcherDmrv = useFetcher();
   const mapboxKey = data.mapboxKey;
-  const dmrv: Dmrv = data.dmrvJSON;
+  const [dmrv, setDmrv] = useState<Dmrv | undefined>(undefined);
   const trackingActivated: boolean = data.trackingActivated;
 
   useEffect(() => {
@@ -109,6 +107,20 @@ export default function ProjectPage() {
     setLaunchpad(data.launchpad);
     setMint(data.mint);
   }, [fetcher.data]);
+
+  useEffect(() => {
+    if (fetcherDmrv.data !== undefined || trackingActivated === false) return;
+
+      fetcherDmrv.load(`/launchpad/dmrv?slug=${project.slug}`);
+  }, []);
+
+  useEffect(() => {
+    if (fetcherDmrv.data === undefined) return;
+
+    const data = fetcherDmrv.data;
+    console.log(data)
+    setDmrv(data);
+  }, [fetcherDmrv.data]);
 
   return (
       <div className="w-full">

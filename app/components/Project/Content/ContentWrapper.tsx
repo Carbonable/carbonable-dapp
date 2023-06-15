@@ -8,7 +8,7 @@ import type { Dmrv } from "~/types/dmrv";
 import Tracking from "./Tracking";
 
 
-export default function ContentWrapper({content, mapboxKey, dmrv, trackingActivated}: {content: SanityContent, mapboxKey: string, dmrv: Dmrv, trackingActivated: boolean}) {
+export default function ContentWrapper({content, mapboxKey, dmrv, trackingActivated}: {content: SanityContent, mapboxKey: string, dmrv: Dmrv | undefined, trackingActivated: boolean}) {
     
     return (
         <div className="mb-20">
@@ -29,7 +29,7 @@ export default function ContentWrapper({content, mapboxKey, dmrv, trackingActiva
             { content.projectOverview && content.projectOverview.sections.length > 0 && content.projectOverview.sections.map((section, index) => (
                 <Section key={`section_${index}`} section={section}></Section>
             ))}
-            { trackingActivated && dmrv.hasOwnProperty('ndvis') &&
+            { trackingActivated && dmrv?.hasOwnProperty('ndvis') &&
                 <div className="hidden md:block">
                     <div className="font-inter font-bold text-neutral-100 text-lg mt-12 flex items-center">
                         🌱 <span className="ml-2 uppercase">Tracking</span>
