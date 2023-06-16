@@ -11,7 +11,7 @@ export const loader: LoaderFunction = async ({
         const global = await fetch(`${process.env.INDEXER_URL}/farming/list/global/${wallet}`, {});
         return json(await global.json());
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };

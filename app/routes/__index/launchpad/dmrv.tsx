@@ -12,7 +12,7 @@ export const loader: LoaderFunction = async ({
 
         return json(await project.json());
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };

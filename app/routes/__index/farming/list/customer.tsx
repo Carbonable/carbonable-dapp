@@ -12,7 +12,7 @@ export const loader: LoaderFunction = async ({
         const customer = await fetch(`${process.env.INDEXER_URL}/farming/list/${wallet}/${slug}`, {});
         return json(await customer.json());
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };
