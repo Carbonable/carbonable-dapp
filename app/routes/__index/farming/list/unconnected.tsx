@@ -11,7 +11,7 @@ export const loader: LoaderFunction = async ({
         const farms = await fetch(`${process.env.INDEXER_URL}/farming/list/unconnected/${slug}`, {});
         return json(await farms.json());
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };

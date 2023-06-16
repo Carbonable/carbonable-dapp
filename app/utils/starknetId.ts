@@ -33,7 +33,7 @@ export async function getStarknetId(address: string | undefined, network: any): 
 
         return domainsJSON.full_ids.length === 0 ? undefined : domainsJSON.full_ids[0].domain;
     } catch (e) {
-        console.log(e);
+        console.error(e);
         return undefined;
     }
 }

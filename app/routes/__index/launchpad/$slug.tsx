@@ -43,7 +43,7 @@ export const loader: LoaderFunction = async ({
       return json({project, content, whitelist, mapboxKey: process.env.MAPBOX, trackingActivated: process.env.TRACKING_ACTIVATED === "true"});
 
     } catch (e) {
-      console.log(e)
+      console.error(e)
       throw new Response("Not Found", {status: 404})
     }
 };
@@ -118,7 +118,6 @@ export default function ProjectPage() {
     if (fetcherDmrv.data === undefined) return;
 
     const data = fetcherDmrv.data;
-    console.log(data)
     setDmrv(data);
   }, [fetcherDmrv.data]);
 

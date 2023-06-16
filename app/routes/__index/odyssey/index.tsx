@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({
         });
         return json({allBadges, contract});
     } catch (e) {
-        console.log(e)
+        console.error(e)
         return json([]);
     }
 };
