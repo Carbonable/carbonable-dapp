@@ -33,7 +33,7 @@ export default function NavMenu({addressToDisplay, closeMenu}: any) {
                     <LinkFooter className="w-[50px] m-1" href={LINKEDIN_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/linkedin-icon.svg" alt="linkedin" /></LinkFooter>
                     <LinkFooter className="w-[50px] m-1" href={MEDIUM_LINK}><img className="w-[30px] h-[30px]" src="/assets/images/icons/medium-icon.svg" alt="medium" /></LinkFooter>
                 </div>
-                <div className="w-full flex items-center justify-center mt-4">Powered by <img className="w-[112px] ml-2" src="/assets/images/common/starknet.png" alt="Starknet logo" /></div>
+                <div className="w-full flex items-center justify-center mt-4">Powered by <img className="w-[112px] ml-2" src="/assets/images/common/starknet.svg" alt="Starknet logo" /></div>
             </div>
         </div>
     )

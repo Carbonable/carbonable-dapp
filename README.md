@@ -29,6 +29,23 @@ fly auth signup
 npm install
 ```
 
+### Environment variables
+```bash
+DATABASE_URL=""
+AIRTABLE_API_KEY=""
+AIRTABLE_USER_BASE=""
+QUEST_SIGNER_PRIVATE_KEY=""
+INDEXER_URL=""
+NETWORK="testnet|mainnet"
+NODE_URL=""
+
+MAPBOX=""
+DMRV_API=""
+
+WEB_WALLET_ENABLED=true|false
+TRACKING_ACTIVATED=true|false #False if no DMRV API
+```
+
 ### ⛏️ Run for dev
 
 ```bash
