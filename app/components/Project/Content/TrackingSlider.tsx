@@ -41,4 +41,4 @@ import type { Ndvi } from "~/types/dmrv";
         </Draggable>
       </div>
     );
-  };
+  }

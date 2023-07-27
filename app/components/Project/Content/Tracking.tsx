@@ -29,7 +29,7 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(dmrv.ndvis.length - 1);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-
+    console.log(ndvis)
     useEffect(() => {
         const selectData = [];
         
