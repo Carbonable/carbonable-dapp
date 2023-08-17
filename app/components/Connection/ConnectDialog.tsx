@@ -1,12 +1,12 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect } from "react";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { type Connector, useAccount, useConnectors } from "@starknet-react/core";
 
-export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: any}) {
+export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
     const { connectors, connect } = useConnectors();
     const { isConnected } = useAccount();
 
-    const handleClick = (wallet: any) => {
+    const handleClick = (wallet: Connector) => {
         connect(wallet);
         setIsOpen(false);
     }
@@ -54,27 +54,14 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                         >
                             Connect your wallet
                         </Dialog.Title>
-                        <div className="mt-6 flex items-start justify-center">
+                        <div className="mt-6">
                             { connectors.map((wallet) => (
-                                <div key={wallet.id() + "_modal"} className="p-4 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5 max-w-[150px] min-h-[120px]" onClick={() => handleClick(wallet)}>
-                                    <img className="w-8 h-8 mx-auto" src={wallet.id() === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${wallet.id()}.svg`} alt={`Connect with ${wallet.id()}`} />
-                                    <div className="uppercase font-inter mt-2">{wallet.id() === 'argentWebWallet' ? 'Argent Web Wallet' : wallet.id()}</div>
+                                <div key={wallet.id + "_modal"} className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full" onClick={() => handleClick(wallet)}>
+                                    <img className="w-5 h-5 mr-3" src={wallet.id === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${wallet.id}.svg`} alt={`Connect with ${wallet.id}`} />
+                                    <div className="uppercase font-inter mt-2">{wallet.id === 'argentWebWallet' ? 'Argent Web Wallet' : wallet.id}</div>
                                 </div>
                             ))}
                          </div>
-                        { connectors.length === 0 && 
-                            <div className="mt-6 flex items-center justify-center">
-                                <a className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" href="https://www.argent.xyz/argent-x/" rel="noreferrer" target="_blank">
-                                    <img className="w-8 mx-auto" src={`/assets/images/common/argentX.svg`} alt="Connect with ArgentX" />
-                                    <div className="uppercase font-inter mt-2">Argent X</div>
-                                </a>
-                                <a className="p-6 m-3 text-center cursor-pointer rounded-2xl hover:bg-opacityLight-5" href="https://braavos.app/" rel="noreferrer" target="_blank">
-                                    <img className="w-8 mx-auto" src={`/assets/images/common/braavos.svg`} alt="Connect with Braavos" />
-                                    <div className="uppercase font-inter mt-2">Braavos</div>
-                                </a>
-                            </div>
-                        }
-                       
                         </Dialog.Panel>
                     </Transition.Child>
                     </div>

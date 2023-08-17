@@ -56,8 +56,8 @@ export default function App() {
   }));
 
   const connectors:Connector<any>[] = useMemo(() => [
-    new InjectedConnector({ options: { id: 'braavos' }}),
     new InjectedConnector({ options: { id: 'argentX' }}),
+    new InjectedConnector({ options: { id: 'braavos' }}),
   ], []);
 
   useEffect(() => {
@@ -67,10 +67,6 @@ export default function App() {
 
       if (defautlNetwork.id === 'mainnet') { 
         setWebwallet(new WebWalletConnector());
-      }
-
-      if (defautlNetwork.id === 'testnet') { 
-        setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.hydrogen.argent47.net" }));
       }
 
       if (defautlNetwork.id === 'testnet2') { 
@@ -84,11 +80,11 @@ export default function App() {
     if (connectors.length > 2) { return; }
 
     if (webwallet) {
-      connectors.push(webwallet);
+      connectors.unshift(webwallet);
     }
 
     if (webwalletTestnet2) {
-      connectors.push(webwalletTestnet2);
+      connectors.unshift(webwalletTestnet2);
     }
   }, [webwallet, webwalletTestnet2, connectors]);
   

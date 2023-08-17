@@ -8,7 +8,7 @@ import ConnectDialog from "../Connection/ConnectDialog";
 export default function ConnectButton({displayIcon = false}: {displayIcon?: boolean}) {
     const { connect, available } = useConnectors();
     const { status } = useAccount();
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = () => {
         if (status === "connected") { return; }
