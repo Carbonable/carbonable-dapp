@@ -1,15 +1,15 @@
-import { useAccount, useConnectors, useContractWrite, useWaitForTransaction } from "@starknet-react/core";
+import { useAccount, useConnectors, useContractWrite } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { getStarkscanUrl, simplifyAddress } from "~/utils/utils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import ConnectDialog from "~/components/Connection/ConnectDialog"
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
-import { number } from "starknet";
 import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
+import { num } from "starknet";
 
 
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
@@ -27,7 +27,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
 
     const [txHash, setTxHash] = useState("");
     const [amount, setAmount] = useState(minBuy);
-    let [isConnectOpen, setIsConnectOpen] = useState(false);
+    const [isConnectOpen, setIsConnectOpen] = useState(false);
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     const handleAmountChange = (e: any) => {
@@ -69,12 +69,12 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         {
             contractAddress: mint.payment_token_address,
             entrypoint: 'approve',
-            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
+            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
         },
         {
             contractAddress: launchpad.minter_contract.address,
             entrypoint: launchpad.public_sale_open ? 'publicBuy' : 'preBuy',
-            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
+            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
 
@@ -108,7 +108,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     }, [txHash]);
 
     const connectAndExecute = () => {
-        if (!canBuy) { return };
+        if (!canBuy) { return }
         
         if (status === "connected") {
             write();
@@ -141,11 +141,11 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         <div className="w-full">
             <div className="w-full flex justify-between items-center gap-6">
                 <div className="flex flex-col w-3/12">
-                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
+                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-xl h-11 font-bold ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
                 </div>
                 <div className="flex flex-col w-full">
-                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.payment_token.value.symbol}</GreenButton>}
-                    {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
+                    {status === "connected" && <GreenButton className={`w-full h-full rounded-xl ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.payment_token.value.symbol}</GreenButton>}
+                    {status === "disconnected" && <GreenButton className="w-full h-full rounded-xl" onClick={connectWallet}>Connect wallet</GreenButton>}
                 </div>
             </div>
             {status === "connected" && !isWhitelisted && !launchpad.public_sale_open && <div className="w-full mt-2 bg-blue-dark text-sm text-neutral-100 rounded-full py-1 px-3 flex flex-nowrap items-center">

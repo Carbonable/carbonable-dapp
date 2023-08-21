@@ -52,7 +52,7 @@ export default function ProjectOverview({project, launchpad, mint, whitelist, ha
     return (
         <div className="w-full bg-mint p-4">
             <div className="mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
-                <div className="font-inter text-neutral-100 font-bold text-lg uppercase md:text-2xl">{project.name}</div>
+                <div className="font-inter text-neutral-100 text-lg uppercase md:text-xl ml-2">{project.name}</div>
                 <div className="flex flex-wrap justify-start items-center mt-4 md:gap-6 md:items-start">
                     <div className="w-full mx-auto md:w-[41%] md:order-2">
                         {isRawSVG === false && <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }

@@ -5,14 +5,14 @@ import { shortenNumber } from "~/utils/utils";
 import { SaleStatusType } from "./ProjectOverview";
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { useNotifications } from "~/root";
-import { number } from "starknet";
+import { num } from "starknet";
 
 export function Tag({label, type}: {label: string, type:SaleStatusType}) {
     return (
         <div className={`font-inter text-xs uppercase px-2 py-1 rounded-full md:px-4
                         ${(type === SaleStatusType.Soldout || type === SaleStatusType.ComingSoon) ? "bg-opacityLight-5 text-neutral-100" : ""}
                         ${(type === SaleStatusType.Whitelist) ? "bg-blue/30 text-blue" : ""}
-                        ${(type === SaleStatusType.Public) ? "bg-orange/30 text-orange" : ""}`
+                        ${(type === SaleStatusType.Public) ? "bg-greenish-500/20 text-greenish-400" : ""}`
         }>
             {label}
         </div>
@@ -57,10 +57,31 @@ function SaleStatusComponent({launchpad, projectState}: {launchpad: LaunchpadPro
     return null;
 }
 
+function InvestmentAndYieldInformation({investedAmount, soldout}: {investedAmount: number, soldout: boolean}) {
+    if (soldout) {
+        return (
+            <div className="flex flex-wrap items-center justify-center pl-1 py-3 bg-dark-40 mt-6 rounded-xl font-inter uppercase text-xs md:mt-3 md:px-2">
+                {investedAmount === 0 && <div className="text-neutral-100 px-2 w-full 2xl:w-fit">You didn’t invest in this project, be sure to not miss next one</div>}
+                {investedAmount > 0 && <div className="text-neutral-100 px-2 w-full 2xl:w-fit">Your final invested amount <span className="px-2 py-1 bg-opacityLight-10 rounded-md ml-2">{investedAmount}$</span></div>}
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex flex-wrap items-center justify-start pl-1 py-3 bg-dark-40 mt-6 rounded-xl font-inter uppercase text-xs md:mt-3 md:px-2 2xl:justify-between">
+            {investedAmount === 0 && <div className="text-neutral-100 px-2 w-full 2xl:w-fit">Estimate the gain for you and the planet</div>}
+            {investedAmount > 0 && <div className="text-neutral-100 px-2 w-full 2xl:w-fit">Your current invested amount <span className="px-2 py-1 bg-opacityLight-10 rounded-md ml-2">{investedAmount}$</span></div>}
+            <a href="https://carbonable.io#simulator" target="_blank" className="text-greenish-500 mt-1 inline-flex px-2 items-center 2xl:mt-0 hover:text-neutral-100" rel="noreferrer">
+                Yield Simulator <ChevronRightIcon className="w-4 ml-2" />
+            </a>
+        </div>
+    )
+}
+
 export default function ProjectInformation({project, launchpad, mint, priceToDisplay, projectState}: 
                                              {project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, projectState: SaleStatusType}) {
     const [maxSupplyForMint] = useState(parseInt(mint.max_value.displayable_value));
-    const [projectTotalSupply] = useState(parseInt(number.hexToDecimalString(project.total_value)) / Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals))));
+    const [projectTotalSupply] = useState(parseInt(num.hexToDecimalString(project.total_value)) / Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))));
     const [reservedSupply] = useState(parseInt(mint.reserved_value.displayable_value));
     const [supplyLeft, setSupplyLeft] = useState(launchpad.is_sold_out ? 0 : (maxSupplyForMint - reservedSupply - projectTotalSupply));
 
@@ -71,30 +92,28 @@ export default function ProjectInformation({project, launchpad, mint, priceToDis
     }, [launchpad.is_sold_out, maxSupplyForMint, reservedSupply, projectTotalSupply]);
 
     return (
-        <div className="relative rounded-3xl w-full bg-project-info-border p-[1px]">
-            <div className="relative rounded-3xl bg-project-info p-4 w-full overflow-hidden">
-                <div className="font-trash font-bold text-lg md:text-2xl lg:text-3xl">{priceToDisplay} {project.payment_token.value.symbol} <span className="font-americana font-normal text-base md:text-lg lg:text-2xl">/ Shares</span></div>
+        <div className="relative rounded-xl w-full bg-project-info-border p-[1px]">
+            <div className="relative rounded-xl bg-project-info p-4 w-full overflow-hidden">
+                <div className="font-inter font-semibold text-lg md:text-xl lg:text-2xl uppercase">{maxSupplyForMint.toLocaleString('en')} Shares</div>
                 <div className="absolute right-3 top-4 md:right-4 md:top-5 lg:top-6">
                     <SaleStatusComponent launchpad={launchpad} projectState={projectState} />
                 </div>
                 <div className="flex items-center justify-between mt-4 gap-x-2 2xl:mt-8">
-                    <KPICard title="Number of shares" value={maxSupplyForMint.toString()} />
-                    <KPICard title="Shares Left" value={supplyLeft.toString()} />
+                    <KPICard title="Shares Left" value={supplyLeft.toLocaleString('en')} />
+                    <KPICard title="$ per t/CO2" value="not available" />
                     <KPICard title="AVG APR (FCST)" value={project.forecasted_apr} />
                 </div>
-                <div className="flex flex-wrap items-center justify-start pl-1 py-3 bg-dark-40 mt-6 rounded-xl font-inter uppercase text-xs md:mt-3 md:px-2 2xl:justify-between">
-                    <div className="text-neutral-100 px-2 w-full 2xl:w-fit">Estimate the gain for you and the planet</div>
-                    <a href="https://carbonable.io#simulator" target="_blank" className="text-greenish-500 mt-1 inline-flex px-2 items-center 2xl:mt-0 hover:text-neutral-100" rel="noreferrer">
-                        Yield Simulator <ChevronRightIcon className="w-4 ml-2" />
-                    </a>
+                <div>
+                    <InvestmentAndYieldInformation soldout={launchpad.is_sold_out} investedAmount={0} />
                 </div>
                 {defautlNetwork.id === "mainnet" && moment(launchpad.sale_date).isBefore(moment(new Date('2022-12-31'))) && 
-                <div className="mt-2 font-inter text-xs text-neutral-100 flex flex-wrap items-center w-fit mx-auto md:mx-1">
-                    Have NFTs on JUNO? 
-                    <a href="https://bridge.carbonable.io" target="_blank" rel="noreferrer" className="underline flex flex-nowrap hover:no-underline ml-2">
-                        Bridge them to StarkNet <ArrowTopRightOnSquareIcon className="w-4 ml-1" />
-                    </a>
-                </div>}
+                    <div className="mt-2 font-inter text-xs text-neutral-100 flex flex-wrap items-center w-fit mx-auto md:mx-1">
+                        Have NFTs on JUNO? 
+                        <a href="https://bridge.carbonable.io" target="_blank" rel="noreferrer" className="underline flex flex-nowrap hover:no-underline ml-2">
+                            Bridge them to StarkNet <ArrowTopRightOnSquareIcon className="w-4 ml-1" />
+                        </a>
+                    </div>
+                }
                 <div className="mt-8 2xl:mt10">
                     <div className="flex justify-between px-4 font-inter text-xs text-transparent">
                         <div className="bg-green-blue bg-clip-text">{launchpad.is_sold_out ? '100%' : ((1 - (supplyLeft / maxSupplyForMint)) * 100).toFixed(0) + '%'}</div>

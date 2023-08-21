@@ -8,7 +8,7 @@ import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
 import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
-import { number } from "starknet";
+import { num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
 export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice}: 
@@ -41,7 +41,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     }, [assetsAllocation, tab, carbonCredits, context]);
     
     const handleAmountChange = (e: any) => {
-        let value = e.target.value;
+        const value = e.target.value;
 
         if (isNaN(value) || value < 0) {
             setAmount(0);
@@ -63,14 +63,14 @@ export default function Management({context, tab, assetsAllocation, contracts, p
             case AssetsManagementContext.DEPOSIT:
                 setCallData((cd: any) => {
                     const callsData = [];
-                    const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(number.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
-                    const filteredTokens = tokens.filter((token: any) => parseInt(number.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
+                    const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
+                    const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
                     let amountDeposited = 0;
 
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
                     for (const token of filteredTokens) {
                         if (amountDeposited >= amount) { break; }
-                        const tokenValue = parseInt(number.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals);
+                        const tokenValue = parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals);
                         const amountToDepositByToken = tokenValue <= (amount - amountDeposited) ? tokenValue : amount - amountDeposited;
                         amountDeposited += amountToDepositByToken;
 
@@ -78,13 +78,13 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         callsData.push({
                             contractAddress:contracts?.project,
                             entrypoint: 'approveValue',
-                            calldata: [parseInt(number.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
 
                         callsData.push({
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
                             entrypoint: 'deposit',
-                            calldata: [parseInt(number.hexToDecimalString(token.token_id)), 0, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
                     }
 
@@ -101,12 +101,12 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 break;
             case AssetsManagementContext.WITHDRAW:
                 setCallData((cd: any) => {
-                    const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(number.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
+                    const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     return {
                         calls: {
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
                             entrypoint: tokens.length === 0 ? 'withdrawTo' : 'withdrawToToken',
-                            calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(number.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
+                            calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
                         },
                         metadata: {
                             method: 'Withdraw',
