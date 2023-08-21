@@ -10,6 +10,7 @@ import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
 import { num } from "starknet";
+import PaidDialog from "./PaidDialog";
 
 
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
@@ -28,6 +29,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     const [txHash, setTxHash] = useState("");
     const [amount, setAmount] = useState(minBuy);
     const [isConnectOpen, setIsConnectOpen] = useState(false);
+    const [isPaidOpen, setIsPaidOpen] = useState(false);
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     const handleAmountChange = (e: any) => {
@@ -88,6 +90,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
+        setIsPaidOpen(true);
     }, [dataExecute]);
 
     useEffect(() => {
@@ -153,6 +156,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
                 You are not whitelisted
             </div>}
             <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
+            <PaidDialog isPaidOpen={isPaidOpen} setIsPaidOpen={setIsPaidOpen} />
         </div>
     );
 }

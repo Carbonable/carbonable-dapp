@@ -67,7 +67,9 @@ export default function ProjectOverview({project, launchpad, mint, whitelist, ha
                                      mint={mint}
                                      priceToDisplay={project.payment_token.displayable_value} 
                                      whitelist={whitelist} 
-                                     hasReports={hasReports}
+                                     SFTClaimed={1}
+                                     SFTToClaim={0}
+                                     STFAvailable={true}
                              />
                         </div>
                     </div>

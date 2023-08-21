@@ -4,20 +4,8 @@ import Mint from "./Mint";
 import { SaleStatusType } from "./ProjectOverview";
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 
-export default function Actions({projectState, project, launchpad, mint, priceToDisplay, whitelist, hasReports}: 
-                                {projectState: SaleStatusType, project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any, hasReports: boolean}) {
-
-    if (projectState === SaleStatusType.Soldout && hasReports) {
-        return (
-            <GreenLinkButton href="#impactreports" className="w-full">View Impact Reports</GreenLinkButton>
-        );
-    }
-
-    if (projectState === SaleStatusType.Soldout && !hasReports) {
-        return (
-            <GreenLinkButton href="#" className="w-full cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800">Impact Reports coming soon</GreenLinkButton>
-        );
-    }
+export default function Actions({projectState, project, launchpad, mint, priceToDisplay, whitelist, STFAvailable, SFTToClaim, SFTClaimed}: 
+                                {projectState: SaleStatusType, project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any, STFAvailable: boolean, SFTToClaim: number, SFTClaimed: number}) {
 
     if (projectState === SaleStatusType.ComingSoon) {
         return (
@@ -30,5 +18,35 @@ export default function Actions({projectState, project, launchpad, mint, priceTo
             <Mint project={project} launchpad={launchpad} mint={mint} priceToDisplay={priceToDisplay} whitelist={whitelist} />
         );
     }
+
+    if (projectState === SaleStatusType.Soldout && !STFAvailable) {
+        return (
+            <GreenLinkButton href="#" className="w-full bg-neutral-300 cursor-not-allowed rounded-xl hover:bg-neutral-300">SFT Claim is coming soon</GreenLinkButton>
+        );
+    }
+
+    if (projectState === SaleStatusType.Soldout && STFAvailable && SFTToClaim > 0) {
+        return (
+            <GreenLinkButton href="#impactreports" className="w-full rounded-xl">Claim your SFT</GreenLinkButton>
+        );
+    }
+
+    if (projectState === SaleStatusType.Soldout && STFAvailable && SFTToClaim === 0 && SFTClaimed > 0) {
+        return (
+            <div className="w-full relative text-center">
+                <div className="w-full">
+                    <GreenLinkButton href={`/farming/${project.slug}`} className="w-full rounded-xl block">Go to Farming</GreenLinkButton>
+                </div>
+                <div className="font-inter font-normal uppercase text-xs mt-2 text-neutral-200">your SFT is claimed, be sure to make it farm.</div>
+            </div>
+        );
+    }
+
+    if (projectState === SaleStatusType.Soldout && STFAvailable && SFTToClaim === 0 && SFTClaimed === 0) {
+        return (
+            <ComingSoon />
+        );
+    }
+
     return null;
 }

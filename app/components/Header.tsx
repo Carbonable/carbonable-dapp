@@ -36,7 +36,7 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
                         <>
                             <span className="mr-12 font-trash hidden lg:flex items-center justify-center">
                                 {addressToDisplay}
-                                {connector?.id() === 'argentWebWallet' && <a href={defautlNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
+                                {connector?.id === 'argentWebWallet' && <a href={defautlNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
                             </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>
