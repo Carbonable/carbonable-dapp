@@ -1,4 +1,4 @@
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { WalletIcon } from "@heroicons/react/24/outline";
 import ConnectDialog from "../Connection/ConnectDialog";
@@ -6,18 +6,11 @@ import ConnectDialog from "../Connection/ConnectDialog";
 
 
 export default function ConnectButton({displayIcon = false}: {displayIcon?: boolean}) {
-    const { connect, available } = useConnectors();
     const { status } = useAccount();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = () => {
         if (status === "connected") { return; }
-
-
-        if (available.length === 1) {
-            connect(available[0]);
-            return;
-        }
 
         setIsOpen(true);
     }

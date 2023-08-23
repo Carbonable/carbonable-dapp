@@ -1,11 +1,11 @@
-import { useAccount, useConnectors, useContractWrite, useWaitForTransaction } from "@starknet-react/core";
+import { useAccount, useContractWrite } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { getStarkscanUrl, simplifyAddress } from "~/utils/utils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import ConnectDialog from "~/components/Connection/ConnectDialog"
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
-import { number } from "starknet";
+import { num } from "starknet";
 import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -15,7 +15,6 @@ import { TxStatus } from "~/utils/blockchain/status";
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
     { project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any }) {
     const { address, status } = useAccount();
-    const { connect, available } = useConnectors();
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
 
     const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
@@ -69,12 +68,12 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         {
             contractAddress: mint.payment_token_address,
             entrypoint: 'approve',
-            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
+            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
         },
         {
             contractAddress: launchpad.minter_contract.address,
             entrypoint: launchpad.public_sale_open ? 'publicBuy' : 'preBuy',
-            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(number.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
+            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
 
@@ -108,15 +107,9 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     }, [txHash]);
 
     const connectAndExecute = () => {
-        if (!canBuy) { return };
+        if (!canBuy) { return }
         
         if (status === "connected") {
-            write();
-            return;
-        }
-
-        if (available.length === 1) {
-            connect(available[0]);
             write();
             return;
         }
@@ -125,11 +118,6 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     }
 
     const connectWallet = () => {
-        if (available.length === 1) {
-            connect(available[0]);
-            return;
-        }
-
         setIsConnectOpen(true);
     }
 
