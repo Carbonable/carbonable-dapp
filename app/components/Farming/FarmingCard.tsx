@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccount, useConnectors, useContractWrite } from "@starknet-react/core";
+import { useAccount, useContractWrite } from "@starknet-react/core";
 import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
@@ -8,7 +8,7 @@ import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { number } from "starknet";
+import { num } from "starknet";
 import type { ContractsProps } from "~/routes/__index/farming/$slug";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -97,7 +97,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
             isNaN(data?.customer_investment.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_investment.displayable_value)));
             isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
-            isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(number.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(number.hexToDecimalString(data.ton_equivalent)), 6));
+            isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(num.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(num.hexToDecimalString(data.ton_equivalent)), 6));
             isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
             setCanClaimYield(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
             setCanClaimOffset(parseFloat(data?.absorption_to_claim.displayable_value) > data?.min_to_claim.displayable_value);
@@ -288,19 +288,12 @@ function Tag({text, color, count, animatedText}: {text: string, color: string, c
 }
 
 function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimYield, handleClaimOffset}: {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimYield: () => void, handleClaimOffset: () => void}) {
-    const { connect, available } = useConnectors();
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (status === "connected") { return; }
-
-
-        if (available.length === 1) {
-            connect(available[0]);
-            return;
-        }
 
         setIsOpen(true);
     }
