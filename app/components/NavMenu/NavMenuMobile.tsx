@@ -2,7 +2,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { slide as Menu } from 'react-burger-menu';
 import NavMenu from "./NavMenu";
 
-export default function NavMenuMobile({menuOpen, handleStateChange, closeMenu, canClose, addressToDisplay}: any) {
+export default function NavMenuMobile({menuOpen, handleStateChange, closeMenu, canClose}: any) {
 
     return ( 
         <Menu 
@@ -15,7 +15,7 @@ export default function NavMenuMobile({menuOpen, handleStateChange, closeMenu, c
             onClose={closeMenu}
             className="bg-black bg-navigation"
             >
-            <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} />
+            <NavMenu closeMenu={closeMenu} />
         </Menu>
     )
 }

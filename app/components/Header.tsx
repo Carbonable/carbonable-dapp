@@ -7,9 +7,10 @@ import ConnectButton from "./Buttons/ConnectButton";
 import { useNotifications } from "~/root";
 import FormSelect from "./Filters/FormSelect";
 import { networksList } from "./NavMenu/networks";
+import Address from "./Connection/Address";
 
 
-export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
+export default function Header({toggleMenu, menuOpen}: any) {
     const { status, connector } = useAccount();
     const { disconnect } = useConnectors();
     const navigate = useNavigate();
@@ -34,8 +35,8 @@ export default function Header({toggleMenu, menuOpen, addressToDisplay}: any) {
 
                     {status === 'connected' && 
                         <>
-                            <span className="mr-12 font-trash hidden lg:flex items-center justify-center">
-                                {addressToDisplay}
+                            <span className="mr-12 font-trash hidden lg:flex items-center justify-center pt-2">
+                                <Address />
                                 {connector?.id === 'argentWebWallet' && <a href={defautlNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
                             </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>

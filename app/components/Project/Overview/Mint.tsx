@@ -60,6 +60,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
             args.push(proof);
         });
         args.push(amount);
+        args.push("0");
         args.push("1");
         return args;
     }
@@ -72,10 +73,12 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         },
         {
             contractAddress: launchpad.minter_contract.address,
-            entrypoint: launchpad.public_sale_open ? 'publicBuy' : 'preBuy',
-            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
+            entrypoint: launchpad.public_sale_open ? 'public_buy' : 'pre_buy',
+            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "0", "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
         },
     ];
+
+    console.log(calls);
 
     const { write, data: dataExecute } = useContractWrite({
         calls,
