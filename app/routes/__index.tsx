@@ -3,8 +3,6 @@ import Header from "~/components/Header";
 import { useEffect, useState } from "react";
 import NavMenuMobile from "~/components/NavMenu/NavMenuMobile";
 import NavMenu from "~/components/NavMenu/NavMenu";
-import { getStarknetId } from "~/utils/starknetId";
-import { useAccount } from "@starknet-react/core";
 import { ToastContainer, toast } from "react-toastify";
 import { useNotifications } from "~/root";
 import Transaction from "~/components/Notifications/Transaction";
@@ -14,29 +12,9 @@ import { TxStatus } from "~/utils/blockchain/status";
 import { CheckCircleIcon, DocumentCheckIcon, InboxArrowDownIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { NotificationSource } from "~/utils/notifications/sources";
 
-function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
-    const input = starknetId !== undefined ? starknetId : address;
-    if (input === undefined) { return ""; }
-
-    return input.length > 24 ? `${input.substring(0, 5)} ... ${input.substring(input.length - 5, input.length)}` : input;
-}
-
 export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { status, address, account } = useAccount();
-    const [addressToDisplay, setAddressToDisplay] = useState("");
     const { notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
-
-    async function getStarnetId() {
-        const id = await getStarknetId(address, defautlNetwork);
-        setAddressToDisplay(minifyAddressOrStarknetId(address, id));
-    }
-
-    useEffect(() => {
-        getStarnetId();
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [account, address, status]);
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);
@@ -53,7 +31,7 @@ export default function Index() {
     return (
         <div className="mx-auto flex" id="outer-container">
             <div className="fixed z-50 top-0 left-0 lg:hidden">
-                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} addressToDisplay={addressToDisplay} />
+                <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} />
             </div>
             <header className="pb-2 fixed top-0 w-full bg-neutral-800 z-50">
                 { defautlNetwork.id === 'testnet' && 
@@ -61,11 +39,11 @@ export default function Index() {
                         You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>
                     </div>
                 }
-                <Header toggleMenu={toggleMenu} menuOpen={menuOpen} addressToDisplay={addressToDisplay} />
+                <Header toggleMenu={toggleMenu} menuOpen={menuOpen} />
             </header>
             <nav className='hidden lg:block z-20'>
                 <div className="sticky top-0 left-0 lg:w-[280px]">
-                    <NavMenu addressToDisplay={addressToDisplay} closeMenu={closeMenu} />
+                    <NavMenu closeMenu={closeMenu} />
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
