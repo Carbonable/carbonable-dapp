@@ -15,12 +15,13 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined }) {
 
     const [available, setAvailable] = useState(0);
-    const [amount, setAmount] = useState<number>(0);
+    const [amount, setAmount] = useState<number | null>(0);
     const [disclaimer, setDisclaimer] = useState("");
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [hasErrror, setHasError] = useState(false);
     
     useEffect(() => {
         if (assetsAllocation !== undefined && carbonCredits !== undefined) {
@@ -43,12 +44,14 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const handleAmountChange = (e: any) => {
         let value = e.target.value;
 
-        if (isNaN(value) || value < 0) {
-            setAmount(0);
+        if (isNaN(value) || value < 0 || value === "") {
+            setAmount(null);
+            setHasError(true);
             return;
         }
 
         setAmount(value > available ? available : value.replace(/^0+/, ''));
+        setHasError(false);
     }
 
     const handleSetMax = () => {
@@ -58,6 +61,10 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const { write, data: dataExecute } = useContractWrite(callData);
 
     const handleAction = useCallback(() => {
+
+        if (amount === null || amount <= 0) {
+            return;
+        }
 
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
@@ -70,6 +77,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
                     for (const token of filteredTokens) {
                         if (amountDeposited >= amount) { break; }
+
                         const tokenValue = parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals);
                         const amountToDepositByToken = tokenValue <= (amount - amountDeposited) ? tokenValue : amount - amountDeposited;
                         amountDeposited += amountToDepositByToken;
@@ -77,7 +85,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         // Allow deposit on yielder or offseter contract
                         callsData.push({
                             contractAddress:contracts?.project,
-                            entrypoint: 'approveValue',
+                            entrypoint: 'approve_value',
                             calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
 
@@ -105,7 +113,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     return {
                         calls: {
                             contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
-                            entrypoint: tokens.length === 0 ? 'withdrawTo' : 'withdrawToToken',
+                            entrypoint: tokens.length === 0 ? 'withdraw_to' : 'withdraw_to_token',
                             calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
                         },
                         metadata: {
@@ -122,7 +130,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         calls: {
                             contractAddress: contracts?.offseter,
                             entrypoint: 'claim',
-                            calldata: [amount]
+                            calldata: [amount * parseInt(tonEquivalent), 0]
                         },
                         metadata: {
                             method: 'Claim',
@@ -151,7 +159,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     title = `${_.capitalize(context)} ${amount} shares from ${project.name} ${tab} farm`;
                     break;
                 case AssetsManagementContext.CLAIM:
-                    title = `${_.capitalize(context)} ${amount / parseInt(tonEquivalent)} tons from ${project.name} ${tab} farm`;
+                    title = `${_.capitalize(context)} ${amount} tons from ${project.name} ${tab} farm`;
                     break;
             }
 
@@ -209,7 +217,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumberWithDigits(available, 6)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
             </div>
             <div className="mt-1 w-full relative">
-                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300`} type="number" value={amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
+                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300 ${hasErrror ? "border-red-500 focus:border-red-500" : ""}`} type="number" value={amount === null  ? '' : amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
                 <div className="absolute right-4 top-3 text-neutral-300 cursor-pointer font-bold font-sm" onClick={handleSetMax}>MAX</div>
             </div>
             <div className="mt-8 px-8 py-6 bg-neutral-800 rounded-xl border border-opacityLight-10 text-left text-sm">{disclaimer}</div>

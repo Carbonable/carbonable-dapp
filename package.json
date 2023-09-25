@@ -40,6 +40,7 @@
     "react-slick": "^0.29.0",
     "react-toastify": "^9.1.2",
     "starknet": "5.18.0",
+    "starknetid.js": "^1.5.3",
     "tailwindcss-radix": "^2.6.0",
     "ts-node": "^10.9.1"
   },
