@@ -34,11 +34,5 @@ export const links = [
         label: 'Impact',
         isOpen: false,
         outsideLink: false
-    },
-    {
-        href: '/odyssey',
-        label: 'Odyssey',
-        isOpen: true,
-        outsideLink: false
     }
 ]

@@ -78,8 +78,6 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         },
     ];
 
-    console.log(calls);
-
     const { write, data: dataExecute } = useContractWrite({
         calls,
         metadata: {
