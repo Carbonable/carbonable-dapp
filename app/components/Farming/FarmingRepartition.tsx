@@ -9,7 +9,7 @@ export default function FarmingRepartition({yieldAmount, offsetAmount}: {yieldAm
                 <div className="text-green font-inter">YIELD {yieldPercentage.toFixed(1)}%</div>
                 <div className="text-blue font-inter">OFFSET {offsetPercentage.toFixed(1)}%</div>
             </div>
-            {total > 0 && <div className="rounded-full h-2 w-full mt-3" style={{background: `linear-gradient(to right, #0AF2AD, ${yieldPercentage}%, #9EBAF0)`, backgroundImage: "rgba(0, 0, 0, 0.3)" }}></div>}
+            {total > 0 && <div className="rounded-full h-2 w-full mt-3" style={{background: `linear-gradient(to right, #0AF2AD, ${yieldPercentage}%, #9EBAF0)` }}></div>}
             {total === 0 && <div className="rounded-full h-2 w-full mt-3 bg-neutral-400"></div>}
         </div>
     )

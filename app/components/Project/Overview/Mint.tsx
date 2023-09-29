@@ -1,5 +1,5 @@
 import { useAccount, useContractWrite } from "@starknet-react/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { getStarkscanUrl, simplifyAddress } from "~/utils/utils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -19,17 +19,22 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
 
     const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
     const isWhitelisted = !launchpad.public_sale_open && whitelistInfo ? true : false;
-    const canBuy: boolean = (isWhitelisted || launchpad.public_sale_open) && status === "connected";
 
     const [minBuy] = useState(parseInt(mint.min_value_per_tx.displayable_value));
     const [maxBuy] = useState(parseInt(mint.max_value_per_tx.displayable_value));
 
     const [txHash, setTxHash] = useState("");
-    const [amount, setAmount] = useState(minBuy);
+    const [amount, setAmount] = useState<number | null>(minBuy);
+    const canBuy: boolean = (isWhitelisted || launchpad.public_sale_open) && status === "connected";
+
     let [isConnectOpen, setIsConnectOpen] = useState(false);
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
 
     const handleAmountChange = (e: any) => {
+        if (e.target.value === "") {
+            setAmount(null);
+            return;
+        }
 
         if (isNaN(e.target.value) || e.target.value < 0) {
             setAmount(1);
@@ -65,18 +70,22 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         return args;
     }
 
-    const calls = [
-        {
-            contractAddress: mint.payment_token_address,
-            entrypoint: 'approve',
-            calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
-        },
-        {
-            contractAddress: launchpad.minter_contract.address,
-            entrypoint: launchpad.public_sale_open ? 'public_buy' : 'pre_buy',
-            calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "0", "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
-        },
-    ];
+    const calls = useMemo(() => {
+        if (!canBuy || amount === null) return [];
+
+        return [
+            {
+                contractAddress: mint.payment_token_address,
+                entrypoint: 'approve',
+                calldata: [launchpad.minter_contract.address, (amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals)))) * (priceToDisplay * Math.pow(10, project.payment_token.value.decimals)), 0]
+            },
+            {
+                contractAddress: launchpad.minter_contract.address,
+                entrypoint: launchpad.public_sale_open ? 'public_buy' : 'pre_buy',
+                calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "0", "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
+            },
+        ];
+    }, [amount, priceToDisplay]);
 
     const { write, data: dataExecute } = useContractWrite({
         calls,
@@ -98,6 +107,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
                 project: project.id,
                 source: NotificationSource.MINT,
                 txStatus: TxStatus.NOT_RECEIVED,
+                walletAddress: address,
                 message: {
                     title: `Minting ${amount} shares of ${project.name}`,
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
@@ -130,10 +140,10 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         <div className="w-full">
             <div className="w-full flex justify-between items-center gap-6">
                 <div className="flex flex-col w-3/12">
-                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
+                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount === null  ? '' : amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
                 </div>
                 <div className="flex flex-col w-full">
-                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {(amount * priceToDisplay).toFixed(2)}&nbsp;{project.payment_token.value.symbol}</GreenButton>}
+                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {amount === null  ? '-' : (amount * priceToDisplay).toFixed(2)}&nbsp;{project.payment_token.value.symbol}</GreenButton>}
                     {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
                 </div>
             </div>

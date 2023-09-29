@@ -12,6 +12,7 @@ import {
   useRouteError,
   isRouteErrorResponse,
   useOutletContext,
+  useFetcher,
 } from "@remix-run/react";
 import type { Connector } from '@starknet-react/core';
 import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
@@ -49,16 +50,37 @@ export default function App() {
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
+  const [lastIndexerBlock, setLastIndexerBlock] = useState<number|undefined>();
   const [defaultProvider] = useState<any>(new Provider({
     sequencer: {
       baseUrl: defautlNetwork.node_url
     }
   }));
+  const lastBlockFetcher = useFetcher();
 
   const connectors:Connector<any>[] = useMemo(() => [
     new InjectedConnector({ options: { id: 'argentX' }}),
     new InjectedConnector({ options: { id: 'braavos' }}),
   ], []);
+
+  useEffect(() => {
+    async function getLastBlock() {
+      lastBlockFetcher.load(`/indexer/block`);
+    }
+
+    const interval = setInterval(() => {
+      getLastBlock();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (lastBlockFetcher.data !== undefined) {
+      const data = lastBlockFetcher.data;
+      setLastIndexerBlock(data);
+    }
+  }, [lastBlockFetcher.data]);
 
   useEffect(() => {
     if (!webWalletEnabled) { return; }
@@ -107,7 +129,7 @@ export default function App() {
       </head>
       <body>
         <StarknetConfig defaultProvider={defaultProvider} connectors={connectors} autoConnect>
-            <Outlet context={{ notifs, setNotifs, defaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage }} />
+            <Outlet context={{ notifs, setNotifs, defaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
@@ -122,6 +144,7 @@ type Notification = {
   project: string,
   source: string,
   txStatus: TxStatus,
+  walletAddress: string | undefined,
   message: {title: string, message: string, link: string}
 };
 
@@ -134,6 +157,7 @@ type ContextType = {
   setMustReloadMigration: (b: boolean) => void,
   mustReloadFarmingPage: boolean,
   setMustReloadFarmingPage: (b: boolean) => void,
+  lastIndexerBlock: number,
 };
 
 export function useNotifications() {

@@ -14,65 +14,11 @@ import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs }
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
 import { num } from "starknet";
-import type { Abi } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
-
-export interface OverviewProps {
-    total_removal: NumericValueProps;
-    tvl: NumericValueProps;
-    apr: any;
-    total_yielded: NumericValueProps;
-    total_offseted: NumericValueProps;
-}
-
-export interface NumericValueProps {
-    displayable_value: string;
-    type: string;
-    value: any;
-}
-
-interface ClaimableProps {
-    available: NumericValueProps;
-    total: NumericValueProps;
-}
-
-export interface CarbonCreditsProps {
-    generated_credits: NumericValueProps;
-    to_be_generated: NumericValueProps;
-    offset: ClaimableProps;
-    yield: ClaimableProps;
-    min_to_claim: NumericValueProps;
-}
-
-export interface AssetsAllocationProps {
-    yield: NumericValueProps;
-    offseted: NumericValueProps;
-    total: NumericValueProps;
-    undeposited: NumericValueProps;
-    tokens: TokenProps[];
-}
-
-interface TokenProps {
-    project_address: string;
-    slot: string;
-    token_id: string;
-    value: any;
-    wallet: string;
-}
-
-export interface ContractsProps {
-    offseter: string;
-    offseter_abi: Abi;
-    yielder: string;
-    yielder_abi: Abi;
-    payment: string;
-    payment_abi: Abi;
-    project: string;
-    project_abi: Abi;
-}
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps, OverviewProps } from "~/interfaces/farming";
 
 export const loader: LoaderFunction = async ({
     params
@@ -92,41 +38,133 @@ export const loader: LoaderFunction = async ({
 
 export default function FarmingPage() {
     const { project, slug } = useLoaderData();
-    const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
     const { address, isConnected } = useAccount();
+
     const fetcher = useFetcher();
+    const fetcherPortfolio = useFetcher();
+
+    const [portfolioKey, setPortfolioKey] = useState<string>("");
+    const [portfolioData, setPortfolioData] = useState<any>();
+    const [farmingDataKey, setFarmingDataKey] = useState<string>("");
+    const [farmingData, setFarmingData] = useState<any>();
+
+    const [portfolio, setPortfolio] = useState([] as any);
     const [overview, setOverview] = useState<OverviewProps | undefined>(undefined);
     const [carbonCredits, setCarbonCredits] = useState<CarbonCreditsProps | undefined>(undefined);
     const [assetsAllocation, setAssetsAllocation] = useState<AssetsAllocationProps | undefined>(undefined);
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [unitPrice, setUnitPrice] = useState<NumericValueProps | undefined>(undefined);
     const [tonEquivalent, setTonEquivalent] = useState<string>('0');
+
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
     const [tab, setTab] = useState<AssetsManagementTabs>(AssetsManagementTabs.YIELD);
-    const fetcherPortfolio = useFetcher();
-    const [portfolio, setPortfolio] = useState([] as any);
     const [mustMigrate, setMustMigrate] = useState(false);
+    const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
+   
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    
     const [imageSrc, setImageSrc] = useState("");
 
+    // Set keys for localstorage
     useEffect(() => {
-        if (isConnected) {
-            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
-            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
-            setMustReloadFarmingPage(false);
-        }
-    }, [address, isConnected]);
+        if (address === undefined) { return; }
 
-    // Set portfolio data when data is loaded
+        setPortfolioKey(`portfolio_${address}`);
+        setFarmingDataKey(`farmingData_${address}`);
+    }, [address]);
+
+    // Get data from portfolio from localstorage or fetcher
+    useEffect(() => {
+        if (!isConnected || portfolioKey === "" || address === undefined) { return; }
+
+        const savedPortfolio = localStorage.getItem(portfolioKey);
+
+        if (savedPortfolio) { 
+            setPortfolioData(JSON.parse(savedPortfolio));
+        }
+
+        const lastSavedBlock = localStorage.getItem(address);
+
+        if (lastSavedBlock !== null || lastSavedBlock !== undefined) { 
+            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
+        }
+
+        
+        
+    }, [isConnected, portfolioKey, address]);
+
+
+    // Set portfolio data when data is loaded and save it in localstorage
     useEffect(() => {
         if (isConnected && fetcherPortfolio.data !== undefined) {
-            setPortfolio(fetcherPortfolio.data.data.projects);
+            setPortfolioData(fetcherPortfolio.data.data);
+            localStorage.setItem(portfolioKey, JSON.stringify(fetcherPortfolio.data.data));
         }
     }, [fetcherPortfolio, isConnected]);
+
+    // Set portfolio when portfolio data changes
+    useEffect(() => {
+        if (portfolioData === undefined) { return; }
+
+        setPortfolio(portfolioData.projects);
+    }, [portfolioData]);
+
+    // Get data from farming from localstorage or fetcher
+    useEffect(() => {
+        if (!isConnected || farmingDataKey === "" || address === undefined) { return; }
+
+        const savedFarmingData = localStorage.getItem(farmingDataKey);
+
+        if (savedFarmingData) { 
+            setFarmingData(JSON.parse(savedFarmingData));
+        }
+
+        const lastSavedBlock = localStorage.getItem(address);
+
+        if (lastSavedBlock !== null || lastSavedBlock !== undefined) { 
+            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
+        }
+
+    }, [isConnected, farmingDataKey, address]);
+
+    // Set farming data when data is loaded and save it in localstorage
+    useEffect(() => {
+        if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
+            setFarmingData(fetcher.data.data);
+            localStorage.setItem(farmingDataKey, JSON.stringify(fetcher.data.data));
+        }
+    }, [fetcher, isConnected]);
+
+    // Set farming data when farming data changes
+    useEffect(() => {
+        if (farmingData === undefined) { return; }
+
+        setOverview(farmingData.overview);
+        setCarbonCredits(farmingData.carbon_credits);
+        setAssetsAllocation(farmingData.allocation);
+        setContracts(farmingData.contracts);
+        setUnitPrice(farmingData.unit_price);
+        setTonEquivalent(farmingData.ton_equivalent);
+    }, [farmingData]);
+
+    // Check if data from localstorage is outdated
+    useEffect(() => {
+        if (lastIndexerBlock === undefined || address === undefined) { return; }
+
+        const lastSavedBlock = localStorage.getItem(address);
+
+        if (lastSavedBlock === null) { return; }
+
+        if (parseInt(lastSavedBlock) <= lastIndexerBlock) {
+            localStorage.removeItem(address);
+            fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
+            fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
+        }
+    }, [lastIndexerBlock, address]);
 
     useEffect(() => {
         if (isConnected === undefined || isConnected || isConnectDialogOpen) { return; }
@@ -135,32 +173,11 @@ export default function FarmingPage() {
     }, [isConnected]);
 
     useEffect(() => {
-        if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
-            const data = fetcher.data.data;
-            setOverview(data.overview);
-            setCarbonCredits(data.carbon_credits);
-            setAssetsAllocation(data.allocation);
-            setContracts(data.contracts);
-            setUnitPrice(data.unit_price);
-            setTonEquivalent(data.ton_equivalent);
-        }
-    }, [fetcher, isConnected,]);
-
-    useEffect(() => {
         if (portfolio?.length > 0) {
             const projectsToMigrate = _.filter(portfolio, project => project.tokens.some((token: any) => !token.hasOwnProperty("value"))); 
             setMustMigrate(projectsToMigrate.find(asset => asset.name === project.name) !== undefined);
         }
     }, [portfolio, project.name]);
-
-    useEffect(() => {
-        if (mustReloadFarmingPage === true) {
-            setTimeout(() => {
-                fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
-                setMustReloadFarmingPage(false);
-            }, 4000);
-        }
-    }, [mustReloadFarmingPage]);
 
     const { write, data: dataExecute } = useContractWrite(callData);
 
@@ -169,13 +186,22 @@ export default function FarmingPage() {
     }, [dataExecute]);
 
     useEffect(() => {
-        // When txHash is set, add toast notification
         if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
+            // Update farming data
+            const oldTotal = parseFloat(farmingData.carbon_credits.yield.total.displayable_value);
+            const oldAvailable = parseFloat(farmingData.carbon_credits.yield.available.displayable_value);
+            farmingData.carbon_credits.yield.total.displayable_value = oldTotal + oldAvailable;
+            farmingData.carbon_credits.yield.available.displayable_value = "0";
+
+            localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
+
+            // Add toast notification
             setNotifs([...notifs, {
                 txHash: txHash,
                 project: project.id,
                 source: NotificationSource.FARMING,
                 txStatus: TxStatus.NOT_RECEIVED,
+                walletAddress: address,
                 message: {
                     title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
@@ -339,8 +365,23 @@ export default function FarmingPage() {
                     </div>
                 </div>
             </div>
-            <ConnectDialog isOpen={isConnectDialogOpen} setIsOpen={setIsConnectDialogOpen} />
-            <AssetsManagementDialog isOpen={isAssetsManagementDialogOpen} setIsOpen={setIsAssetsManagementDialogOpen} context={context} tab={tab} assetsAllocation={assetsAllocation} contracts={contracts} project={project} carbonCredits={carbonCredits} tonEquivalent={tonEquivalent} unitPrice={unitPrice} />
+            <ConnectDialog 
+                isOpen={isConnectDialogOpen} 
+                setIsOpen={setIsConnectDialogOpen} 
+            />
+            <AssetsManagementDialog 
+                isOpen={isAssetsManagementDialogOpen} 
+                setIsOpen={setIsAssetsManagementDialogOpen} 
+                context={context} tab={tab} 
+                assetsAllocation={assetsAllocation} 
+                contracts={contracts} project={project} 
+                carbonCredits={carbonCredits} 
+                tonEquivalent={tonEquivalent} 
+                unitPrice={unitPrice} 
+                farmingData={farmingData}
+                setFarmingData={setFarmingData}
+                farmingDataKey={farmingDataKey}
+            />
         </>
     )
 }

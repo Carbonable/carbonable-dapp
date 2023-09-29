@@ -60,7 +60,7 @@ export default function FarmingIndex() {
 
     // Set portfolio data when data is loaded
     useEffect(() => {
-        if (isConnected && fetcher.data !== undefined) {
+        if (isConnected && fetcher.data !== undefined && fetcher.data.data !== undefined) {
             setPortfolio(fetcher.data.data.projects);
         }
     }, [fetcher, isConnected]);

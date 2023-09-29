@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { AssetsManagementContext, AssetsManagementTabs } from "./Dialog";
-import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps } from "~/routes/__index/farming/$slug";
+import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
-import { useContractWrite } from "@starknet-react/core";
+import { useAccount, useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
@@ -11,17 +11,18 @@ import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
 import { num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
-export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined }) {
+export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData, farmingDataKey}: 
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void, farmingDataKey: string }) {
 
     const [available, setAvailable] = useState(0);
-    const [amount, setAmount] = useState<number | null>(0);
+    const [amount, setAmount] = useState<number | null>(1);
     const [disclaimer, setDisclaimer] = useState("");
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
     const [hasErrror, setHasError] = useState(false);
+    const { address } = useAccount();
     
     useEffect(() => {
         if (assetsAllocation !== undefined && carbonCredits !== undefined) {
@@ -42,14 +43,13 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     }, [assetsAllocation, tab, carbonCredits, context]);
     
     const handleAmountChange = (e: any) => {
-        let value = e.target.value;
+        const value = e.target.value;
 
-        if (isNaN(value) || value < 0 || value === "") {
+        if (value === "" || isNaN(value) || value <= 0) {
             setAmount(null);
             setHasError(true);
             return;
         }
-
         setAmount(value > available ? available : value.replace(/^0+/, ''));
         setHasError(false);
     }
@@ -154,12 +154,54 @@ export default function Management({context, tab, assetsAllocation, contracts, p
             switch (context) {
                 case AssetsManagementContext.DEPOSIT:
                     title = `${_.capitalize(context)} ${amount} shares in ${project.name} ${tab} farm`;
+
+                    if (tab === AssetsManagementTabs.OFFSET && amount) {
+                        const oldOffset = parseFloat(farmingData.allocation.offseted.displayable_value);
+                        const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
+                        farmingData.allocation.offseted.displayable_value = oldOffset + amount;
+                        farmingData.allocation.undeposited.displayable_value = oldUndeposited - amount;
+                    }
+
+                    if (tab === AssetsManagementTabs.YIELD && amount) {
+                        const oldYield = parseFloat(farmingData.allocation.yield.displayable_value);
+                        const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
+                        farmingData.allocation.yield.displayable_value = oldYield + amount;
+                        farmingData.allocation.undeposited.displayable_value = oldUndeposited - amount;
+                    }
+                    localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
+
                     break;
                 case AssetsManagementContext.WITHDRAW:
                     title = `${_.capitalize(context)} ${amount} shares from ${project.name} ${tab} farm`;
+
+                    if (tab === AssetsManagementTabs.OFFSET && amount) {
+                        const oldOffset = parseFloat(farmingData.allocation.offseted.displayable_value);
+                        const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
+                        farmingData.allocation.offseted.displayable_value = oldOffset - amount;
+                        farmingData.allocation.undeposited.displayable_value = oldUndeposited + amount;
+                    }
+
+                    if (tab === AssetsManagementTabs.YIELD && amount) {
+                        const oldYield = parseFloat(farmingData.allocation.yield.displayable_value);
+                        const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
+                        farmingData.allocation.yield.displayable_value = oldYield - amount;
+                        farmingData.allocation.undeposited.displayable_value = oldUndeposited + amount;
+                    }
+                    localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
+
                     break;
                 case AssetsManagementContext.CLAIM:
                     title = `${_.capitalize(context)} ${amount} tons from ${project.name} ${tab} farm`;
+                    
+                    // Update farming data
+                    if (amount) { 
+                        const oldTotal = parseFloat(farmingData.carbon_credits.offset.total.displayable_value);
+                        const oldAvailable = parseFloat(farmingData.carbon_credits.offset.available.displayable_value);
+                        farmingData.carbon_credits.offset.total.displayable_value = oldTotal + (amount  * parseInt(tonEquivalent));
+                        farmingData.carbon_credits.offset.available.displayable_value = oldAvailable - (amount  * parseInt(tonEquivalent));
+
+                        localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
+                    }
                     break;
             }
 
@@ -168,6 +210,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 project: project.id,
                 source: NotificationSource.FARMING,
                 txStatus: TxStatus.NOT_RECEIVED,
+                walletAddress: address,
                 message: {
                     title,
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
@@ -217,12 +260,12 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 <div className="text-right text-neutral-200 uppercase">Available <span className="text-neutral-50 font-bold ml-1">{shortenNumberWithDigits(available, 6)} {context === AssetsManagementContext.CLAIM ? 'TONS' : 'SHARES'}</span></div>
             </div>
             <div className="mt-1 w-full relative">
-                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300 ${hasErrror ? "border-red-500 focus:border-red-500" : ""}`} type="number" value={amount === null  ? '' : amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
+                <input className={`bg-neutral-800 text-left outline-0 border border-opacityLight-10 px-3 py-3 rounded-xl w-full focus:border-neutral-300 ${hasErrror ? "border-red-500 focus:border-red-500" : ""}`} type="number" value={amount === null ? '' : amount} name="amount" aria-label="Amount" onChange={handleAmountChange} />
                 <div className="absolute right-4 top-3 text-neutral-300 cursor-pointer font-bold font-sm" onClick={handleSetMax}>MAX</div>
             </div>
             <div className="mt-8 px-8 py-6 bg-neutral-800 rounded-xl border border-opacityLight-10 text-left text-sm">{disclaimer}</div>
             <div className="w-full text-right my-8">
-                <GreenButton className={`w-fit`} onClick={handleAction}>{context}</GreenButton>
+                <GreenButton className={`w-fit ${hasErrror ? "cursor-not-allowed bg-greenish-500/50 text-neutral-300 hover:bg-greenish-500/50" : ""}`} onClick={handleAction} disabled={hasErrror}>{context}</GreenButton>
             </div>
         </div>
     )
