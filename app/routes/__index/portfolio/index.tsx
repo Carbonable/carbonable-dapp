@@ -102,6 +102,7 @@ function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigr
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const { address } = useAccount();
 
     // check if project is in notification list
     const [isMigrating, setIsMigrating] = useState(false);
@@ -177,6 +178,7 @@ function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigr
                 project: project.id,
                 source: NotificationSource.MIGRATION,
                 txStatus: TxStatus.NOT_RECEIVED,
+                walletAddress: address,
                 message: {
                     title: `Migrating ${project.name}`, 
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
@@ -321,5 +323,4 @@ export default function Portfolio() {
              />
         </div>
     )
-    
 }

@@ -14,7 +14,7 @@ import { NotificationSource } from "~/utils/notifications/sources";
 
 export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const { notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock } = useNotifications();
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);
@@ -47,7 +47,7 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage }} />
+                <Outlet context={{ notifs, setNotifs, defaultProvider, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
                 <Notifications />
             </main>
         </div>
@@ -113,6 +113,15 @@ function Notifications() {
                         progress: 1,
                         icon: <div className={iconCssGreen}><CheckCircleIcon /></div>
                     });
+
+                    // Update localStorage
+                    if (notif.walletAddress !== undefined) {
+                        const lastBlockSaved = localStorage.getItem(notif.walletAddress);
+
+                        if (lastBlockSaved === null || lastBlockSaved === undefined || parseInt(lastBlockSaved) < dataTx.block_number) {
+                            localStorage.setItem(notif.walletAddress, dataTx.block_number.toString());
+                        }
+                    }
 
                     setMustReloadMigration(notif.source === NotificationSource.MIGRATION || notif.source === NotificationSource.MINT);
                     setMustReloadFarmingPage(notif.source === NotificationSource.FARMING);

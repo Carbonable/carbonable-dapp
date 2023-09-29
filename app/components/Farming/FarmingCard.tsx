@@ -9,7 +9,7 @@ import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
 import { num } from "starknet";
-import type { ContractsProps } from "~/routes/__index/farming/$slug";
+import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
@@ -134,6 +134,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 project: project.id,
                 source: NotificationSource.FARMING,
                 txStatus: TxStatus.NOT_RECEIVED,
+                walletAddress: address,
                 message: {
                     title: claimContext === 'Yield' ? `Claiming $${yieldRewards} in ${project.name} yield farm` : `Claiming ${offsetRewards}t in ${project.name} offset farm`, 
                     message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
