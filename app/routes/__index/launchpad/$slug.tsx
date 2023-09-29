@@ -1,7 +1,6 @@
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, V2_MetaFunction} from "@remix-run/node";
-import { Response } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { Response, json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import ProjectOverview from "~/components/Project/Overview/ProjectOverview";
 import type { ProjectWhitelist } from "@prisma/client";
@@ -90,12 +89,17 @@ export default function ProjectPage() {
   const [dmrv, setDmrv] = useState<Dmrv | undefined>(undefined);
   const trackingActivated: boolean = data.trackingActivated;
 
-  useEffect(() => {
-    if (fetcher.data === undefined) return;
 
-    setTimeout(() => {
+  useEffect(() => {
+    async function refreshData() {
       fetcher.load(`/launchpad/refresh?slug=${project.slug}`);
-    }, 4000);
+    }
+
+    const interval = setInterval(() => {
+      refreshData();
+    }, 6000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
