@@ -10,6 +10,7 @@ import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
+import { cp } from "fs";
 
 
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
@@ -85,7 +86,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
                 calldata: launchpad.public_sale_open ? [amount *  Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))), "0", "1"] : buildWhitelistCallArgs(whitelistInfo, amount)
             },
         ];
-    }, [amount, priceToDisplay]);
+    }, [amount, priceToDisplay, canBuy]);
 
     const { write, data: dataExecute } = useContractWrite({
         calls,

@@ -14,6 +14,6 @@ export const loader: LoaderFunction = async ({
         return json(await userData.json());
     } catch (e) {
         console.error(e);
-        return null;
+        return json(null);
     }
 };
