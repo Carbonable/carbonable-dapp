@@ -89,7 +89,8 @@ export default function FarmingPage() {
 
         const lastSavedBlock = localStorage.getItem(address);
 
-        if (lastSavedBlock !== null || lastSavedBlock !== undefined) { 
+        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock) {
+            localStorage.removeItem(address);
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
         }
 
@@ -125,7 +126,8 @@ export default function FarmingPage() {
 
         const lastSavedBlock = localStorage.getItem(address);
 
-        if (lastSavedBlock !== null || lastSavedBlock !== undefined) { 
+        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock) {
+            localStorage.removeItem(address);
             fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
         }
 
