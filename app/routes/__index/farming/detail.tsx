@@ -10,8 +10,9 @@ export const loader: LoaderFunction = async ({
         const slug = url.searchParams.get("slug");
 
         const userData = await fetch(`${process.env.INDEXER_URL}/farming/details/${wallet}/${slug}`, {});
+        const result = await userData.json();
 
-        return json(await userData.json());
+        return json(result);
     } catch (e) {
         console.error(e);
         return json(null);

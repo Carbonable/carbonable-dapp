@@ -83,13 +83,13 @@ export default function FarmingPage() {
 
         const savedPortfolio = localStorage.getItem(portfolioKey);
 
-        if (savedPortfolio) { 
+        if (savedPortfolio && savedPortfolio !== "undefined") { 
             setPortfolioData(JSON.parse(savedPortfolio));
         }
 
         const lastSavedBlock = localStorage.getItem(address);
 
-        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock) {
+        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock || savedPortfolio !== "undefined") {
             localStorage.removeItem(address);
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
         }
@@ -101,7 +101,7 @@ export default function FarmingPage() {
 
     // Set portfolio data when data is loaded and save it in localstorage
     useEffect(() => {
-        if (isConnected && fetcherPortfolio.data !== undefined) {
+        if (isConnected && fetcherPortfolio.data !== undefined && fetcherPortfolio.data.data !== undefined ) {
             setPortfolioData(fetcherPortfolio.data.data);
             localStorage.setItem(portfolioKey, JSON.stringify(fetcherPortfolio.data.data));
         }
