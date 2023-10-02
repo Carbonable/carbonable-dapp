@@ -10,8 +10,6 @@ import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { TxStatus } from "~/utils/blockchain/status";
-import { cp } from "fs";
-
 
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
     { project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any }) {
