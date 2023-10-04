@@ -13,10 +13,9 @@ import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } 
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
-import { num } from "starknet";
+import { TransactionStatus, num } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
-import { TxStatus } from "~/utils/blockchain/status";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps, OverviewProps } from "~/interfaces/farming";
 
@@ -65,7 +64,7 @@ export default function FarmingPage() {
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     
     const [imageSrc, setImageSrc] = useState("");
 
@@ -202,11 +201,11 @@ export default function FarmingPage() {
                 txHash: txHash,
                 project: project.id,
                 source: NotificationSource.FARMING,
-                txStatus: TxStatus.NOT_RECEIVED,
+                txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
                     title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
-                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
             }]);
@@ -228,7 +227,7 @@ export default function FarmingPage() {
                 }
             }
         });
-        write();
+        write({});
     }
 
     const handleClaimOffset = async () => {

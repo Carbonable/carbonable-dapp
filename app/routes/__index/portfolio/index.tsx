@@ -1,17 +1,11 @@
-import { useContractWrite, useAccount } from "@starknet-react/core";
+import { useAccount } from "@starknet-react/core";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import Disconnected from "~/components/Portfolio/Disconnected";
 import { useEffect, useState } from "react";
 import _ from "lodash";
-import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber } from "~/utils/utils";
-import { GreenButton } from "~/components/Buttons/ActionButton";
-import NewsletterDialog from "~/components/Newsletter/Newsletter";
-import { TxStatus } from "~/utils/blockchain/status";
+import { shortenNumber } from "~/utils/utils";
 import { useNotifications } from "~/root";
-import { NotificationSource } from "~/utils/notifications/sources";
-import { num } from "starknet";
-import SVGMetadata from "~/components/Images/SVGMetadata";
+import PortfolioState from "~/components/Portfolio/PortfolioState";
 
 export const meta: V2_MetaFunction = () => {
     return [
@@ -32,206 +26,6 @@ export const meta: V2_MetaFunction = () => {
     ]
 };
 
-function LoaderProjects() {
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <div className="flex justify-start items-center border-2 border-neutral-500 p-2 bg-transparent rounded-2xl col-span-4 md:col-span-1 w-full h-[96vw] md:h-[200px] xl:h-[240px]">
-                <div className="w-full h-full bg-neutral-500 rounded-2xl animate-pulse"></div>
-            </div>
-            <div className="hidden justify-start items-center border-2 border-neutral-500 p-2 bg-transparent rounded-2xl col-span-4 md:col-span-1 w-full h-[96vw] md:h-[200px] xl:h-[240px] md:flex">
-                <div className="w-full h-full bg-neutral-500 rounded-2xl animate-pulse"></div>
-            </div>
-            <div className="hidden justify-start items-center border-2 border-neutral-500 p-2 bg-transparent rounded-2xl col-span-4 md:col-span-1 w-full h-[96vw] md:h-[200px] xl:h-[240px] md:flex">
-                <div className="w-full h-full bg-neutral-500 rounded-2xl animate-pulse"></div>
-            </div>
-            <div className="hidden justify-start items-center border-2 border-neutral-500 p-2 bg-transparent rounded-2xl col-span-4 md:col-span-1 w-full h-[96vw] md:h-[200px] xl:h-[240px] xl:flex">
-                <div className="w-full h-full bg-neutral-500 rounded-2xl animate-pulse"></div>
-            </div>
-        </div>
-    )
-}
-
-function ProjectsList({projects, setRefreshData}: {projects: any[], setRefreshData: (b: boolean) => void}) {
-    const migratedProjects = _.filter(projects, project => project.tokens.some((token: any) => token.hasOwnProperty("value")));
-    const projectsToMigrate = _.filter(projects, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
-    const [isOpen, setIsOpen] = useState(false);
-
-    if (projects.length === 0) {
-        return (
-            <div className="ml-2 mt-2">
-                You don't have any assets yet. Go to <a href="/launchpad" className="text-greenish-500 mt-1 hover:text-neutral-100">Launchpad</a> to invest during open sales.
-                <br />
-                <GreenButton className="w-fit mt-2" onClick={() => setIsOpen(true)}>Be alerted when a sale opens</GreenButton>
-                <NewsletterDialog isOpen={isOpen} setIsOpen={setIsOpen} />
-            </div>
-        )
-    }
-
-    return (
-        <>
-            { projectsToMigrate.length > 0 && 
-                <>
-                    <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-2">Assets to migrate</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
-                        {projectsToMigrate.map((project) => (
-                            <ProjectCard key={project.id} project={project} toMigrate={true} setRefreshData={setRefreshData} />
-                        ))}
-                    </div>
-                </>
-            }
-            { migratedProjects.length > 0 && 
-                <>
-                    {projectsToMigrate.length > 0 && <div className="uppercase font-trash text-bold text-sm text-left md:pl-1 2xl:text-base mt-8">Migrated assets</div> }
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2 select-none">
-                        {migratedProjects.map((project) => (
-                            <ProjectCard key={project.id} project={project} setRefreshData={setRefreshData} />
-                        ))}
-                    </div>
-                </>
-            }
-        </>
-    )
-}
-
-function ProjectCard({project, toMigrate, setRefreshData}: {project: any, toMigrate?: boolean, setRefreshData: (b: boolean) => void}) {
-    const walletShares = project.tokens.reduce((acc: any, token: any) => acc + parseFloat(token?.value?.displayable_value), 0);
-    const shares = walletShares + parseFloat(project.total_deposited_value?.displayable_value) ?? 0;
-    const [imageSrc, setImageSrc] = useState<string>("");
-    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
-    const calls: any = [];
-    const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
-    const { address } = useAccount();
-
-    // check if project is in notification list
-    const [isMigrating, setIsMigrating] = useState(false);
-
-    useEffect(() => {
-        setIsMigrating(_.some(notifs, (notification: any) => notification.project === project.id && notification.source === NotificationSource.MIGRATION));
-    }, [notifs]);
-
-    useEffect(() => {
-        if (mustReloadMigration === true) { 
-            setRefreshData(true);
-            setMustReloadMigration(false);
-        }
-        
-    }, [mustReloadMigration]);
-
-    useEffect(() => {
-        if (project.tokens[0].image) {
-            getImageUrlFromMetadata(project.tokens[0].image).then((url) => {
-                setImageSrc(url.imgUrl);
-                setIsRawSVG(url.isSvg);
-            });
-        }
-    }, [project.tokens]);
-
-
-    const { write, data: dataExecute } = useContractWrite({
-        calls,
-        metadata: {
-            method: 'Approve migration, migrate tokens then revoke approval',
-            message: 'Migrate ERC-721 tokens to ERC-3525 tokens',
-        }
-    });
-
-    const handleMigrate = (project: any) => {
-        const migrateData = [project.tokens.length];
-
-        calls.push({ 
-            contractAddress: project.address,
-            entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 1]
-        });
-
-        project.tokens.forEach((token: any) => {
-            migrateData.push(parseInt(num.hexToDecimalString(token.token_id)), 0);
-        });
-
-        calls.push({
-            contractAddress: project.minter_address,
-            entrypoint: 'migrate',
-            calldata: migrateData
-        });
-
-        calls.push({
-            contractAddress: project.address,
-            entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 0]
-        });
-        
-        write();
-        return;
-    }
-
-    useEffect(() => {
-        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
-    }, [dataExecute]);
-
-    useEffect(() => {
-        // When txHash is set, add toast notification
-        if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
-            setNotifs([...notifs, {
-                txHash: txHash,
-                project: project.id,
-                source: NotificationSource.MIGRATION,
-                txStatus: TxStatus.NOT_RECEIVED,
-                walletAddress: address,
-                message: {
-                    title: `Migrating ${project.name}`, 
-                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
-                    link: `${starkscanUrl}/tx/${txHash}`
-                }
-            }]);
-
-            setIsMigrating(true);
-        }
-    }, [txHash]);
-
-    return (
-        <div className="w-full flex flex-wrap" >
-            <div className="flex justify-start items-center flex-wrap col-span-4 md:col-span-1">
-                <div className="relative group">
-                    {isRawSVG === false && <img src={imageSrc} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
-                    {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc}/></div>}
-                    {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">x{project.tokens.length}</div>}
-                    {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-white rounded-lg text-neutral-900 text-center px-2 py-1 font-bold text-xs>">{shortenNumber(shares)} {shares > 1 ? 'shares' : 'share'}</div>}
-                </div>
-            </div>
-            {toMigrate && isMigrating === false && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
-            {toMigrate && isMigrating === true && <GreenButton className="w-full mt-2 cursor-not-allowed bg-greenish-800 text-neutral-300 hover:bg-greenish-800" disabled={true}>Migrating...</GreenButton> }
-        </div>
-        
-    )
-}
-
-function PortfolioState({isConnected, state, projects, badges, reloadData, setReloadData, setRefreshData}:
-    {isConnected: boolean | undefined, state: string, projects: any[], badges: any[], reloadData: boolean, setReloadData: any, setRefreshData: (b: boolean) => void}) {
-
-    if (!isConnected) {
-        return <Disconnected />
-    }
-
-    if (reloadData) {
-        return (
-            <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
-                <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
-                <GreenButton className="w-fit mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
-            </div>
-        )
-    }
-
-    return (
-        <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
-            <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
-            {state === 'loading' && <LoaderProjects /> }
-            {state !== 'loading' && <ProjectsList projects={projects} setRefreshData={setRefreshData} />}
-        </div>
-    )
-}
-
 function KPI({title, value}: {title: string, value: string}) {
     return (
         <div className="flex flex-col items-start justify-start text-neutral-100 font-trash">
@@ -240,7 +34,6 @@ function KPI({title, value}: {title: string, value: string}) {
         </div>
     )
 }
-
 
 export default function Portfolio() {
     const { isConnected, address } = useAccount();

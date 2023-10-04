@@ -14,54 +14,35 @@ import {
   useOutletContext,
   useFetcher,
 } from "@remix-run/react";
-import type { Connector } from '@starknet-react/core';
-import { StarknetConfig, InjectedConnector } from '@starknet-react/core';
-import { Provider } from "starknet";
 import styles from "./styles/app.css";
-import { useEffect, useMemo, useState } from "react";
-import type { TxStatus } from "./utils/blockchain/status";
+import { useEffect, useState } from "react";
+import type { ContextType } from "./types/notification";
+import { StarknetProvider } from "./components/Starknet/StarknetProvider";
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
 }
 
-
 export const loader: LoaderFunction = async () => {
   try {
-    const defautlNetwork = {
-      id: process.env.NETWORK,
-      node_url: process.env.NODE_URL
-    };
+    const defautlNetwork = process.env.NETWORK
     const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
+    const infuraApiKey = process.env.INFURA_API_KEY;
 
-    return json({ defautlNetwork, webWalletEnabled });
+    return json({ defautlNetwork, webWalletEnabled, infuraApiKey });
   } catch {
       return json([]);
   }
-  
 };
 
 export default function App() {
-  const data = useLoaderData();
-  const defautlNetwork = data.defautlNetwork;
-  const webWalletEnabled = data.webWalletEnabled;
-  const [webwallet, setWebwallet] = useState<any>(null);
-  const [webwalletTestnet2, setWebwalletTestnet2] = useState<any>(null);
+  const { defautlNetwork, webWalletEnabled, infuraApiKey } = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
   const [lastIndexerBlock, setLastIndexerBlock] = useState<number|undefined>();
-  const [defaultProvider] = useState<any>(new Provider({
-    sequencer: {
-      baseUrl: defautlNetwork.node_url
-    }
-  }));
-  const lastBlockFetcher = useFetcher();
 
-  const connectors:Connector<any>[] = useMemo(() => [
-    new InjectedConnector({ options: { id: 'argentX' }}),
-    new InjectedConnector({ options: { id: 'braavos' }}),
-  ], []);
+  const lastBlockFetcher = useFetcher();
 
   useEffect(() => {
     async function getLastBlock() {
@@ -81,34 +62,6 @@ export default function App() {
       setLastIndexerBlock(data);
     }
   }, [lastBlockFetcher.data]);
-
-  useEffect(() => {
-    if (!webWalletEnabled) { return; }
-
-    import("@argent/starknet-react-webwallet-connector").then(({ WebWalletConnector }) => {
-
-      if (defautlNetwork.id === 'mainnet') { 
-        setWebwallet(new WebWalletConnector());
-      }
-
-      if (defautlNetwork.id === 'testnet2') { 
-        setWebwalletTestnet2(new WebWalletConnector({ url: "https://web.dev.argent47.net" }));
-      }
-    });
-    
-  }, [defautlNetwork, webWalletEnabled]);
-
-  useEffect(() => {
-    if (connectors.length > 2) { return; }
-
-    if (webwallet) {
-      connectors.unshift(webwallet);
-    }
-
-    if (webwalletTestnet2) {
-      connectors.unshift(webwalletTestnet2);
-    }
-  }, [webwallet, webwalletTestnet2, connectors]);
   
   return (
     <html lang="en" className="bg-neutral-800 text-white">
@@ -128,37 +81,16 @@ export default function App() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
-        <StarknetConfig defaultProvider={defaultProvider} connectors={connectors} autoConnect>
-            <Outlet context={{ notifs, setNotifs, defaultProvider, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
-            <ScrollRestoration />
-            <Scripts />
-            <LiveReload />
-        </StarknetConfig>
+        <StarknetProvider defautlNetwork={defautlNetwork} infuraApiKey={infuraApiKey} webWalletEnabled={webWalletEnabled} >
+          <Outlet context={{ notifs, setNotifs, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </StarknetProvider>
       </body>
     </html>
   );
 }
-
-type Notification = {
-  txHash: string,
-  project: string,
-  source: string,
-  txStatus: TxStatus,
-  walletAddress: string | undefined,
-  message: {title: string, message: string, link: string}
-};
-
-type ContextType = { 
-  notifs: Notification[], 
-  setNotifs: (n: Notification[]) => void,
-  defaultProvider: any,
-  defautlNetwork: any, 
-  mustReloadMigration: boolean, 
-  setMustReloadMigration: (b: boolean) => void,
-  mustReloadFarmingPage: boolean,
-  setMustReloadFarmingPage: (b: boolean) => void,
-  lastIndexerBlock: number,
-};
 
 export function useNotifications() {
   return useOutletContext<ContextType>();

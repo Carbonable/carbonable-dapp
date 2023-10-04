@@ -5,11 +5,10 @@ import { getStarkscanUrl, simplifyAddress } from "~/utils/utils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import ConnectDialog from "~/components/Connection/ConnectDialog"
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
-import { num } from "starknet";
+import { TransactionStatus, num } from "starknet";
 import _ from "lodash";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
-import { TxStatus } from "~/utils/blockchain/status";
 
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
     { project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any }) {
@@ -27,7 +26,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     const canBuy: boolean = (isWhitelisted || launchpad.public_sale_open) && status === "connected";
 
     let [isConnectOpen, setIsConnectOpen] = useState(false);
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
 
     const handleAmountChange = (e: any) => {
         if (e.target.value === "") {
@@ -86,13 +85,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         ];
     }, [amount, priceToDisplay, canBuy]);
 
-    const { write, data: dataExecute } = useContractWrite({
-        calls,
-        metadata: {
-            method: 'Approve and buy tokens',
-            message: 'Approve and buy tokens',
-        }
-    });
+    const { write, data: dataExecute } = useContractWrite({ calls });
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
@@ -105,11 +98,11 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
                 txHash: txHash,
                 project: project.id,
                 source: NotificationSource.MINT,
-                txStatus: TxStatus.NOT_RECEIVED,
+                txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
                     title: `Minting ${amount} shares of ${project.name}`,
-                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
             }]);
@@ -120,7 +113,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         if (!canBuy) { return }
         
         if (status === "connected") {
-            write();
+            write({});
             return;
         }
 

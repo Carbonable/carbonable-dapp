@@ -10,7 +10,8 @@ module.exports = {
     v2_errorBoundary: true,
     v2_meta: true,
   },
-  serverDependenciesToBundle: ["mapbox-gl"],
+  serverDependenciesToBundle: ["mapbox-gl", "@starknet-react/core", "@starknet-react/chains"],
+  serverModuleFormat: "cjs",
 
   routes(defineRoutes) {
     // uses the v1 convention, works in v1.15+ and v2
