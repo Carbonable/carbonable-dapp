@@ -6,9 +6,8 @@ import { useNotifications } from "~/root";
 import { useAccount, useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
-import { TxStatus } from "~/utils/blockchain/status";
 import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
-import { num } from "starknet";
+import { TransactionStatus, num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
 export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData, farmingDataKey}: 
@@ -20,7 +19,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [callData, setCallData] = useState<any>({});
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     const [hasErrror, setHasError] = useState(false);
     const { address } = useAccount();
     
@@ -105,7 +104,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     }
                 });
         
-                write();
+                write({});
                 break;
             case AssetsManagementContext.WITHDRAW:
                 setCallData((cd: any) => {
@@ -122,7 +121,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         }
                     }
                 });
-                write();
+                write({});
                 break;
             case AssetsManagementContext.CLAIM:
                 setCallData((cd: any) => {
@@ -138,7 +137,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         }
                     }
                 });
-                write();
+                write({});
                 break;
         }
     }, [amount, tab, context]);
@@ -209,11 +208,11 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                 txHash: txHash,
                 project: project.id,
                 source: NotificationSource.FARMING,
-                txStatus: TxStatus.NOT_RECEIVED,
+                txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
                     title,
-                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
             }]);

@@ -11,7 +11,7 @@ interface ValueProps {
 
 export default function FormSelect({values, selectedValue, action}: any) {
     const select = useFetcher();
-    const [selected, setSelected] = useState(values.filter((value: any) => value.id === selectedValue.id)[0]);
+    const [selected, setSelected] = useState(values.filter((value: any) => value.id === selectedValue)[0]);
 
     function handleSelect(event: any) {
       setSelected(event);

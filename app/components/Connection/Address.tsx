@@ -1,25 +1,18 @@
-import { useAccount, useNetwork, useProvider } from "@starknet-react/core";
-import { useEffect, useState } from "react";
+import { useAccount, useStarkName } from "@starknet-react/core";
+import { useMemo } from "react";
 import { minifyAddressOrStarknetId } from "~/utils/utils";
-import { StarknetIdNavigator } from 'starknetid.js';
-import { constants } from "starknet";
 
 export default function Address() {
-    const [starknetId, setStarknetId] = useState<string | undefined>(undefined);
     const { address } = useAccount();
-    const { chain } = useNetwork();
-    const { provider } = useProvider();
+    const { data } = useStarkName({ address });
 
-    useEffect(() => {
-        async function getAddress() {
-            if (chain && address) {
-                const starknetIdNavigator = new StarknetIdNavigator(provider, chain.id as constants.StarknetChainId);
-                const starkName = await starknetIdNavigator.getStarkName(address);
-                setStarknetId(starkName);
-            }
+    const starknetId = useMemo(() => {
+        if (data !== undefined) {
+            return data;
         }
-        getAddress();
-    }, [address]);
+
+        return address;
+    }, [address, data]);
 
     return <>{minifyAddressOrStarknetId(address, starknetId)}</>
 }

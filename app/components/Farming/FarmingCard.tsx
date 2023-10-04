@@ -8,11 +8,10 @@ import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { num } from "starknet";
+import { TransactionStatus, num } from "starknet";
 import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
-import { TxStatus } from "~/utils/blockchain/status";
 
 const enum CardLocation {
     HEADER = "header",
@@ -41,7 +40,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork.id));
+    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     const [claimContext, setClaimContext] = useState<any>("Yield");
 
     useEffect(() => {
@@ -133,11 +132,11 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 txHash: txHash,
                 project: project.id,
                 source: NotificationSource.FARMING,
-                txStatus: TxStatus.NOT_RECEIVED,
+                txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
                     title: claimContext === 'Yield' ? `Claiming $${yieldRewards} in ${project.name} yield farm` : `Claiming ${offsetRewards}t in ${project.name} offset farm`, 
-                    message: 'Your transaction is ' + TxStatus.NOT_RECEIVED, 
+                    message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
             }]);
@@ -160,7 +159,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 }
             }
         });
-        write();
+        write({});
     }
 
     const handleClaimOffset = async () => {
@@ -179,7 +178,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 }
             }
         });
-        write();
+        write({});
     }
 
     return (

@@ -1,18 +1,18 @@
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "@remix-run/react";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useDisconnect } from "@starknet-react/core";
 
-import SecondaryButton from "./Buttons/ActionButton";
-import ConnectButton from "./Buttons/ConnectButton";
+import SecondaryButton from "../Buttons/ActionButton";
+import ConnectButton from "../Buttons/ConnectButton";
 import { useNotifications } from "~/root";
-import FormSelect from "./Filters/FormSelect";
-import { networksList } from "./NavMenu/networks";
-import Address from "./Connection/Address";
+import FormSelect from "../Filters/FormSelect";
+import { networksList } from "../NavMenu/networks";
+import Address from "../Connection/Address";
 
 
 export default function Header({toggleMenu, menuOpen}: any) {
     const { status, connector } = useAccount();
-    const { disconnect } = useConnectors();
+    const { disconnect } = useDisconnect();
     const navigate = useNavigate();
     const resolvedPath = useLocation();
     const { defautlNetwork } = useNotifications();
@@ -37,7 +37,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
                         <>
                             <span className="mr-12 font-trash hidden lg:flex items-center justify-center pt-2">
                                 <Address />
-                                {connector?.id === 'argentWebWallet' && <a href={defautlNetwork.id === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
+                                {connector?.id === 'argentWebWallet' && <a href={defautlNetwork === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
                             </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>

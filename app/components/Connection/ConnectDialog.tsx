@@ -1,13 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect } from "react";
-import { type Connector, useAccount, useConnectors } from "@starknet-react/core";
+import { type Connector, useAccount, useConnect } from "@starknet-react/core";
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
-    const { connectors, connect } = useConnectors();
+    const { connectors, connect } = useConnect();
     const { isConnected } = useAccount();
 
-    const handleClick = (wallet: Connector) => {
-        connect(wallet);
+    const handleClick = (connector: Connector) => {
+        connect({ connector });
         setIsOpen(false);
     }
 
@@ -55,15 +55,15 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                             Connect your wallet
                         </Dialog.Title>
                         <div className="mt-6">
-                            { connectors.map((wallet) => (
-                                <div key={wallet.id + "_modal"}>
-                                    {wallet.available() && <div className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full" onClick={() => handleClick(wallet)}>
-                                        <img className="w-5 h-5 mr-3" src={wallet.id === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${wallet.id}.svg`} alt={`Connect with ${wallet.id}`} />
-                                        <div className="uppercase font-inter">{wallet.id === 'argentWebWallet' ? 'Argent Web Wallet' : wallet.id}</div>
+                            { connectors.map((connector) => (
+                                <div key={connector.id + "_modal"}>
+                                    {connector.available() && <div className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full" onClick={() => handleClick(connector)}>
+                                        <img className="w-5 h-5 mr-3" src={connector.id === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${connector.id}.svg`} alt={`Connect with ${connector.id}`} />
+                                        <div className="uppercase font-inter">{connector.id === 'argentWebWallet' ? 'Argent Web Wallet' : connector.id}</div>
                                     </div>}
-                                    {!wallet.available() && <a className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full opacity-40 hover:opacity-100" href={wallet.id === 'argentX' ? 'https://www.argent.xyz/argent-x/' : 'https://braavos.app/'} rel="noreferrer" target="_blank">
-                                        <img className="w-5 h-5 mr-3" src={wallet.id === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${wallet.id}.svg`} alt={`Connect with ${wallet.id}`} />
-                                        <div className="uppercase font-inter">{wallet.id === 'argentWebWallet' ? 'Argent Web Wallet' : wallet.id} <span className='text-neutral-300 text-sm ml-1'>(download)</span></div>
+                                    {!connector.available() && <a className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full opacity-40 hover:opacity-100" href={connector.id === 'argentX' ? 'https://www.argent.xyz/argent-x/' : 'https://braavos.app/'} rel="noreferrer" target="_blank">
+                                        <img className="w-5 h-5 mr-3" src={connector.id === 'argentWebWallet' ? '/assets/images/common/argentX.svg' : `/assets/images/common/${connector.id}.svg`} alt={`Connect with ${connector.id}`} />
+                                        <div className="uppercase font-inter">{connector.id === 'argentWebWallet' ? 'Argent Web Wallet' : connector.id} <span className='text-neutral-300 text-sm ml-1'>(download)</span></div>
                                     </a>}
                                 </div>
                             ))}
