@@ -1,11 +1,11 @@
-import { IPFS_GATEWAY } from "~/utils/links";
-import { ipfsUrl } from "~/utils/utils";
+import SVGMetadata from "../Images/SVGMetadata";
 
-export default function ProjectIdentification({name, imageSrc, slug}: {name: string, imageSrc: string, slug: string}) {
+export default function ProjectIdentification({id, name, imageSrc, slug, isRawSVG}: {id: string, name: string, imageSrc: string, slug: string, isRawSVG: boolean}) {
     return (
         <div className="flex items-center justify-start w-full px-4 md:px-0">
             <div className="w-3/12">
-                <img src={imageSrc} alt={`${slug} NFT card`} className="w-10/12 rounded-[8.8%] md:w-full" />
+                    {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${name} NFT card`} className="w-10/12 rounded-[8.8%] md:w-full" /> }
+                    {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={id} /></div>}
             </div>
             <div className="px-4 font-inter text-neutral-100 text-lg md:text-xl lg:text-2xl font-bold w-9/12 uppercase">{name}</div>
         </div>

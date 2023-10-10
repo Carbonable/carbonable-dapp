@@ -25,8 +25,8 @@ export default function LaunchpadCard(project: LaunchpadLoaderData) {
 
     return (
         <div className="relative">
-            {isRawSVG === false && <img src={imageSrc} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" /> }
-            {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc}/></div>}
+            {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" /> }
+            {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={project.project.id}/></div>}
             
             { (project.launchpad.is_sold_out || saleIsOpen === false) && 
                 <div className="absolute top-0 left-0 bg-white/40 w-full h-[100%] rounded-[8.8%]"></div>

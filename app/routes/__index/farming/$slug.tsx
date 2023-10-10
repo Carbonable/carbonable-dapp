@@ -9,7 +9,7 @@ import FarmDetail, { FarmType } from "~/components/Farming/FarmDetail";
 import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite } from "@starknet-react/core";
-import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
+import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
@@ -42,9 +42,7 @@ export default function FarmingPage() {
     const fetcher = useFetcher();
     const fetcherPortfolio = useFetcher();
 
-    const [portfolioKey, setPortfolioKey] = useState<string>("");
     const [portfolioData, setPortfolioData] = useState<any>();
-    const [farmingDataKey, setFarmingDataKey] = useState<string>("");
     const [farmingData, setFarmingData] = useState<any>();
 
     const [portfolio, setPortfolio] = useState([] as any);
@@ -67,42 +65,27 @@ export default function FarmingPage() {
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     
     const [imageSrc, setImageSrc] = useState("");
+    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
-    // Set keys for localstorage
     useEffect(() => {
-        if (address === undefined) { return; }
-
-        setPortfolioKey(`portfolio_${address}`);
-        setFarmingDataKey(`farmingData_${address}`);
-    }, [address]);
-
-    // Get data from portfolio from localstorage or fetcher
-    useEffect(() => {
-        if (!isConnected || portfolioKey === "" || address === undefined) { return; }
-
-        const savedPortfolio = localStorage.getItem(portfolioKey);
-
-        if (savedPortfolio && savedPortfolio !== "undefined") { 
-            setPortfolioData(JSON.parse(savedPortfolio));
-        }
+        if (!isConnected || address === undefined) { return; }
 
         const lastSavedBlock = localStorage.getItem(address);
 
-        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock || savedPortfolio !== "undefined") {
+        if (lastSavedBlock === null || lastSavedBlock === undefined || parseInt(lastSavedBlock) <= lastIndexerBlock) {
             localStorage.removeItem(address);
             fetcherPortfolio.load(`/portfolio/load?wallet=${address}`);
         }
 
         
         
-    }, [isConnected, portfolioKey, address]);
+    }, [isConnected, address]);
 
 
-    // Set portfolio data when data is loaded and save it in localstorage
+    // Set portfolio data when data is loaded
     useEffect(() => {
         if (isConnected && fetcherPortfolio.data !== undefined && fetcherPortfolio.data.data !== undefined ) {
             setPortfolioData(fetcherPortfolio.data.data);
-            localStorage.setItem(portfolioKey, JSON.stringify(fetcherPortfolio.data.data));
         }
     }, [fetcherPortfolio, isConnected]);
 
@@ -113,15 +96,8 @@ export default function FarmingPage() {
         setPortfolio(portfolioData.projects);
     }, [portfolioData]);
 
-    // Get data from farming from localstorage or fetcher
     useEffect(() => {
-        if (!isConnected || farmingDataKey === "" || address === undefined) { return; }
-
-        const savedFarmingData = localStorage.getItem(farmingDataKey);
-
-        if (savedFarmingData) { 
-            setFarmingData(JSON.parse(savedFarmingData));
-        }
+        if (!isConnected || address === undefined) { return; }
 
         const lastSavedBlock = localStorage.getItem(address);
 
@@ -130,13 +106,12 @@ export default function FarmingPage() {
             fetcher.load(`/farming/detail?wallet=${address}&slug=${slug}`);
         }
 
-    }, [isConnected, farmingDataKey, address]);
+    }, [isConnected, address]);
 
-    // Set farming data when data is loaded and save it in localstorage
+    // Set farming data when data is loaded
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined && fetcher.data !== null) {
             setFarmingData(fetcher.data.data);
-            localStorage.setItem(farmingDataKey, JSON.stringify(fetcher.data.data));
         }
     }, [fetcher, isConnected]);
 
@@ -194,8 +169,6 @@ export default function FarmingPage() {
             farmingData.carbon_credits.yield.total.displayable_value = oldTotal + oldAvailable;
             farmingData.carbon_credits.yield.available.displayable_value = "0";
 
-            localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
-
             // Add toast notification
             setNotifs([...notifs, {
                 txHash: txHash,
@@ -250,8 +223,9 @@ export default function FarmingPage() {
 
     useEffect(() => {
         if (project.uri?.data.image) {
-            getImageUrl(project.uri.data.image).then((url) => {
-                setImageSrc(url);
+            getImageUrlFromMetadata(project.uri.data.image).then((url) => {
+                setImageSrc(url.imgUrl);
+                setIsRawSVG(url.isSvg);
             });
         }
     }, [project]);
@@ -263,7 +237,7 @@ export default function FarmingPage() {
                     <div className="max-w-6xl mx-auto pl-4 xl:pl-8">
                         <div className="w-full grid grid-cols-2 gap-4 items-center">
                             <div className="col-span-2 md:col-span-1">
-                                <ProjectIdentification name={project.name} imageSrc={imageSrc} slug={project.slug} />
+                                <ProjectIdentification id={project.id} name={project.name} imageSrc={imageSrc} slug={project.slug} isRawSVG={isRawSVG} />
                             </div>
                             <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
                                 <FarmingRepartition 
@@ -381,7 +355,6 @@ export default function FarmingPage() {
                 unitPrice={unitPrice} 
                 farmingData={farmingData}
                 setFarmingData={setFarmingData}
-                farmingDataKey={farmingDataKey}
             />
         </>
     )

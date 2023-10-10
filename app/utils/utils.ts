@@ -91,9 +91,19 @@ export async function getImageUrlFromMetadata(url: string): Promise<any> {
     if (url.startsWith("data:application/json")) {
         const jsonData = JSON.parse(url.split("data:application/json,").pop() || "");
         const image = jsonData.image;
+        
         return { 
             imgUrl: image.split("data:image/svg+xml,").pop() || "",
             isSvg: true
+        };
+    }
+
+    if (url.startsWith('"data:image/png;base64,')) {
+        const imageData = url.split('"data:image/png;base64,').pop()?.replace('"', '');
+        
+        return { 
+            imgUrl: imageData,
+            isSvg: false
         };
     }
    
@@ -104,12 +114,31 @@ export async function getImageUrlFromMetadata(url: string): Promise<any> {
         };
     }
 
-    const response = await fetch(url);
-    const data = await response.json();
-    return {
-        imgUrl: data.image,
-        isSvg: false
+    if (url.startsWith("<svg")) {
+        return { 
+            imgUrl: url,
+            isSvg: true
+        };
     }
+
+    const response = await fetch(url);
+
+    try {
+        const data = await response.json();
+        const imageData = data.image.split('data:image/png;base64,').pop()?.replace('"', '');
+
+        return { 
+            imgUrl: imageData,
+            isSvg: false
+        };
+    } catch (error) {
+        return {
+            imgUrl: url,
+            isSvg: false
+        }
+    }
+    
+    
 }
 
 /**

@@ -9,8 +9,9 @@ export const loader: LoaderFunction = async ({
         const wallet = url.searchParams.get("wallet");
 
         const portfolio = await fetch(`${process.env.INDEXER_URL}/portfolio/${wallet}`, {});
+        const res = await portfolio.json();
 
-        return json(await portfolio.json());
+        return json(res);
     } catch (e) {
         console.error(e)
         return json([]);

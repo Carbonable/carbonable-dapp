@@ -9,7 +9,7 @@ export default function ProjectsList({projects, setRefreshData}: {projects: any[
     const projectsToMigrate = _.filter(projects, project => project.tokens.some((token: any) => !token.hasOwnProperty("value")));
     const [isOpen, setIsOpen] = useState(false);
 
-    if (projects.length === 0) {
+    if (projects.filter((project) => project.tokens.length > 0).length === 0) {
         return (
             <div className="ml-2 mt-2">
                 You don't have any assets yet. Go to <a href="/launchpad" className="text-greenish-500 mt-1 hover:text-neutral-100">Launchpad</a> to invest during open sales.

@@ -1,11 +1,10 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { shortenNumber } from "~/utils/utils";
 import { SaleStatusType } from "./ProjectOverview";
 import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { useNotifications } from "~/root";
-import { num } from "starknet";
 
 export function Tag({label, type}: {label: string, type:SaleStatusType}) {
     return (
@@ -59,16 +58,10 @@ function SaleStatusComponent({launchpad, projectState}: {launchpad: LaunchpadPro
 
 export default function ProjectInformation({project, launchpad, mint, priceToDisplay, projectState}: 
                                              {project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, projectState: SaleStatusType}) {
-    const [maxSupplyForMint] = useState(parseInt(mint.max_value.displayable_value));
-    const [projectTotalSupply] = useState(parseInt(num.hexToDecimalString(project.total_value)) / Math.pow(10, parseInt(num.hexToDecimalString(project.value_decimals))));
-    const [reservedSupply] = useState(parseInt(mint.reserved_value.displayable_value));
-    const [supplyLeft, setSupplyLeft] = useState(launchpad.is_sold_out ? 0 : (maxSupplyForMint - reservedSupply - projectTotalSupply));
+    const [maxSupplyForMint] = useState(parseInt(mint.total_value.displayable_value));
+    const [supplyLeft] = useState(parseInt(mint.remaining_value.displayable_value));
 
     const { defautlNetwork } = useNotifications();
-    
-    useEffect(() => {
-        setSupplyLeft(launchpad.is_sold_out ? 0 : maxSupplyForMint - reservedSupply - projectTotalSupply);
-    }, [launchpad.is_sold_out, maxSupplyForMint, reservedSupply, projectTotalSupply]);
 
     return (
         <div className="relative rounded-3xl w-full bg-project-info-border p-[1px]">

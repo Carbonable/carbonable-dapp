@@ -3,7 +3,7 @@ import { useAccount, useContractWrite } from "@starknet-react/core";
 import { FarmingButton } from "../Buttons/ActionButton";
 import { NavLink, useFetcher, useNavigate } from "@remix-run/react";
 import ConnectDialog from "../Connection/ConnectDialog";
-import { getImageUrl, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
+import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
@@ -12,6 +12,7 @@ import { TransactionStatus, num } from "starknet";
 import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
+import SVGMetadata from "../Images/SVGMetadata";
 
 const enum CardLocation {
     HEADER = "header",
@@ -42,11 +43,13 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     const [claimContext, setClaimContext] = useState<any>("Yield");
+    const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {
-        if (project.uri?.data.image) {
-            getImageUrl(project.uri.data.image).then((url) => {
-                setImageSrc(url);
+        if (project.uri.uri) {
+            getImageUrlFromMetadata(project.uri.uri).then((url) => {
+                setImageSrc(url.imgUrl);
+                setIsRawSVG(url.isSvg);
             });
         }
     }, [project]);
@@ -84,7 +87,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
     useEffect(() => {
         if (isConnected && connectedUserFetcher.data !== undefined) {
-            if(connectedUserFetcher.data === 404 || connectedUserFetcher.data.length === 0) {
+            if(connectedUserFetcher.data.code === 404 || connectedUserFetcher.data.length === 0) {
                 setMyStake('0');
                 setYieldRewards('0');
                 setOffsetRewards('0');
@@ -199,7 +202,8 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                     </div>
                     <div className={`w-full h-[1px] ${printFarmingColorClass(color, CardLocation.SEPARATOR)}`}></div>
                     <div className="relative text-center p-4 bg-farming-card-bg">
-                        <img src={imageSrc} alt={`${project.slug} NFT card`} className="w-[66px] h-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50" />
+                        {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.slug} NFT card`} className="w-[66px] h-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50" /> }
+                        {isRawSVG === true && <div className="w-[66px] h-[66px] rounded-full absolute top-[-33px] left-[calc(50%_-_33px)] border border-neutral-50 overflow-hidden"><SVGMetadata svg={imageSrc} id={project.id} /></div>}
                         <div className="font-inter font-medium text-neutral-100 text-lg pt-8">
                             {project.name}
                         </div>

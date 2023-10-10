@@ -41,7 +41,6 @@ export default function Portfolio() {
     const [investedProjects, setInvestedProjects] = useState([] as any);
     const [collectedBadges, setCollectedBadges] = useState([] as any);
     const [numberOfProjects, setNumberOfProjects] = useState(0);
-    const [numberOfNFT, setNumberOfNFT] = useState(0);
     const fetcher = useFetcher();
     const [reloadData, setReloadData] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
@@ -61,7 +60,6 @@ export default function Portfolio() {
             setInvestedProjects([]);
             setCollectedBadges([]);
             setNumberOfProjects(0);
-            setNumberOfNFT(0);
         }
     }, [address, isConnected]);
 
@@ -80,6 +78,7 @@ export default function Portfolio() {
     useEffect(() => {
         if (isConnected && fetcher.data !== undefined) {
             const data = fetcher.data.data;
+            
             if (data === undefined) {
                 setReloadData(true);
                 return;
@@ -91,7 +90,6 @@ export default function Portfolio() {
             setInvestedProjects(projects);
             setCollectedBadges(badges);
             setNumberOfProjects((_.filter(projects, (project) => project.tokens.length > 0)).length)
-            setNumberOfNFT(_(projects).flatMap('tokens').value().length);
         }
     }, [fetcher, isConnected]);
 
@@ -101,7 +99,6 @@ export default function Portfolio() {
                 <div className="grid grid-cols-3 gap-3 md:grid-cols-none md:grid-flow-col md:auto-cols-max md:gap-6 xl:gap-16">
                     <KPI title="Invested Amount" value={`$${investedAmount}`} />
                     <KPI title="Number of projects" value={`# ${numberOfProjects}`} />
-                    <KPI title="Number of NFT" value={`# ${numberOfNFT}`} />
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>

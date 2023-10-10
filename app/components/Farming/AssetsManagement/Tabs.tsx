@@ -4,8 +4,8 @@ import { AssetsManagementTabs } from "./Dialog";
 import Management from "./Management";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps } from "~/interfaces/farming";
 
-export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData, farmingDataKey}: 
-    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void, farmingDataKey: string}) {
+export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData}: 
+    {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void}) {
         
     const tabs = [AssetsManagementTabs.YIELD, AssetsManagementTabs.OFFSET];
 
@@ -42,7 +42,6 @@ export default function Tabs({context, assetsAllocation, contracts, project, set
                                 unitPrice={unitPrice} 
                                 farmingData={farmingData}
                                 setFarmingData={setFarmingData}
-                                farmingDataKey={farmingDataKey}
                             />
                         </div>
                     </Tab.Panel>

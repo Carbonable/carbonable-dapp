@@ -10,7 +10,7 @@ module.exports = {
     v2_errorBoundary: true,
     v2_meta: true,
   },
-  serverDependenciesToBundle: ["mapbox-gl", "@starknet-react/core", "@starknet-react/chains"],
+  serverDependenciesToBundle: ["mapbox-gl", "@starknet-react/core", "@starknet-react/chains", "@iconfu/svg-inject"],
   serverModuleFormat: "cjs",
 
   routes(defineRoutes) {

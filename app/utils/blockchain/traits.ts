@@ -1,5 +1,5 @@
 export const enum Traits {
-    COLOR = "Project color",
+    COLOR = "Project Color",
     STATUS = "Status",
 }
 
@@ -26,5 +26,5 @@ export const enum FarmStatus {
 export function getTraitValue(traits: any[] | undefined, key: string) {
     if (undefined === traits) { return ''; }
 
-    return traits.filter(trait => trait.trait_type === key)[0].value;
+    return traits.filter(trait => (trait.trait_type as string).toLowerCase() === key.toLowerCase())[0].value;
 }

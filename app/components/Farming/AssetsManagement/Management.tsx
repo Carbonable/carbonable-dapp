@@ -10,8 +10,8 @@ import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
 import { TransactionStatus, num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
-export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData, farmingDataKey}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void, farmingDataKey: string }) {
+export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData}: 
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void }) {
 
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState<number | null>(1);
@@ -167,7 +167,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         farmingData.allocation.yield.displayable_value = oldYield + amount;
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited - amount;
                     }
-                    localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
 
                     break;
                 case AssetsManagementContext.WITHDRAW:
@@ -186,7 +185,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         farmingData.allocation.yield.displayable_value = oldYield - amount;
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited + amount;
                     }
-                    localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
 
                     break;
                 case AssetsManagementContext.CLAIM:
@@ -198,8 +196,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         const oldAvailable = parseFloat(farmingData.carbon_credits.offset.available.displayable_value);
                         farmingData.carbon_credits.offset.total.displayable_value = oldTotal + (amount  * parseInt(tonEquivalent));
                         farmingData.carbon_credits.offset.available.displayable_value = oldAvailable - (amount  * parseInt(tonEquivalent));
-
-                        localStorage.setItem(farmingDataKey, JSON.stringify(farmingData));
                     }
                     break;
             }

@@ -29,6 +29,8 @@ export interface MintProps {
     min_value_per_tx: any,
     max_value_per_tx: any,
     max_value: any,
+    total_value: any,
+    remaining_value: any,
     reserved_value: any,
     payment_token_address: string
 }
