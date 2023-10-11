@@ -100,14 +100,12 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     }, [txHash]);
 
     return (
-        <div className="w-full flex flex-wrap" >
-            <div className="flex justify-start items-center flex-wrap col-span-4 md:col-span-1">
-                <div className="relative group">
-                    {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
-                    {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={project.id} /></div>}
-                    {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-opacityLight-80 rounded-full text-neutral-900 text-center px-2 py-1 font-bold text-xs border border-opacityLight-90">x{project.tokens.length}</div>}
-                    {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-opacityLight-80 rounded-full text-neutral-900 text-center px-2 py-1 font-bold text-xs border border-opacityLight-90">{shortenNumber(shares)} {shares > 1 ? 'shares' : 'share'}</div>}
-                </div>
+        <div className="w-full" >
+            <div className="relative group">
+                {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
+                {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={project.id} /></div>}
+                {toMigrate && project.tokens.length > 1 && <div className="font-inter absolute top-6 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-opacityLight-80 rounded-full text-neutral-900 text-center px-2 py-1 font-bold text-xs border border-opacityLight-90">x{project.tokens.length}</div>}
+                {!toMigrate && <div className="font-inter absolute top-4 left-6 md:top-4 md:left-4 xl:top-4 xl:left-4 bg-opacityLight-80 rounded-full text-neutral-900 text-center px-2 py-1 font-bold text-xs border border-opacityLight-90">{shortenNumber(shares)} {shares > 1 ? 'shares' : 'share'}</div>}
             </div>
             {toMigrate && isMigrating === false && <GreenButton className="w-full mt-2" onClick={() => handleMigrate(project)}>Migrate assets</GreenButton> }
             {toMigrate && isMigrating === true && <GreenButton className="w-full mt-2 cursor-not-allowed bg-greenish-800 text-neutral-300 hover:bg-greenish-800" disabled={true}>Migrating...</GreenButton> }

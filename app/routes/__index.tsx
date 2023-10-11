@@ -35,7 +35,7 @@ export default function Index() {
                 }
                 <Header toggleMenu={toggleMenu} menuOpen={menuOpen} />
             </header>
-            <nav className='hidden lg:block z-20'>
+            <nav className='hidden lg:block z-50'>
                 <div className="sticky top-0 left-0 lg:w-[280px]">
                     <NavMenu closeMenu={closeMenu} />
                 </div>

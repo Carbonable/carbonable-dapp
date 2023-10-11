@@ -5,8 +5,9 @@ export default function SVGMetadata({svg, id}: {svg: any, id: string}) {
     useEffect(() => {
         // Function to modify SVGs
         function modifySVG(containerId: string) {
-            const container = SVG().addTo(`#${containerId}`);
-            const svgToDisplay = container.svg(svg, true);
+            const selector = '#' + containerId;
+            const container = SVG().addTo(selector);
+            const svgToDisplay = container.svg(svg, true); // Use provided SVG content
             const prefix = containerId + '_';
 
             svgToDisplay.find('[id]').each((element) => {
@@ -38,7 +39,8 @@ export default function SVGMetadata({svg, id}: {svg: any, id: string}) {
                 }
             });
         }
-
+        
+        console.log(svg)
         // Modify the SVGs
         modifySVG(`svg_${id}`);
     }, []);
