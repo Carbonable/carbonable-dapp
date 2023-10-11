@@ -40,7 +40,6 @@ export default function SVGMetadata({svg, id}: {svg: any, id: string}) {
             });
         }
         
-        console.log(svg)
         // Modify the SVGs
         modifySVG(`svg_${id}`);
     }, []);

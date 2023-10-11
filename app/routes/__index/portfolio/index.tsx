@@ -9,18 +9,18 @@ import PortfolioState from "~/components/Portfolio/PortfolioState";
 
 export const meta: V2_MetaFunction = () => {
     return [
-        {title: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
-        { name: "description", content: "Manage your assets and badges from your Carbonable portfolio."},
+        { title: "Portfolio - Carbonable - Provable Nature Restoration" },
+        { name: "description", content:"Nature-based Solutions Portfolio Management reinvented. Source, Fund, Drive, and Monitor Provable Ecological Restoration. Powered by Blockchain Technology."},
         { name: "image", content: "https://carbonable.github.io/socials/social.jpg"},
-        { property: 'og:url', content: "https://app.carbonable.io/portfolio"},
+        { property: 'og:url', content:"https://app.carbonable.io"},
         { property: 'og:type', content: "website"},
-        { property: 'og:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
-        { property: 'og:description', content: "Manage your assets and badges from your Carbonable portfolio."},
+        { property: 'og:title', content: "Carbonable - Provable Nature Restoration"},
+        { property: 'og:description', content: "Nature-based Solutions Portfolio Management reinvented. Source, Fund, Drive, and Monitor Provable Ecological Restoration. Powered by Blockchain Technology."},
         { property: 'og:image', content: "https://carbonable.github.io/socials/social.jpg"},
         { property: 'twitter:domain', content: "carbonable.io"},
-        { property: 'twitter:url', content: "https://app.carbonable.io/portfolio"},
-        { property: 'twitter:title', content: "Portfolio - Carbonable - Web3 powered end-to-end carbon removal platform"},
-        { property: 'twitter:description', content: "Manage your assets and badges from your Carbonable portfolio."},
+        { property: 'twitter:url', content: "https://app.carbonable.io"},
+        { property: 'twitter:title', content: "Carbonable - Provable Nature Restoration"},
+        { property: 'twitter:description', content: "Nature-based Solutions Portfolio Management reinvented. Source, Fund, Drive, and Monitor Provable Ecological Restoration. Powered by Blockchain Technology."},
         { property: 'twitter:card', content: "summary_large_image"},
         { property: 'twitter:image', content: "https://carbonable.github.io/socials/social.jpg"}
     ]
