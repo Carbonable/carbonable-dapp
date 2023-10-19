@@ -1,6 +1,13 @@
 import SVGMetadata from "../Images/SVGMetadata";
 
-export default function ProjectIdentification({id, name, imageSrc, slug, isRawSVG}: {id: string, name: string, imageSrc: string, slug: string, isRawSVG: boolean}) {
+export default function ProjectIdentification({id, name, imageSrc, slug, isRawSVG}: {id: string, name: string, imageSrc: string|undefined, slug: string, isRawSVG: boolean}) {
+    if (imageSrc === undefined) {
+        return (
+            <div className="flex items-center justify-start w-full px-4 md:px-0">
+            </div>
+        )
+    }    
+
     return (
         <div className="flex items-center justify-start w-full px-4 md:px-0">
             <div className="w-3/12">
