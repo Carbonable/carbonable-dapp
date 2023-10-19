@@ -25,7 +25,6 @@ export const loader: LoaderFunction = async ({
     try {
         const selectedNetwork = process.env.NETWORK;
         const slug = params.slug;
-
         const data = await fetch(`${process.env.INDEXER_URL}/projects/${slug}`, {});
         const project = await data.json();
 
@@ -64,7 +63,7 @@ export default function FarmingPage() {
     const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     
-    const [imageSrc, setImageSrc] = useState("");
+    const [imageSrc, setImageSrc] = useState(undefined);
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {

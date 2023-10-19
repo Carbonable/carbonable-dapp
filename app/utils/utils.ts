@@ -114,7 +114,7 @@ export async function getImageUrlFromMetadata(url: string): Promise<any> {
         };
     }
 
-    if (url.startsWith("<svg")) {
+    if (url.startsWith("<svg") || url.startsWith("data:image/svg+xml")) {
         return { 
             imgUrl: url,
             isSvg: true
