@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { SVG } from '@svgdotjs/svg.js';
 
-export default function SVGMetadata({svg, id, overrideValues, area, carbonUnits}: {svg: any, id: string, overrideValues?: boolean, area?: string, carbonUnits?: string}) {
+export default function SVGMetadata({svg, id, area, carbonUnits}: {svg: any, id: string, area?: string, carbonUnits?: string}) {
     useEffect(() => {
         // Function to modify SVGs
         function modifySVG(containerId: string) {
@@ -44,7 +44,7 @@ export default function SVGMetadata({svg, id, overrideValues, area, carbonUnits}
                 }
             });
 
-            if (overrideValues === true && area && carbonUnits) {
+            if (area && carbonUnits) {
                 const assetAreaTspan = svgToDisplay.findOne('#' + prefix + 'asset_area');
 
                 if (assetAreaTspan) {
