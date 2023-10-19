@@ -172,7 +172,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             return {
                 calls: {
                     contractAddress: contracts?.offseter,
-                    entrypoint: 'claimAll',
+                    entrypoint: 'claim_all',
                     calldata: []
                 },
                 metadata: {
