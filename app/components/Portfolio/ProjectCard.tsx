@@ -52,7 +52,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
         calls.push({ 
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 1]
+            calldata: [project.migrator_address, 1]
         });
 
         project.tokens.forEach((token: any) => {
@@ -60,7 +60,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
         });
 
         calls.push({
-            contractAddress: project.minter_address,
+            contractAddress: project.migrator_address,
             entrypoint: 'migrate',
             calldata: migrateData
         });
@@ -68,7 +68,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
         calls.push({
             contractAddress: project.address,
             entrypoint: 'setApprovalForAll',
-            calldata: [project.minter_address, 0]
+            calldata: [project.migrator_address, 0]
         });
         
         write({});
