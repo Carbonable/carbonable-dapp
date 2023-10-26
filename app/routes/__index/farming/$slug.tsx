@@ -295,7 +295,7 @@ export default function FarmingPage() {
                                     />
                                 </div>
                             </div>
-                            <div className="w-full md:w-9/12 md:pl-8">
+                            <div className="w-full md:w-9/12 md:pl-12">
                                 <div className="mt-12 md:mt-0">
                                     <FarmDetail 
                                         type={FarmType.YIELD} 
@@ -311,6 +311,7 @@ export default function FarmingPage() {
                                         total={carbonCredits?.offset.total.displayable_value && tonEquivalent !== '0' ? shortenNumber(parseFloat(carbonCredits?.offset.total.displayable_value) / parseInt(tonEquivalent)) : "-"} 
                                         available={carbonCredits?.offset.available.displayable_value && tonEquivalent !== '0' ? shortenNumberWithDigits(parseFloat(carbonCredits?.offset.available.displayable_value) / parseInt(tonEquivalent), 6) : "-"}
                                         canClaim={carbonCredits ? parseFloat(carbonCredits?.offset.available.displayable_value) > parseFloat(carbonCredits?.min_to_claim.displayable_value): false}
+                                        minClaim={carbonCredits ? (parseInt(carbonCredits?.min_to_claim.displayable_value) / parseInt(tonEquivalent)).toString() : undefined}
                                         handleClaim={handleClaimOffset} 
                                     />
                                 </div>
@@ -346,9 +347,11 @@ export default function FarmingPage() {
             <AssetsManagementDialog 
                 isOpen={isAssetsManagementDialogOpen} 
                 setIsOpen={setIsAssetsManagementDialogOpen} 
-                context={context} tab={tab} 
+                context={context} 
+                tab={tab} 
                 assetsAllocation={assetsAllocation} 
-                contracts={contracts} project={project} 
+                contracts={contracts} 
+                project={project} 
                 carbonCredits={carbonCredits} 
                 tonEquivalent={tonEquivalent} 
                 unitPrice={unitPrice} 

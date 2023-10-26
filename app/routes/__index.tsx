@@ -8,7 +8,7 @@ import Notification from "~/components/Common/Notification";
 
 export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock } = useNotifications();
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip } = useNotifications();
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);
@@ -41,7 +41,7 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
+                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
                 { notifs.map((notif) => (
                     <Notification key={notif.txHash} notif={notif} />
                 ))}

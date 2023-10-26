@@ -85,21 +85,6 @@ export default function FarmingIndex() {
             filter: 'All',
             active: true,
             isDisabled: false
-        },
-        {
-            filter: 'My projects',
-            active: false,
-            isDisabled: true
-        },
-        {
-            filter: 'Undeposited',
-            active: false,
-            isDisabled: true
-        },
-        {
-            filter: 'Claimable',
-            active: false,
-            isDisabled: true
         }
     ];
 
@@ -111,17 +96,17 @@ export default function FarmingIndex() {
         <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-farming bg-cover bg-[50%_22%] rounded-3xl p-8 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
                 <div className="flex items-start justify-center flex-wrap w-full md:w-5/12 md:justify-start">
-                    <div className="font-trash uppercase w-full lg:text-lg text-center md:text-left">My farming assets</div>
-                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold"><span className='mr-2 text-3xl'>$</span>{myFarmingAssets}</div>
+                    <div className="uppercase w-full lg:text-2xl text-center md:text-left font-bold">My farming assets</div>
+                    <div className="text-4xl mt-4 text-neutral-200 font-bold"><span className='mr-2 text-3xl'>$</span>{myFarmingAssets}</div>
                 </div>
                 <div className="flex items-start justify-center flex-wrap w-full mt-8 md:w-5/12 md:mt-0 md:justify-start">
-                    <div className="font-trash uppercase w-full lg:text-lg text-center md:text-left">Claimable assets</div>
-                    <div className="font-americana text-4xl mt-4 text-neutral-200 font-extrabold flex items-center"><span className='mr-2 text-3xl'>$</span>{claimableAssets}<span className="font-inter font-extralight text-lg px-4">|</span><span className='mr-2 text-3xl'>t</span>{releasableAssets}</div>
+                    <div className="uppercase w-full font-bold lg:text-2xl text-center md:text-left">Claimable assets</div>
+                    <div className="text-4xl mt-4 text-neutral-200 font-bold flex items-center"><span className='mr-2 text-3xl'>$</span>{claimableAssets}<span className="font-inter font-extralight text-lg px-4">|</span><span className='mr-2 text-3xl'>t</span>{releasableAssets}</div>
                 </div>
                 <img src="/assets/images/common/logo-grey.svg" alt="Carbonable logo grey" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />
             </div>
             <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12 md:pl-6">
-                <div className="uppercase font-trash text-lg text-center md:text-left md:pl-1 lg:text-xl">Farming Projects</div>
+                <div className="uppercase text-xl font-bold text-center md:text-left md:pl-1 lg:text-xl">Farming Projects</div>
                 <div className="items-center justify-start mt-4">
                     {
                         filterButtons.map((button, index) => {

@@ -41,6 +41,7 @@ export default function App() {
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
   const [lastIndexerBlock, setLastIndexerBlock] = useState<number|undefined>();
+  const [displayPortfolioTootltip, setDisplayPortfolioTooltip] = useState(true);
 
   const lastBlockFetcher = useFetcher();
 
@@ -82,7 +83,7 @@ export default function App() {
       </head>
       <body>
         <StarknetProvider defautlNetwork={defautlNetwork} infuraApiKey={infuraApiKey} webWalletEnabled={webWalletEnabled} >
-          <Outlet context={{ notifs, setNotifs, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock }} />
+          <Outlet context={{ notifs, setNotifs, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
           <ScrollRestoration />
           <Scripts />
           <LiveReload />

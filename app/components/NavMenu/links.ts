@@ -12,14 +12,14 @@ export const links = [
         outsideLink: false
     },
     {
-        href: '/farming',
-        label: 'Farming',
+        href: '/portfolio',
+        label: 'Portfolio',
         isOpen: true,
         outsideLink: false
     },
     {
-        href: '/portfolio',
-        label: 'Portfolio',
+        href: '/farming',
+        label: 'Farming',
         isOpen: true,
         outsideLink: false
     },
