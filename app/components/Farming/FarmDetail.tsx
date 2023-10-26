@@ -1,19 +1,20 @@
-import SecondaryButton from "../Buttons/ActionButton"
-import KPI from "./FarmKPI"
+import { GreenButton } from "../Buttons/ActionButton";
+import KPI from "./FarmKPI";
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 export const enum FarmType {
     YIELD = "YIELD",
     OFFSET = "OFFSET"
 }
 
-export default function FarmDetail({type, total, available, canClaim, handleClaim}: {type: FarmType, total: string, available: string, canClaim: boolean, handleClaim: () => void }) {
+export default function FarmDetail({type, total, available, canClaim, minClaim, handleClaim}: {type: FarmType, total: string, available: string, canClaim: boolean, minClaim?: string, handleClaim: () => void }) {
     return (
         <div className="w-full flex flex-wrap items-center">
             <div className="w-full md:w-3/12">
                 <FarmTypeTitle type={type} />
             </div>
             <div className="w-full mt-4 md:mt-0 md:w-9/12">
-                <FarmTypeDetail type={type} total={total} available={available} canClaim={canClaim} handleClaim={handleClaim} />
+                <FarmTypeDetail type={type} total={total} available={available} canClaim={canClaim} minClaim={minClaim} handleClaim={handleClaim} />
             </div>
         </div>
     )
@@ -21,13 +22,13 @@ export default function FarmDetail({type, total, available, canClaim, handleClai
 
 function FarmTypeTitle({type}: {type: FarmType}) {
     return (
-        <div className={`${type === FarmType.YIELD ? "border-l-yieldBorder text-green" : "border-l-offsetBorder text-blue"} border-l rounded-full py-4 pl-8 uppercase font-inter font-semibold`}>
+        <div className={`${type === FarmType.YIELD ? " text-green" : " text-blue"} py-4 pl-8 uppercase font-inter font-semibold`}>
             {type === FarmType.YIELD ? "Yield" : "Offset"}
         </div>
     )
 }
 
-function FarmTypeDetail({type, total, available, canClaim, handleClaim}: {type:FarmType, total: string, available: string, canClaim: boolean, handleClaim: () => void}) {
+function FarmTypeDetail({type, total, available, canClaim, minClaim, handleClaim}: {type:FarmType, total: string, available: string, canClaim: boolean, minClaim?: string, handleClaim: () => void}) {
     return (
         <div className="w-full grid grid-cols-12 gap-1 rounded-2xl border border-neutral-500 bg-opacityLight-5 px-3 py-3 items-center lg:px-6">
             <div className="text-left col-span-4">
@@ -37,8 +38,18 @@ function FarmTypeDetail({type, total, available, canClaim, handleClaim}: {type:F
                 <KPI title="Available" value={available} unit={type === FarmType.YIELD ? "$" : "CC"} large={false} />
             </div>
             <div className="text-right col-span-3">
-                {canClaim && <SecondaryButton onClick={handleClaim} className="w-fit text-neutral-200">Claim</SecondaryButton>}
-                {canClaim === false && <SecondaryButton className="w-fit cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Claim</SecondaryButton>}
+            <Tooltip.Provider delayDuration={0}>
+                <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                        <span tabIndex={0}>
+                            <GreenButton disabled={canClaim === false} onClick={handleClaim} className="w-fit text-neutral-200 disabled:bg-transparent disabled:border disabled:border-neutral-600 disabled:hover:bg-transparent disabled:text-neutral-500 disabled:pointer-events-none">Claim</GreenButton>
+                        </span>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content className="px-2 py-1 bg-neutral-800 border border-neutral-600 rounded-lg text-sm text-neutral-200 font-light">
+                        A {minClaim ? minClaim + ' CC' : '0.01$'} min. is required before claiming.
+                    </Tooltip.Content>
+                </Tooltip.Root>
+            </Tooltip.Provider>
             </div>
         </div>
     )

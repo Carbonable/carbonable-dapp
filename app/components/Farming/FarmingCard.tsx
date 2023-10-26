@@ -13,6 +13,7 @@ import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import SVGMetadata from "../Images/SVGMetadata";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const enum CardLocation {
     HEADER = "header",
@@ -241,7 +242,15 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 </div>
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
-                <ActionButtons canClaimYield={canClaimYield} canClaimOffset={canClaimOffset} mustMigrate={mustMigrate} handleClaimYield={handleClaimYield} handleClaimOffset={handleClaimOffset} />
+                <ActionButtons 
+                    canClaimYield={canClaimYield} 
+                    canClaimOffset={canClaimOffset} 
+                    mustMigrate={mustMigrate} 
+                    handleClaimYield={handleClaimYield} 
+                    handleClaimOffset={handleClaimOffset} 
+                    undepositedCount={undepositedCount}
+                    slug={project.slug}
+                />
             </div>
         </div>
     )
@@ -261,7 +270,7 @@ function printFarmingColorClass(color: Color, location: CardLocation) {
 function FarmStatusComponent({status}: {status: string}) {
     switch (status) {
         case FarmStatus.LIVE:
-            return <Tag text="Live" color="text-greenish-500" />;
+            return <Tag text="Live" color="text-neutral-200" />;
         case FarmStatus.UPCOMING:
             return <Tag text="Upcoming" color="text-blue-light" />;
         case FarmStatus.PAUSED:
@@ -291,7 +300,8 @@ function Tag({text, color, count, animatedText}: {text: string, color: string, c
     )
 }
 
-function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimYield, handleClaimOffset}: {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimYield: () => void, handleClaimOffset: () => void}) {
+function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimYield, handleClaimOffset, undepositedCount, slug}: 
+    {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimYield: () => void, handleClaimOffset: () => void, undepositedCount: number, slug: string}) {
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
@@ -309,12 +319,28 @@ function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimY
             )
         }
 
+        if (canClaimYield || canClaimOffset) {
+            return (
+                <div className="flex gap-x-2">
+                    <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield} onClick={handleClaimYield}>Claim Yield</FarmingButton>
+                    <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset} onClick={handleClaimOffset}>Claim Offset</FarmingButton>
+                </div>
+            )
+        }
+
+        if (undepositedCount > 0) {
+            return (
+                <FarmingButton className="w-full rounded-xl flex items-center justify-center" onClick={() => {navigate("/farming/" + slug)}}>
+                    Deposit assets
+                    <ArrowRightIcon className="w-4 ml-2" />
+                </FarmingButton>
+            )
+        }
+
         return (
             <div className="flex gap-x-2">
-                {canClaimYield && <FarmingButton className="w-1/2 rounded-xl" onClick={handleClaimYield}>Claim Yield</FarmingButton>}
-                {canClaimYield === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield}>Claim Yield</FarmingButton>}
-                {canClaimOffset && <FarmingButton className="w-1/2 rounded-xl" onClick={handleClaimOffset}>Claim Offset</FarmingButton>}
-                {canClaimOffset === false && <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset}>Claim Offset</FarmingButton>}
+                <FarmingButton className="w-1/2 rounded-xl" disabled={true}>Claim Yield</FarmingButton>
+                <FarmingButton className="w-1/2 rounded-xl" disabled={true}>Claim Offset</FarmingButton>
             </div>
         )
     }

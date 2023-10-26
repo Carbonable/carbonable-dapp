@@ -6,6 +6,7 @@ import _ from "lodash";
 import { shortenNumber } from "~/utils/utils";
 import { useNotifications } from "~/root";
 import PortfolioState from "~/components/Portfolio/PortfolioState";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export const meta: V2_MetaFunction = () => {
     return [
@@ -44,7 +45,7 @@ export default function Portfolio() {
     const fetcher = useFetcher();
     const [reloadData, setReloadData] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
-    const { setMustReloadMigration } = useNotifications();
+    const { setMustReloadMigration, displayPortfolioTootltip, setDisplayPortfolioTooltip } = useNotifications();
 
     useEffect(() => {
         // Load portfolio data when user connects wallet or changes account
@@ -94,7 +95,7 @@ export default function Portfolio() {
     }, [fetcher, isConnected]);
 
     return (
-        <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
+        <div className="relative mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-portfolio bg-cover bg-bottom rounded-3xl px-4 py-6 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
                 <div className="grid grid-cols-3 gap-3 md:grid-cols-none md:grid-flow-col md:auto-cols-max md:gap-6 xl:gap-16">
                     <KPI title="Invested Amount" value={`$${investedAmount}`} />
@@ -111,6 +112,13 @@ export default function Portfolio() {
                 setReloadData={setReloadData} 
                 setRefreshData={setRefreshData}
              />
+             {displayPortfolioTootltip && <div className="fixed flex justify-center left-0 right-0 items-center bottom-8">
+                <div className="px-4 py-2 bg-neutral-800 border border-neutral-600 rounded-lg text-sm text-neutral-200 font-light flex items-center">
+                    A detailled portfolio view is under construction
+                    <XMarkIcon className="w-4 h-4 ml-2 cursor-pointer hover:text-neutral-50" onClick={() => setDisplayPortfolioTooltip(false)} />
+                </div>
+             </div>
+            }
         </div>
     )
 }

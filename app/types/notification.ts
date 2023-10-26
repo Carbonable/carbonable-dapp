@@ -18,5 +18,7 @@ export type ContextType = {
     mustReloadFarmingPage: boolean,
     setMustReloadFarmingPage: (b: boolean) => void,
     lastIndexerBlock: number,
+    displayPortfolioTootltip: boolean,
+    setDisplayPortfolioTooltip: (b: boolean) => void,
 };
   
