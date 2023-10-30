@@ -29,18 +29,18 @@ export default function Index() {
             </div>
             <header className="pb-2 fixed top-0 w-full bg-neutral-800 z-50">
                 { defautlNetwork === 'testnet' && 
-                    <div className="w-full lg:w-[calc(100%_-_280px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[280px]">
+                    <div className="w-full lg:w-[calc(100%_-_222px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[222px]">
                         You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>
                     </div>
                 }
                 <Header toggleMenu={toggleMenu} menuOpen={menuOpen} />
             </header>
             <nav className='hidden lg:block z-50'>
-                <div className="sticky top-0 left-0 lg:w-[280px]">
+                <div className="fixed top-0 left-0 lg:w-[222px]">
                     <NavMenu closeMenu={closeMenu} />
                 </div>
             </nav>
-            <main className='w-full mt-[110px]' id="page-wrap">
+            <main className='w-[calc(100%_-_222px)] ml-[222px] mt-[110px]' id="page-wrap">
                 <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
                 { notifs.map((notif) => (
                     <Notification key={notif.txHash} notif={notif} />

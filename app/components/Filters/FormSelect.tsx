@@ -25,7 +25,7 @@ export default function FormSelect({values, selectedValue, action}: any) {
       <select.Form method="post" action={action} >
         <Listbox value={selected} onChange={handleSelect}>
           <div className="relative mt-1 font-inter">
-            <Listbox.Button className={({open}) => `min-w-max flex items-center justify-start w-full cursor-pointer rounded-lg text-neutral-300 py-2 pl-4 pr-10 text-left focus:outline-none hover:text-neutral-100 hover:bg-opacityLight-5 ${open ? 'text-neutral-100 bg-opacityLight-5' : ''}`}>
+            <Listbox.Button className={({open}) => `min-w-max flex items-center justify-start w-full cursor-pointer rounded-lg text-neutral-300 py-2 pl-4 pr-10 text-left focus:outline-none hover:text-neutral-100 bg-opacityLight-5 hover:bg-opacityLight-10 ${open ? 'text-neutral-100 bg-opacityLight-5 hover:bg-opacityLight-10' : ''}`}>
               <span className="block truncate">{selected.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon

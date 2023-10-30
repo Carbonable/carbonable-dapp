@@ -3,36 +3,43 @@ export const links = [
         href: "'/dashboard'",
         label: 'Dashboard',
         isOpen: false,
-        outsideLink: false
+        outsideLink: false,
+        icon: 'dashboard'
     },
     {
         href: '/launchpad',
         label: 'Launchpad',
         isOpen: true,
-        outsideLink: false
+        outsideLink: false,
+        icon: 'launchpad'
     },
     {
         href: '/portfolio',
         label: 'Portfolio',
         isOpen: true,
-        outsideLink: false
+        outsideLink: false,
+        icon: 'portfolio'
     },
     {
         href: '/farming',
         label: 'Farming',
         isOpen: true,
-        outsideLink: false
-    },
-    {
-        href: 'https://carbonable.io/#simulator',
-        label: 'Simulator',
-        isOpen: true,
-        outsideLink: true
+        outsideLink: false,
+        icon: 'farming'
     },
     {
         href: '/impact',
         label: 'Impact',
         isOpen: false,
-        outsideLink: false
+        outsideLink: false,
+        icon: 'impact'
     }
-]
+];
+
+export const linkSimulator = {
+    href: 'https://carbonable.io/#simulator',
+    label: 'Simulator',
+    isOpen: true,
+    outsideLink: true,
+    icon: 'simulator'
+};
