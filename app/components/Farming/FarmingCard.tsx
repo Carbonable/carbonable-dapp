@@ -27,7 +27,6 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const { isConnected, address } = useAccount();
     const unconnectedFetcher = useFetcher();
     const connectedUserFetcher = useFetcher();
-    const [apr, setApr] = useState('-');
     const [tvl, setTvl] = useState('-');
     const [totalRemoval, setTotalRemoval] = useState('-');
     const [myStake, setMyStake] = useState('-');
@@ -65,7 +64,6 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             
             if (data === undefined) { return; }
 
-            isNaN(parseFloat(data?.apr)) ? setApr('-') : setApr(shortenNumber(parseFloat(data?.apr)));
             setTvl(shortenNumber(parseFloat(data?.tvl.displayable_value)));
             setTotalRemoval(shortenNumber(parseFloat(data?.total_removal.displayable_value) / GRAMS_PER_TON));
         }
@@ -194,10 +192,6 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                             <div className="text-left">
                                 <div className="font-inter text-neutral-100">My stake</div>
                                 <div className="font-inter text-neutral-300 mt-1"><span className='mr-[2px]'>$</span>{myStake}</div>
-                            </div>
-                            <div className="text-right">
-                                <div className="font-inter text-neutral-100">Farming APR</div>
-                                <div className="font-inter text-neutral-300 mt-1">{apr}<span className='ml-[2px]'>%</span></div>
                             </div>
                         </div>
                     </div>
