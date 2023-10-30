@@ -7,7 +7,7 @@ export default function NavMenuMobile({menuOpen, handleStateChange, closeMenu, c
     return ( 
         <Menu 
             customBurgerIcon={ false }
-            customCrossIcon={ canClose ? <XMarkIcon/> : false }
+            customCrossIcon={ canClose ? <XMarkIcon className="text-neutral-200" /> : false }
             pageWrapId={ "page-wrap" }
             outerContainerId={"outer-container"}
             isOpen={menuOpen}
