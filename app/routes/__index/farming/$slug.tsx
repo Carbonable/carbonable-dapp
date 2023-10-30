@@ -262,13 +262,6 @@ export default function FarmingPage() {
                                     large={true} 
                                 />
                             </div>
-                            <div className="col-span-2 md:col-span-2">
-                                <KPI 
-                                    title="Current APR" 
-                                    value={overview?.apr === 'n/a' ? '- %' : `${shortenNumber(overview?.apr)}%`} 
-                                    large={true}
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>
