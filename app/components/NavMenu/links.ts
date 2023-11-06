@@ -37,7 +37,7 @@ export const links = [
 ];
 
 export const linkSimulator = {
-    href: 'https://carbonable.io/#simulator',
+    href: 'https://simulator.carbonable.io',
     label: 'Simulator',
     isOpen: true,
     outsideLink: true,
