@@ -17,12 +17,17 @@ export function StarknetProvider({ children, defautlNetwork, infuraApiKey, webWa
       }, [defautlNetwork]);
     
       const providers = [infuraProvider({ apiKey: infuraApiKey })];
-      const connectors = useMemo(() => [
+      const connectors = useMemo(() => webWalletEnabled ? [
         braavos(),
         argent(),
         new WebWalletConnector({ url: "https://web.argent.xyz" }),
         new ArgentMobileConnector(),
-      ], []);
+      ] : 
+      [
+        braavos(),
+        argent()
+      ]
+      , []);
   
     return (
       <StarknetConfig
