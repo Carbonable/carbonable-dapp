@@ -7,7 +7,7 @@ import { useAccount, useContractWrite } from "@starknet-react/core";
 import _ from "lodash";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
-import { TransactionStatus, num } from "starknet";
+import { type Call, TransactionStatus, num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
 export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData}: 
@@ -16,7 +16,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState<number | null>(1);
     const [disclaimer, setDisclaimer] = useState("");
-    const [callData, setCallData] = useState<any>({});
+    const [calls, setCalls] = useState<Call[] | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
@@ -57,7 +57,8 @@ export default function Management({context, tab, assetsAllocation, contracts, p
         setAmount(available);
     }
 
-    const { write, data: dataExecute } = useContractWrite(callData);
+    const { write, data: dataExecute, error, status, variables } = useContractWrite({ calls });
+    console.log(calls, error, status, variables);
 
     const handleAction = useCallback(() => {
 
@@ -67,11 +68,16 @@ export default function Management({context, tab, assetsAllocation, contracts, p
 
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
-                setCallData((cd: any) => {
-                    const callsData = [];
+                setCalls((cd: any) => {
+                    console.log(cd)
+                    const callsData: Call[] = [];
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
                     let amountDeposited = 0;
+
+                    if (contracts?.project === undefined || contracts?.yielder === undefined || contracts?.offseter === undefined) {
+                        return undefined;
+                    }
 
                     // We deposit the value of the tokens from the smallest to the biggest until we reach the amount the user wants to deposit
                     for (const token of filteredTokens) {
@@ -95,52 +101,47 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         });
                     }
 
-                    return {
-                        calls: callsData,
-                        metadata: {
-                            method: 'Deposit',
-                            message: `Deposit in ${tab} farm`
-                        }
-                    }
+                    return callsData;
                 });
-        
-                write();
                 break;
             case AssetsManagementContext.WITHDRAW:
-                setCallData((cd: any) => {
+                setCalls((cd: any) => {
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
-                    return {
-                        calls: {
-                            contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
-                            entrypoint: tokens.length === 0 ? 'withdraw_to' : 'withdraw_to_token',
-                            calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
-                        },
-                        metadata: {
-                            method: 'Withdraw',
-                            message: `Withdraw from ${tab} farm`
-                        }
+
+                    if (contracts?.project === undefined || contracts?.yielder === undefined || contracts?.offseter === undefined) {
+                        return undefined;
                     }
+
+                    return [{
+                        contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
+                        entrypoint: tokens.length === 0 ? 'withdraw_to' : 'withdraw_to_token',
+                        calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
+                    }];
+
                 });
-                write();
                 break;
             case AssetsManagementContext.CLAIM:
-                setCallData((cd: any) => {
-                    return {
-                        calls: {
-                            contractAddress: contracts?.offseter,
-                            entrypoint: 'claim',
-                            calldata: [amount * parseInt(tonEquivalent), 0]
-                        },
-                        metadata: {
-                            method: 'Claim',
-                            message: `Claim from ${tab} farm`
-                        }
+                setCalls((cd: any) => {
+
+                    if (contracts?.project === undefined || contracts?.offseter === undefined) {
+                        return undefined;
                     }
+
+                    return [{
+                        contractAddress: contracts?.offseter,
+                        entrypoint: 'claim',
+                        calldata: [amount * parseInt(tonEquivalent), 0]
+                    }];
                 });
-                write();
                 break;
         }
-    }, [amount, tab, context]);
+    }, [amount, tab, context, write, contracts, assetsAllocation, tonEquivalent]);
+
+    useEffect(() => {
+        if (calls === undefined) return;
+        
+        write();
+    }, [calls]);
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");

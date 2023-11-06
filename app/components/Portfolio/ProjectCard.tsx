@@ -1,6 +1,6 @@
 import { useAccount, useContractWrite } from "@starknet-react/core";
 import { useEffect, useState } from "react";
-import { TransactionStatus, num } from "starknet";
+import { type Call, TransactionStatus, num } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber } from "~/utils/utils";
@@ -13,7 +13,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     const shares = walletShares + parseFloat(project.total_deposited_value?.displayable_value) ?? 0;
     const [imageSrc, setImageSrc] = useState<string>("");
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
-    const calls: any = [];
+    const calls: Call[] = [];
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
@@ -47,7 +47,6 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     const { write, data: dataExecute } = useContractWrite({ calls });
 
     const handleMigrate = (project: any) => {
-        console.log(project)
         const migrateData = [project.tokens.length];
 
         calls.push({ 

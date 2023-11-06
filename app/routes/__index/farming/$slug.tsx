@@ -13,7 +13,7 @@ import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber, shortenNumberW
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
-import { TransactionStatus, num } from "starknet";
+import { Call, TransactionStatus, num } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
@@ -58,7 +58,7 @@ export default function FarmingPage() {
     const [mustMigrate, setMustMigrate] = useState(false);
     const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
    
-    const [callData, setCallData] = useState<any>({});
+    const [calls, setCalls] = useState<Call[]>([]);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
@@ -154,7 +154,7 @@ export default function FarmingPage() {
         }
     }, [portfolio, project.name]);
 
-    const { write, data: dataExecute } = useContractWrite(callData);
+    const { write, data: dataExecute } = useContractWrite({calls});
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
@@ -185,22 +185,25 @@ export default function FarmingPage() {
     }, [txHash]);
 
     const handleClaimYield = async () => {
-        setCallData((cd: any) => {
+        setCalls((cd: any) => {
 
-            return {
-                calls: {
+            if (contracts?.yielder === undefined) { return []; }
+
+            return [
+                {
                     contractAddress: contracts?.yielder,
                     entrypoint: 'claim',
                     calldata: []
-                },
-                metadata: {
-                    method: 'Claim',
-                    message: `Claim from yield farm`
                 }
-            }
+            ]
         });
-        write();
     }
+
+    useEffect(() => {
+        if (calls === undefined) return;
+        
+        write();
+    }, [calls]);
 
     const handleClaimOffset = async () => {
         setContext(AssetsManagementContext.CLAIM);

@@ -8,7 +8,7 @@ import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { TransactionStatus, num } from "starknet";
+import { Call, TransactionStatus, num } from "starknet";
 import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -37,7 +37,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [canClaimYield, setCanClaimYield] = useState(false);
     const [canClaimOffset, setCanClaimOffset] = useState(false);
     const [imageSrc, setImageSrc] = useState("");
-    const [callData, setCallData] = useState<any>({});
+    const [calls, setCalls] = useState<Call[]>([]);
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
@@ -121,7 +121,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
         }
     }, [portfolio, project.name]);
 
-    const { write, data: dataExecute } = useContractWrite(callData);
+    const { write, data: dataExecute } = useContractWrite({calls});
 
     useEffect(() => {
         setTxHash(dataExecute ? dataExecute.transaction_hash : "");
@@ -147,41 +147,39 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
 
     const handleClaimYield = async () => {
         setClaimContext("Yield");
-        setCallData((cd: any) => {
+        setCalls((cd: any) => {
+            if (contracts === undefined) return ([]);
 
-            return {
-                calls: {
+            return [
+                {
                     contractAddress: contracts?.yielder,
                     entrypoint: 'claim',
                     calldata: []
-                },
-                metadata: {
-                    method: 'Claim',
-                    message: `Claim from yield farm`
                 }
-            }
+            ];
         });
-        write();
     }
 
     const handleClaimOffset = async () => {
         setClaimContext("Offset");
-        setCallData((cd: any) => {
+        setCalls((cd: any) => {
+            if (contracts === undefined) return ([]);
 
-            return {
-                calls: {
+            return [
+                {
                     contractAddress: contracts?.offseter,
                     entrypoint: 'claim_all',
                     calldata: []
-                },
-                metadata: {
-                    method: 'Claim',
-                    message: `Claim from offset farm`
                 }
-            }
+            ];
         });
-        write();
     }
+
+    useEffect(() => {
+        if (calls === undefined) return;
+          
+        write();
+    }, [calls]);
 
     return (
         <div className={`relative rounded-3xl p-[1px] max-w-md min-w-[350px] ${printFarmingColorClass(color, CardLocation.BORDER)} hover:brightness-[108%]`}>
