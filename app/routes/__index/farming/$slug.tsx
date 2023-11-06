@@ -199,7 +199,7 @@ export default function FarmingPage() {
                 }
             }
         });
-        write({});
+        write();
     }
 
     const handleClaimOffset = async () => {

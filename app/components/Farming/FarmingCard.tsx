@@ -161,7 +161,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 }
             }
         });
-        write({});
+        write();
     }
 
     const handleClaimOffset = async () => {
@@ -180,7 +180,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 }
             }
         });
-        write({});
+        write();
     }
 
     return (

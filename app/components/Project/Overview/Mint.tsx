@@ -113,7 +113,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
         if (!canBuy) { return }
         
         if (status === "connected") {
-            write({});
+            write();
             return;
         }
 
