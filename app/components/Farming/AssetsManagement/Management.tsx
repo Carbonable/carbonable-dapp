@@ -104,7 +104,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     }
                 });
         
-                write({});
+                write();
                 break;
             case AssetsManagementContext.WITHDRAW:
                 setCallData((cd: any) => {
@@ -121,7 +121,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         }
                     }
                 });
-                write({});
+                write();
                 break;
             case AssetsManagementContext.CLAIM:
                 setCallData((cd: any) => {
@@ -137,7 +137,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         }
                     }
                 });
-                write({});
+                write();
                 break;
         }
     }, [amount, tab, context]);

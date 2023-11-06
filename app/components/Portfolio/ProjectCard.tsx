@@ -47,6 +47,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     const { write, data: dataExecute } = useContractWrite({ calls });
 
     const handleMigrate = (project: any) => {
+        console.log(project)
         const migrateData = [project.tokens.length];
 
         calls.push({ 
@@ -71,7 +72,7 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
             calldata: [project.migrator_address, 0]
         });
         
-        write({});
+        write();
         return;
     }
 
