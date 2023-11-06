@@ -58,7 +58,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     }
 
     const { write, data: dataExecute, error, status, variables } = useContractWrite({ calls });
-    console.log(calls, error, status, variables);
 
     const handleAction = useCallback(() => {
 
@@ -69,7 +68,6 @@ export default function Management({context, tab, assetsAllocation, contracts, p
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
                 setCalls((cd: any) => {
-                    console.log(cd)
                     const callsData: Call[] = [];
                     const tokens = _.sortBy(assetsAllocation?.tokens, (token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals));
                     const filteredTokens = tokens.filter((token: any) => parseInt(num.hexToDecimalString(token.value.value)) * Math.pow(10, -token.value.value_decimals) > 0);
@@ -139,7 +137,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
 
     useEffect(() => {
         if (calls === undefined) return;
-        
+
         write();
     }, [calls]);
 
