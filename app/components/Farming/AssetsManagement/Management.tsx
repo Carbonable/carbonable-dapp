@@ -10,8 +10,8 @@ import { getStarkscanUrl, shortenNumberWithDigits } from "~/utils/utils";
 import { type Call, TransactionStatus, num } from "starknet";
 import { UINT256_DECIMALS } from "~/utils/constant";
 
-export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData}: 
-    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void }) {
+export default function Management({context, tab, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData}: 
+    {context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any}) {
 
     const [available, setAvailable] = useState(0);
     const [amount, setAmount] = useState<number | null>(1);
@@ -57,7 +57,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
         setAmount(available);
     }
 
-    const { write, data: dataExecute, error, status, variables } = useContractWrite({ calls });
+    const { write, data: dataExecute } = useContractWrite({ calls });
 
     const handleAction = useCallback(() => {
 
