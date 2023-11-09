@@ -16,8 +16,8 @@ export const enum AssetsManagementTabs {
     OFFSET = "Offset",
 }
 
-export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project, carbonCredits, tonEquivalent, unitPrice, farmingData, setFarmingData}: 
-    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any, setFarmingData: (d: any) => void}) {
+export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab, assetsAllocation, contracts, project, carbonCredits, tonEquivalent, unitPrice, farmingData}: 
+    {isOpen: boolean, setIsOpen: (b: boolean) => void, context: AssetsManagementContext, tab: AssetsManagementTabs, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any}) {
     const handleClose = () => {
         setIsOpen(false);
     }
@@ -69,7 +69,6 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab,
                                         tonEquivalent={tonEquivalent}
                                         unitPrice={unitPrice}
                                         farmingData={farmingData}
-                                        setFarmingData={setFarmingData}
                                     /> 
                                 }
                                 {context === AssetsManagementContext.CLAIM && 
@@ -84,7 +83,6 @@ export default function AssetsManagementDialog({isOpen, setIsOpen, context, tab,
                                         tonEquivalent={tonEquivalent}
                                         unitPrice={unitPrice}
                                         farmingData={farmingData}
-                                        setFarmingData={setFarmingData}
                                     />
                                 }
                             </div>

@@ -13,7 +13,7 @@ import { getImageUrlFromMetadata, getStarkscanUrl, shortenNumber, shortenNumberW
 import AssetsManagementDialog, { AssetsManagementContext, AssetsManagementTabs } from "~/components/Farming/AssetsManagement/Dialog";
 import _ from "lodash";
 import { GRAMS_PER_TON, UINT256_DECIMALS } from "~/utils/constant";
-import { Call, TransactionStatus, num } from "starknet";
+import { type Call, TransactionStatus, num } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
@@ -352,7 +352,6 @@ export default function FarmingPage() {
                 tonEquivalent={tonEquivalent} 
                 unitPrice={unitPrice} 
                 farmingData={farmingData}
-                setFarmingData={setFarmingData}
             />
         </>
     )
