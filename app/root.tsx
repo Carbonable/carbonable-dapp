@@ -27,16 +27,16 @@ export const loader: LoaderFunction = async () => {
   try {
     const defautlNetwork = process.env.NETWORK
     const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
-    const infuraApiKey = process.env.INFURA_API_KEY;
+    const rpcApiKey = process.env.RPC_API_KEY;
 
-    return json({ defautlNetwork, webWalletEnabled, infuraApiKey });
+    return json({ defautlNetwork, webWalletEnabled, rpcApiKey });
   } catch {
       return json([]);
   }
 };
 
 export default function App() {
-  const { defautlNetwork, webWalletEnabled, infuraApiKey } = useLoaderData();
+  const { defautlNetwork, webWalletEnabled, rpcApiKey } = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
@@ -82,7 +82,7 @@ export default function App() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
-        <StarknetProvider defautlNetwork={defautlNetwork} infuraApiKey={infuraApiKey} webWalletEnabled={webWalletEnabled} >
+        <StarknetProvider defautlNetwork={defautlNetwork} rpcApiKey={rpcApiKey} webWalletEnabled={webWalletEnabled} >
           <Outlet context={{ notifs, setNotifs, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
           <ScrollRestoration />
           <Scripts />

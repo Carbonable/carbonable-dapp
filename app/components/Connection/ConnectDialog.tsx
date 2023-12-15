@@ -58,8 +58,8 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                             { connectors.map((connector) => (
                                 <div key={connector.id + "_modal"}>
                                     {connector.available() && <div className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full" onClick={() => handleClick(connector)}>
-                                        {connector.icon.dark && <img className="w-8 h-8 mr-3" src={connector.icon.dark} alt={`Connect with ${connector.id}`} /> }
-                                        {!connector.icon.dark && <div className='w-8 h-8 mr-3' dangerouslySetInnerHTML={{__html: connector.icon }} />}
+                                        {!connector.icon.dark?.startsWith("<svg") && <img className="w-8 h-8 mr-3" src={connector.icon.dark} alt={`Connect with ${connector.id}`} /> }
+                                        {connector.icon.dark?.startsWith("<svg") && <div className='w-8 h-8 mr-3' dangerouslySetInnerHTML={{__html: connector.icon.dark }} />}
                                         <div className="uppercase font-inter">{connector.id === 'argentWebWallet' ? 'Argent Web Wallet' : connector.id}</div>
                                     </div>}
                                     {!connector.available() && <a className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full opacity-40 hover:opacity-100" href={connector.id === 'argentX' ? 'https://www.argent.xyz/argent-x/' : 'https://braavos.app/'} rel="noreferrer" target="_blank">
