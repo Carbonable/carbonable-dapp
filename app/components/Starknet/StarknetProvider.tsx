@@ -1,10 +1,10 @@
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { WebWalletConnector } from "starknetkit/webwallet";
-import { StarknetConfig, argent, braavos, infuraProvider } from "@starknet-react/core";
+import { StarknetConfig, argent, braavos, nethermindProvider } from "@starknet-react/core";
 import { devnet, goerli, mainnet } from "@starknet-react/chains";
 import { useMemo } from "react";
 
-export function StarknetProvider({ children, defautlNetwork, infuraApiKey, webWalletEnabled }: { children: React.ReactNode, defautlNetwork: string, infuraApiKey: string, webWalletEnabled: boolean }) {
+export function StarknetProvider({ children, defautlNetwork, rpcApiKey, webWalletEnabled }: { children: React.ReactNode, defautlNetwork: string, rpcApiKey: string, webWalletEnabled: boolean }) {
     const chains = useMemo(() => {
         if (defautlNetwork === 'mainnet') {
           return [mainnet];
@@ -16,7 +16,7 @@ export function StarknetProvider({ children, defautlNetwork, infuraApiKey, webWa
         return [goerli]
       }, [defautlNetwork]);
     
-      const providers = [infuraProvider({ apiKey: infuraApiKey })];
+      const provider = nethermindProvider({ apiKey: rpcApiKey });
       const connectors = useMemo(() => webWalletEnabled ? [
         braavos(),
         argent(),
@@ -32,7 +32,7 @@ export function StarknetProvider({ children, defautlNetwork, infuraApiKey, webWa
     return (
       <StarknetConfig
         chains={chains}
-        providers={providers}
+        provider={provider}
         connectors={connectors}
         autoConnect={true}
       >
