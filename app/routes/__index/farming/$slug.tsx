@@ -18,6 +18,7 @@ import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps, OverviewProps } from "~/interfaces/farming";
+import SVGMetadata from "~/components/Images/SVGMetadata";
 
 export const loader: LoaderFunction = async ({
     params
@@ -63,7 +64,7 @@ export default function FarmingPage() {
     const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
     
-    const [imageSrc, setImageSrc] = useState(undefined);
+    const [imageSrc, setImageSrc] = useState<string|undefined>(undefined);
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {
@@ -332,7 +333,12 @@ export default function FarmingPage() {
                             {project.name}
                         </div>
                         <NavLink to={`/launchpad/${slug}`} className="font-inter text-white font-light uppercase text-xs mt-4 inline-flex items-center border border-white rounded-full px-4 py-1 md:text-sm md:py-2 hover:bg-opacityLight-5">Go to project page &nbsp;&nbsp; <span className="text-base mt-[-3px]">&gt;</span></NavLink>
-                        <img src={imageSrc} alt={`${slug} NFT card`} className="absolute bottom-[-28px] right-2 w-28 rounded-[8.8%] md:w-[280px] md:bottom-[-80px] md:right-6 lg:w-[300px] lg:bottom-[-100px]" />
+                        <div className="absolute bottom-[-28px] right-2 w-28 rounded-[8.8%] md:w-[280px] md:bottom-[-80px] md:right-6 lg:w-[300px] lg:bottom-[-100px]">
+                            <div className="relative">
+                                {imageSrc && isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.name} NFT card`} className="w-full rounded-[8.8%]" /> }
+                                {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={`${project.id}_2`} /></div>}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
