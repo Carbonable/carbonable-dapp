@@ -40,7 +40,7 @@ export default function Index() {
                     <NavMenu closeMenu={closeMenu} />
                 </div>
             </nav>
-            <main className='w-[calc(100%_-_222px)] ml-[222px] mt-[110px]' id="page-wrap">
+            <main className='lg:w-[calc(100%_-_222px)] lg:ml-[222px] mt-[110px]' id="page-wrap">
                 <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
                 { notifs.map((notif) => (
                     <Notification key={notif.txHash} notif={notif} />
