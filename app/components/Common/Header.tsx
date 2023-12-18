@@ -19,7 +19,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
 
     return (
         <>
-            <div className="flex items-center justify-center mx-auto w-11/12 lg:w-full lg:px-4">
+            <div className="flex items-center justify-center mx-auto w-11/12 lg:w-full pt-4 lg:px-4">
                 <div className="w-2/12 overflow-hidden; lg:hidden lg:w-0">
                     {!menuOpen && <Bars3Icon className="w-10 border border-neutral-500 text-neutral-200 p-2 rounded-full md:w-12" onClick={toggleMenu} /> }
                 </div>
