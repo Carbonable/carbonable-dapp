@@ -10,13 +10,17 @@ assignees: ''
 **Description**
 ---
 A clear and concise description of the Feature
-
-**Acceptance Criteria**
----
-
-- [ ] Add and describe Acceptance Criteria
-- [ ] Add and describe Acceptance Criteria
+As [Persona]
+I want to [achieve this goal]
+In order to [meet this business requirement]
 
 **Additional context**
 ---
 Add any other context or screenshots about the feature request here.
+
+**Acceptance Criteria**
+---
+[Title of the scenario]
+Given [initial state/data]
+When [action]
+Then [result]

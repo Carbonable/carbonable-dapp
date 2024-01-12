@@ -11,19 +11,6 @@ assignees: ''
 ---
 A clear and concise description of what the bug is.
 
-**To Reproduce**
----
-Steps to reproduce the behavior:
-    [Step 1]
-    [Step 2]
-    [Step ...]
-
-example: 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
 **Behavior**
 ---
 **Expected behavior**
@@ -37,6 +24,19 @@ If applicable, add screenshots to help explain your problem.
 
 **Frequency**:
 If applicable, describe the frequency of the problem.
+
+**To Reproduce**
+---
+Steps to reproduce the behavior:
+    [Step 1]
+    [Step 2]
+    [Step ...]
+
+example: 
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
 **Additional context**
 ---
