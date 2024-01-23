@@ -130,12 +130,15 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
 
     return (
         <div className="w-full">
-            <div className="w-full flex justify-between items-center gap-6">
-                <div className="flex flex-col w-3/12">
-                    <input className={`bg-transparent text-center outline-0 border border-neutral-100 px-3 py-3 rounded-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount === null  ? '' : amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
+            <div className="w-full flex justify-between items-center gap-4">
+                <div className="flex flex-col w-7/12">
+                    <div className="relative">
+                        <input className={`bg-transparent w-full text-left outline-0 border border-opacityLight-20 px-3 py-3 rounded-lg h-10 text-neutral-100 ${canBuy ? "" : "cursor-not-allowed text-neutral-300 border-neutral-300"}`} readOnly={!canBuy} type="number" value={amount === null  ? '' : amount} name="amount" aria-label="Amount" min="1" step="1" onChange={handleAmountChange} />
+                        <div className="absolute right-4 top-2 uppercase text-neutral-300 font-light">{project.payment_token.value.symbol}</div>
+                    </div>
                 </div>
-                <div className="flex flex-col w-full">
-                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now - {amount === null  ? '-' : (amount * priceToDisplay).toFixed(2)}&nbsp;{project.payment_token.value.symbol}</GreenButton>}
+                <div className="flex flex-col w-5/12">
+                    {status === "connected" && <GreenButton className={`w-full ${canBuy ? "" : "cursor-not-allowed text-neutral-300 bg-greenish-800 hover:text-neutral-300 hover:bg-greenish-800"}`} onClick={connectAndExecute}>Buy now</GreenButton>}
                     {status === "disconnected" && <GreenButton className="w-full" onClick={connectWallet}>Connect wallet</GreenButton>}
                 </div>
             </div>
