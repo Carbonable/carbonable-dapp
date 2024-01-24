@@ -1,5 +1,5 @@
 import { useAccount, useContractWrite } from "@starknet-react/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type Call, TransactionStatus, num } from "starknet";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -46,9 +46,9 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     }, [project.tokens]);
 
 
-    const { write, data: dataExecute } = useContractWrite({ calls });
+    const { writeAsync } = useContractWrite({ calls });
 
-    const handleMigrate = (project: any) => {
+    const handleMigrate = useCallback(async (project: any) => {
         const migrateData = [project.tokens.length];
 
         calls.push({ 
@@ -73,13 +73,11 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
             calldata: [project.migrator_address, 0]
         });
         
-        write();
+        const result = await writeAsync();
+        setTxHash(result?.transaction_hash);
         return;
     }
-
-    useEffect(() => {
-        setTxHash(dataExecute ? dataExecute.transaction_hash : "");
-    }, [dataExecute]);
+    , [setTxHash]);
 
     useEffect(() => {
         // When txHash is set, add toast notification

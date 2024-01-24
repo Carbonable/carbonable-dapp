@@ -49,7 +49,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
             setHasError(true);
             return;
         }
-        setAmount(value > available ? available : value.replace(/^0+/, ''));
+        setAmount(value > available ? available : parseFloat(value.replace(/^0+/, '')));
         setHasError(false);
     }
 
