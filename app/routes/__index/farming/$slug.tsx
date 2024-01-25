@@ -55,7 +55,7 @@ export default function FarmingPage() {
 
     const [isAssetsManagementDialogOpen, setIsAssetsManagementDialogOpen] = useState(false);
     const [context, setContext] = useState<AssetsManagementContext>(AssetsManagementContext.CLAIM);
-    const [tab, setTab] = useState<AssetsManagementTabs>(AssetsManagementTabs.YIELD);
+    const [tab, setTab] = useState<AssetsManagementTabs>(AssetsManagementTabs.RESALE);
     const [mustMigrate, setMustMigrate] = useState(false);
     const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
    
@@ -177,7 +177,7 @@ export default function FarmingPage() {
                 txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
-                    title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} yield farm`, 
+                    title: `Claiming $${parseFloat(num.hexToDecimalString(carbonCredits?.yield.available.value.value)) / UINT256_DECIMALS} in ${project.name} resale farm`, 
                     message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
@@ -185,7 +185,7 @@ export default function FarmingPage() {
         }
     }, [txHash]);
 
-    const handleClaimYield = async () => {
+    const handleClaimResale = async () => {
         setCalls((cd: any) => {
 
             if (contracts?.yielder === undefined) { return []; }
@@ -214,13 +214,13 @@ export default function FarmingPage() {
 
     const handleDeposit = async () => {
         setContext(AssetsManagementContext.DEPOSIT);
-        setTab(AssetsManagementTabs.YIELD);
+        setTab(AssetsManagementTabs.RESALE);
         setIsAssetsManagementDialogOpen(true);
     }
 
     const handleWithdraw = async () => {
         setContext(AssetsManagementContext.WITHDRAW);
-        setTab(AssetsManagementTabs.YIELD);
+        setTab(AssetsManagementTabs.RESALE);
         setIsAssetsManagementDialogOpen(true);
     }
 
@@ -244,7 +244,7 @@ export default function FarmingPage() {
                             </div>
                             <div className="col-span-2 md:col-span-1 mt-4 md:mt-0">
                                 <FarmingRepartition 
-                                    yieldAmount={overview?.total_yielded.displayable_value ? parseFloat(overview?.total_yielded.displayable_value) : 0} 
+                                    resaleAmount={overview?.total_yielded.displayable_value ? parseFloat(overview?.total_yielded.displayable_value) : 0} 
                                     offsetAmount={overview?.total_offseted.displayable_value ? parseFloat(overview?.total_offseted.displayable_value) : 0} 
                                 />
                             </div>
@@ -295,11 +295,11 @@ export default function FarmingPage() {
                             <div className="w-full md:w-9/12 md:pl-12">
                                 <div className="mt-12 md:mt-0">
                                     <FarmDetail 
-                                        type={FarmType.YIELD} 
+                                        type={FarmType.RESALE} 
                                         total={carbonCredits?.yield.total.displayable_value ? shortenNumber(parseFloat(carbonCredits?.yield.total.displayable_value)) : "-"} 
                                         available={carbonCredits?.yield.available.displayable_value ? shortenNumberWithDigits(parseFloat(carbonCredits?.yield.available.displayable_value), 6) : "-"} 
                                         canClaim={carbonCredits ? parseFloat(carbonCredits?.yield.available.displayable_value) > 0 : false}
-                                        handleClaim={handleClaimYield} 
+                                        handleClaim={handleClaimResale} 
                                     />
                                 </div>
                                 <div className="mt-12">
@@ -318,7 +318,7 @@ export default function FarmingPage() {
                     
                     <div className="mt-12">
                         <FarmingAllocation 
-                            yieldAmount={assetsAllocation?.yield.displayable_value ? parseFloat(assetsAllocation?.yield.displayable_value) : 0} 
+                            resaleAmount={assetsAllocation?.yield.displayable_value ? parseFloat(assetsAllocation?.yield.displayable_value) : 0} 
                             offsetAmount={assetsAllocation?.offseted.displayable_value ? parseFloat(assetsAllocation?.offseted.displayable_value) : 0} 
                             undepositedAmount={assetsAllocation?.undeposited.displayable_value ? parseFloat(assetsAllocation?.undeposited.displayable_value) : 0} 
                             total={assetsAllocation?.total.displayable_value ? parseFloat(assetsAllocation?.total.displayable_value) : 0} 

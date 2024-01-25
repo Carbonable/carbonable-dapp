@@ -12,7 +12,7 @@ export const enum AssetsManagementContext {
 }
 
 export const enum AssetsManagementTabs {
-    YIELD = "Yield",
+    RESALE = "Resale",
     OFFSET = "Offset",
 }
 

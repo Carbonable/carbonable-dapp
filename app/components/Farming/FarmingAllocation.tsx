@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import SecondaryButton, { GreenButton } from "../Buttons/ActionButton";
 import { useNavigate } from "@remix-run/react";
 
-export default function FarmingAllocation({yieldAmount, offsetAmount, undepositedAmount, total, mustMigrate, handleDeposit, handleWithdraw}: {yieldAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void}) {
-    const [yieldPercentage, setYieldPercentage] = useState<string | undefined>(undefined);
+export default function FarmingAllocation({resaleAmount, offsetAmount, undepositedAmount, total, mustMigrate, handleDeposit, handleWithdraw}: {resaleAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void}) {
+    const [resalePercentage, setResalePercentage] = useState<string | undefined>(undefined);
     const [offsetPercentage, setOffsetPercentage] = useState<string | undefined>(undefined);
     const [undepositedPercentage, setUndepositedPercentage] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        if (total === undefined || total === 0 || yieldAmount === undefined || offsetAmount === undefined || undepositedAmount === undefined) { return; }
+        if (total === undefined || total === 0 || resaleAmount === undefined || offsetAmount === undefined || undepositedAmount === undefined) { return; }
 
-        setYieldPercentage(`${((yieldAmount / total) * 100).toFixed(0)}%`);
+        setResalePercentage(`${((resaleAmount / total) * 100).toFixed(0)}%`);
         setOffsetPercentage(`${((offsetAmount / total) * 100).toFixed(0)}%`);
         setUndepositedPercentage(`${((undepositedAmount / total) * 100).toFixed(0)}%`);
 
-    }, [yieldAmount, offsetAmount, undepositedAmount, total]);
+    }, [resaleAmount, offsetAmount, undepositedAmount, total]);
     
     const FarmingAllocationValue = ({title, value, percentage}: {title: string, value: number | undefined, percentage?: string}) => (
         <div className="flex flex-col items-left">
@@ -36,7 +36,7 @@ export default function FarmingAllocation({yieldAmount, offsetAmount, undeposite
                     <FarmingAllocationValue title="Total" value={total} />
                 </div>
                 <div className="w-full col-span-3 md:col-span-2">
-                    <FarmingAllocationValue title="Yield" value={yieldAmount} percentage={yieldPercentage} />
+                    <FarmingAllocationValue title="Resale" value={resaleAmount} percentage={resalePercentage} />
                 </div>
                 <div className="w-full col-span-3 md:col-span-2">
                     <FarmingAllocationValue title="Offset" value={offsetAmount} percentage={offsetPercentage} />

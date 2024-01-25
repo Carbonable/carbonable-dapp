@@ -3,7 +3,7 @@ import KPI from "./FarmKPI";
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 export const enum FarmType {
-    YIELD = "YIELD",
+    RESALE = "RESALE",
     OFFSET = "OFFSET"
 }
 
@@ -22,8 +22,8 @@ export default function FarmDetail({type, total, available, canClaim, minClaim, 
 
 function FarmTypeTitle({type}: {type: FarmType}) {
     return (
-        <div className={`${type === FarmType.YIELD ? " text-green" : " text-blue"} py-4 pl-8 uppercase font-inter font-semibold`}>
-            {type === FarmType.YIELD ? "Yield" : "Offset"}
+        <div className={`${type === FarmType.RESALE ? " text-green" : " text-blue"} py-4 pl-8 uppercase font-inter font-semibold`}>
+            {type === FarmType.RESALE ? "RESALE" : "Offset"}
         </div>
     )
 }
@@ -32,10 +32,10 @@ function FarmTypeDetail({type, total, available, canClaim, minClaim, handleClaim
     return (
         <div className="w-full grid grid-cols-12 gap-1 rounded-2xl border border-neutral-500 bg-opacityLight-5 px-3 py-3 items-center lg:px-6">
             <div className="text-left col-span-4">
-                <KPI title="Total" value={total} unit={type === FarmType.YIELD ? "$" : "CC"} large={false} />
+                <KPI title="Total" value={total} unit={type === FarmType.RESALE ? "$" : "CC"} large={false} />
             </div>
             <div className="text-left col-span-5">
-                <KPI title="Available" value={available} unit={type === FarmType.YIELD ? "$" : "CC"} large={false} />
+                <KPI title="Available" value={available} unit={type === FarmType.RESALE ? "$" : "CC"} large={false} />
             </div>
             <div className="text-right col-span-3">
             <Tooltip.Provider delayDuration={0}>
