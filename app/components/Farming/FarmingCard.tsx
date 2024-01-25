@@ -8,7 +8,8 @@ import type { Color } from '~/utils/blockchain/traits';
 import { FarmStatus, getTraitValue, Traits } from '~/utils/blockchain/traits';
 import _ from "lodash";
 import { GRAMS_PER_TON } from "~/utils/constant";
-import { Call, TransactionStatus, num } from "starknet";
+import type { Call} from "starknet";
+import { TransactionStatus, num } from "starknet";
 import type { ContractsProps } from "~/interfaces/farming";
 import { useNotifications } from "~/root";
 import { NotificationSource } from "~/utils/notifications/sources";
@@ -30,11 +31,11 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [tvl, setTvl] = useState('-');
     const [totalRemoval, setTotalRemoval] = useState('-');
     const [myStake, setMyStake] = useState('-');
-    const [yieldRewards, setYieldRewards] = useState('-');
+    const [resaleRewards, setResaleRewards] = useState('-');
     const [offsetRewards, setOffsetRewards] = useState('-');
     const [undepositedCount, setUndepositedCount] = useState(0);
     const [mustMigrate, setMustMigrate] = useState(false);
-    const [canClaimYield, setCanClaimYield] = useState(false);
+    const [canClaimResale, setCanClaimResale] = useState(false);
     const [canClaimOffset, setCanClaimOffset] = useState(false);
     const [imageSrc, setImageSrc] = useState("");
     const [calls, setCalls] = useState<Call[]>([]);
@@ -42,7 +43,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [txHash, setTxHash] = useState<string | undefined>("");
     const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
-    const [claimContext, setClaimContext] = useState<any>("Yield");
+    const [claimContext, setClaimContext] = useState<any>("Resale");
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 
     useEffect(() => {
@@ -88,7 +89,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
         if (isConnected && connectedUserFetcher.data !== undefined) {
             if(connectedUserFetcher.data.code === 404 || connectedUserFetcher.data.length === 0) {
                 setMyStake('0');
-                setYieldRewards('0');
+                setResaleRewards('0');
                 setOffsetRewards('0');
                 setUndepositedCount(0);
                 return;
@@ -97,17 +98,17 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             const data = connectedUserFetcher.data.data;
 
             isNaN(data?.customer_investment.displayable_value) ? setMyStake('0') : setMyStake(shortenNumber(parseFloat(data?.customer_investment.displayable_value)));
-            isNaN(data?.vesting_to_claim.displayable_value) ? setYieldRewards('0') : setYieldRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
+            isNaN(data?.vesting_to_claim.displayable_value) ? setResaleRewards('0') : setResaleRewards(shortenNumberWithDigits(parseFloat(data?.vesting_to_claim.displayable_value), 6));
             isNaN(data?.absorption_to_claim.displayable_value) || parseFloat(num.hexToDecimalString(data.ton_equivalent)) === 0 ? setOffsetRewards('0') : setOffsetRewards(shortenNumberWithDigits(parseFloat(data?.absorption_to_claim.displayable_value) / parseFloat(num.hexToDecimalString(data.ton_equivalent)), 6));
             isNaN(data?.undeposited.displayable_value) ? setUndepositedCount(0) : setUndepositedCount(data?.undeposited.displayable_value);
-            setCanClaimYield(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
+            setCanClaimResale(parseFloat(data?.vesting_to_claim.displayable_value) > 0);
             setCanClaimOffset(parseFloat(data?.absorption_to_claim.displayable_value) > data?.min_to_claim.displayable_value);
             setContracts(data.contracts);
         }
 
         if (!isConnected) {
             setMyStake('-');
-            setYieldRewards('-');
+            setResaleRewards('-');
             setOffsetRewards('-');
             setUndepositedCount(0);
             return;
@@ -137,7 +138,7 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                 txStatus: TransactionStatus.RECEIVED,
                 walletAddress: address,
                 message: {
-                    title: claimContext === 'Yield' ? `Claiming $${yieldRewards} in ${project.name} yield farm` : `Claiming ${offsetRewards}t in ${project.name} offset farm`, 
+                    title: claimContext === 'Resale' ? `Claiming $${resaleRewards} in ${project.name} resale farm` : `Claiming ${offsetRewards}t in ${project.name} offset farm`, 
                     message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
                     link: `${starkscanUrl}/tx/${txHash}`
                 }
@@ -145,8 +146,8 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
         }
     }, [txHash]);
 
-    const handleClaimYield = async () => {
-        setClaimContext("Yield");
+    const handleClaimResale = async () => {
+        setClaimContext("Resale");
         setCalls((cd: any) => {
             if (contracts === undefined) return ([]);
 
@@ -222,11 +223,11 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
                             </div>
                             <div className="h-[1px] w-9/12 mx-auto my-4 bg-opacityLight-5 col-span-2"></div>
                             <div className="text-left text-neutral-100">
-                                <div>Your Yield Rewards</div>
+                                <div>Your Resale Rewards</div>
                                 <div>Your Offset Rewards</div>
                             </div>
                             <div className="text-right">
-                                <div className={`${yieldRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>$</span>{yieldRewards}</div>
+                                <div className={`${resaleRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>$</span>{resaleRewards}</div>
                                 <div className={`${offsetRewards === '0' ? "text-neutral-300" : "text-neutral-100"}`}><span className={`mr-[2px]`}>t</span>{offsetRewards}</div>
                             </div>
                         </div>
@@ -235,10 +236,10 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
             </NavLink>
             <div className="w-full bg-farming-card-bg rounded-b-3xl p-4">
                 <ActionButtons 
-                    canClaimYield={canClaimYield} 
+                    canClaimResale={canClaimResale} 
                     canClaimOffset={canClaimOffset} 
                     mustMigrate={mustMigrate} 
-                    handleClaimYield={handleClaimYield} 
+                    handleClaimResale={handleClaimResale} 
                     handleClaimOffset={handleClaimOffset} 
                     undepositedCount={undepositedCount}
                     slug={project.slug}
@@ -292,8 +293,8 @@ function Tag({text, color, count, animatedText}: {text: string, color: string, c
     )
 }
 
-function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimYield, handleClaimOffset, undepositedCount, slug}: 
-    {canClaimYield: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimYield: () => void, handleClaimOffset: () => void, undepositedCount: number, slug: string}) {
+function ActionButtons({canClaimResale, canClaimOffset, mustMigrate, handleClaimResale, handleClaimOffset, undepositedCount, slug}: 
+    {canClaimResale: boolean, canClaimOffset: boolean, mustMigrate: boolean, handleClaimResale: () => void, handleClaimOffset: () => void, undepositedCount: number, slug: string}) {
     const { status } = useAccount();
     let [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
@@ -311,10 +312,10 @@ function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimY
             )
         }
 
-        if (canClaimYield || canClaimOffset) {
+        if (canClaimResale || canClaimOffset) {
             return (
                 <div className="flex gap-x-2">
-                    <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimYield} onClick={handleClaimYield}>Claim Yield</FarmingButton>
+                    <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimResale} onClick={handleClaimResale}>Claim Resale</FarmingButton>
                     <FarmingButton className="w-1/2 rounded-xl" disabled={!canClaimOffset} onClick={handleClaimOffset}>Claim Offset</FarmingButton>
                 </div>
             )
@@ -331,7 +332,7 @@ function ActionButtons({canClaimYield, canClaimOffset, mustMigrate, handleClaimY
 
         return (
             <div className="flex gap-x-2">
-                <FarmingButton className="w-1/2 rounded-xl" disabled={true}>Claim Yield</FarmingButton>
+                <FarmingButton className="w-1/2 rounded-xl" disabled={true}>Claim Resale</FarmingButton>
                 <FarmingButton className="w-1/2 rounded-xl" disabled={true}>Claim Offset</FarmingButton>
             </div>
         )

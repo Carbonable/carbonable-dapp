@@ -78,7 +78,7 @@ export default function ProjectInformation({project, launchpad, mint, priceToDis
                 <div className="flex flex-wrap items-center justify-start pl-1 py-3 bg-dark-40 mt-6 rounded-xl font-inter uppercase text-xs md:mt-3 md:px-2 2xl:justify-between">
                     <div className="text-neutral-100 px-2 w-full 2xl:w-fit">Estimate the gain for you and the planet</div>
                     <a href="https://carbonable.io#simulator" target="_blank" className="text-greenish-500 mt-1 inline-flex px-2 items-center 2xl:mt-0 hover:text-neutral-100" rel="noreferrer">
-                        Yield Simulator <ChevronRightIcon className="w-4 ml-2" />
+                        Offset Simulator <ChevronRightIcon className="w-4 ml-2" />
                     </a>
                 </div>
                 {defautlNetwork === "mainnet" && moment(launchpad.sale_date).isBefore(moment(new Date('2022-12-31'))) && 

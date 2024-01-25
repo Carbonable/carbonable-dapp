@@ -98,7 +98,7 @@ export default function Portfolio() {
         <div className="relative mx-auto md:mt-12 lg:mt-6 max-w-7xl">
             <div className="relative w-11/12 mx-auto border border-neutral-700 bg-portfolio bg-cover bg-bottom rounded-3xl px-4 py-6 flex items-start justify-start flex-wrap md:p-10 lg:p-12">
                 <div className="grid grid-cols-3 gap-3 md:grid-cols-none md:grid-flow-col md:auto-cols-max md:gap-6 xl:gap-16">
-                    <KPI title="Invested Amount" value={`$${investedAmount}`} />
+                    <KPI title="Funded Amount" value={`$${investedAmount}`} />
                     <KPI title="Number of projects" value={`# ${numberOfProjects}`} />
                 </div>
                 <img src="/assets/images/common/logo-transparent.svg" alt="Carbonable logo transparent" className="absolute bottom-0 right-12 w-[100px] xl:right-20 lg:w-[110px]" />

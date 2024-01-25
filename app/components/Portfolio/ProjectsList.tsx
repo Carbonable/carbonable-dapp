@@ -12,7 +12,7 @@ export default function ProjectsList({projects, setRefreshData}: {projects: any[
     if (projects.filter((project) => project.tokens.length > 0).length === 0) {
         return (
             <div className="ml-2 mt-2">
-                You don't have any assets yet. Go to <a href="/launchpad" className="text-greenish-500 mt-1 hover:text-neutral-100">Launchpad</a> to invest during open sales.
+                You don't have any assets yet. Go to <a href="/launchpad" className="text-greenish-500 mt-1 hover:text-neutral-100">Launchpad</a> to fund during open sales.
                 <br />
                 <GreenButton className="w-fit mt-2" onClick={() => setIsOpen(true)}>Be alerted when a sale opens</GreenButton>
                 <NewsletterDialog isOpen={isOpen} setIsOpen={setIsOpen} />

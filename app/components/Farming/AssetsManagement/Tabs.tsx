@@ -7,7 +7,7 @@ import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, Numeric
 export default function Tabs({context, assetsAllocation, contracts, project, setIsOpen, carbonCredits, tonEquivalent, unitPrice, farmingData}: 
     {context: AssetsManagementContext, assetsAllocation: AssetsAllocationProps | undefined, contracts: ContractsProps | undefined, project: any, setIsOpen: (b: boolean) => void, carbonCredits: CarbonCreditsProps | undefined, tonEquivalent: string, unitPrice: NumericValueProps | undefined, farmingData: any}) {
         
-    const tabs = [AssetsManagementTabs.YIELD, AssetsManagementTabs.OFFSET];
+    const tabs = [AssetsManagementTabs.RESALE, AssetsManagementTabs.OFFSET];
 
     return (
         <Tab.Group>

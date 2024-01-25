@@ -112,7 +112,7 @@ module.exports = {
         'farming-separator-blue': 'linear-gradient(90deg, rgba(85, 153, 255, 0.025), rgba(141, 165, 255, 0.5), rgba(85, 153, 255, 0.025));',
         'farming-separator-brown': 'linear-gradient(90deg, rgba(255, 187, 85, 0.025), rgba(255, 187, 85, 0.5), rgba(255, 187, 85, 0.025));',
         'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');",
-        'allocation-yield': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
+        'allocation-resale': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
         'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);",
         'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);"
       },

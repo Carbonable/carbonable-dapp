@@ -80,10 +80,12 @@ export default function Launchpad() {
                 <div className="w-2/12">
                     <img src="/assets/images/common/logo-green.svg" alt="Carbonable logo green" className="w-full md:w-9/12" />
                 </div>
-                <h1 className="uppercase w-10/12 pl-8 md:w-6/12 md:pl-2">
-                    <div className="font-trash text-lg text-neutral-100 md:text-2xl xl:text-3xl">Long-term yield</div>
-                    <div className="font-americana font-thin text-neutral-100 md:text-xl xl:text-2xl">for your wallet</div>
-                    <div className="font-trash text-xl bg-primary bg-clip-text text-transparent md:text-3xl xl:text-4xl">and the planet</div>
+                <h1 className="uppercase w-10/12 pl-8 md:w-6/12 md:pl-2 font-bold text-xl md:text-2xl lg:text-3xl xl:text-5xl">
+                    <div className="text-neutral-100">
+                        Fund
+                        <span className="text-greenish-500"> provable</span>
+                    </div>
+                    <div className="">Nature restoration</div>
                 </h1>
                 <img src="/assets/images/backgrounds/launchpad.svg" alt="world map" className="w-10/12 mx-auto mt-4 md:w-4/12" />
             </div>

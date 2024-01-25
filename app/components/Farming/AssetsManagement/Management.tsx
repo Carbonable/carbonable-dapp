@@ -30,7 +30,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     setAvailable(parseFloat(assetsAllocation.undeposited.displayable_value));
                     break;
                 case AssetsManagementContext.WITHDRAW:
-                    setAvailable(tab === AssetsManagementTabs.YIELD ? parseFloat(assetsAllocation.yield.displayable_value) : parseFloat(assetsAllocation.offseted.displayable_value));
+                    setAvailable(tab === AssetsManagementTabs.RESALE ? parseFloat(assetsAllocation.yield.displayable_value) : parseFloat(assetsAllocation.offseted.displayable_value));
                     break;
                 case AssetsManagementContext.CLAIM:
                     if (tonEquivalent !== '0') {
@@ -89,11 +89,11 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         callsData.push({
                             contractAddress:contracts?.project,
                             entrypoint: 'approve_value',
-                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
+                            calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, tab === AssetsManagementTabs.RESALE ? contracts?.yielder : contracts?.offseter, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
 
                         callsData.push({
-                            contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
+                            contractAddress: tab === AssetsManagementTabs.RESALE ? contracts?.yielder : contracts?.offseter,
                             entrypoint: 'deposit',
                             calldata: [parseInt(num.hexToDecimalString(token.token_id)), 0, Math.round(amountToDepositByToken * Math.pow(10, token.value.value_decimals)), 0]
                         });
@@ -111,7 +111,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                     }
 
                     return [{
-                        contractAddress: tab === AssetsManagementTabs.YIELD ? contracts?.yielder : contracts?.offseter,
+                        contractAddress: tab === AssetsManagementTabs.RESALE ? contracts?.yielder : contracts?.offseter,
                         entrypoint: tokens.length === 0 ? 'withdraw_to' : 'withdraw_to_token',
                         calldata: tokens.length === 0 ? [amount * UINT256_DECIMALS, 0] : [parseInt(num.hexToDecimalString(tokens[tokens.length - 1].token_id)), 0, amount * UINT256_DECIMALS, 0]
                     }];
@@ -160,10 +160,10 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited - amount;
                     }
 
-                    if (tab === AssetsManagementTabs.YIELD && amount) {
-                        const oldYield = parseFloat(farmingData.allocation.yield.displayable_value);
+                    if (tab === AssetsManagementTabs.RESALE && amount) {
+                        const oldResale = parseFloat(farmingData.allocation.yield.displayable_value);
                         const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
-                        farmingData.allocation.yield.displayable_value = oldYield + amount;
+                        farmingData.allocation.yield.displayable_value = oldResale + amount;
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited - amount;
                     }
 
@@ -178,10 +178,10 @@ export default function Management({context, tab, assetsAllocation, contracts, p
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited + amount;
                     }
 
-                    if (tab === AssetsManagementTabs.YIELD && amount) {
-                        const oldYield = parseFloat(farmingData.allocation.yield.displayable_value);
+                    if (tab === AssetsManagementTabs.RESALE && amount) {
+                        const oldResale = parseFloat(farmingData.allocation.yield.displayable_value);
                         const oldUndeposited = parseFloat(farmingData.allocation.undeposited.displayable_value);
-                        farmingData.allocation.yield.displayable_value = oldYield - amount;
+                        farmingData.allocation.yield.displayable_value = oldResale - amount;
                         farmingData.allocation.undeposited.displayable_value = oldUndeposited + amount;
                     }
 
@@ -219,24 +219,24 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     useEffect(() => {
         switch (context) {
             case AssetsManagementContext.DEPOSIT:
-                if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("Deposit shares to start earning Yield in USDC based on the absorption curve of the project. You can deposit more or withdraw your shares at any time.");
+                if (tab === AssetsManagementTabs.RESALE) {
+                    setDisclaimer("Deposit shares to start earning in USDC based on the absorption curve of the project. You can deposit more or withdraw your shares at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
                     setDisclaimer("Deposit shares to start offsetting your carbon footprint in TONs based on the absorption curve of the project. You can deposit more or withdraw your shares at any time.");
                 }
                 break;
             case AssetsManagementContext.WITHDRAW:
-                if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("By withdrawing shares you will earn less yield in USDC. You can withdraw more or deposit back your shares at any time.");
+                if (tab === AssetsManagementTabs.RESALE) {
+                    setDisclaimer("By withdrawing shares you will earn less in USDC. You can withdraw more or deposit back your shares at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
                     setDisclaimer("By withdrawing shares you will offset less carbon footprint. Be aware that you need to offset at least 1CC to claim your offset certificate. You can withdraw more or deposit back your shares at any time.");
                 }
                 break;
             case AssetsManagementContext.CLAIM:
-                if (tab === AssetsManagementTabs.YIELD) {
-                    setDisclaimer("You will receive your yield in USDC. You can claim your yield at any time.");
+                if (tab === AssetsManagementTabs.RESALE) {
+                    setDisclaimer("You will receive your resale in USDC. You can claim your resale amount at any time.");
                 }
                 if (tab === AssetsManagementTabs.OFFSET) {
                     setDisclaimer("By claiming your offset, the underlying carbon credits will be burnt and you will receive your offset certificate. You can claim your offset certificate when you have offset at least 1CC.");
@@ -273,7 +273,7 @@ function AllocationContainer({tab, assetsAllocation, unitPrice}: {tab: string, a
         const readablePrice = unitPrice === undefined ? 1 : parseInt(unitPrice.displayable_value);
         if (assetsAllocation !== undefined) {
             switch (tab) {
-                case AssetsManagementTabs.YIELD:
+                case AssetsManagementTabs.RESALE:
                     setShares(parseFloat(assetsAllocation.yield.displayable_value));
                     setValue(parseFloat(assetsAllocation.yield.displayable_value) * readablePrice);
                     break;
@@ -287,8 +287,8 @@ function AllocationContainer({tab, assetsAllocation, unitPrice}: {tab: string, a
 
     const getTitle = () => {
         switch (tab) {
-            case "Yield":
-                return "Your Yield Allocation";
+            case "Resale":
+                return "Your Resale Allocation";
             case "Offset":
                 return "Your Offset Allocation";
             default:
@@ -297,7 +297,7 @@ function AllocationContainer({tab, assetsAllocation, unitPrice}: {tab: string, a
     }
 
     return (
-        <div className={`relative w-full rounded-2xl py-4 px-6 text-left font-inter border border-opacityLight-10 ${tab === 'Yield' ? "bg-allocation-yield" : "bg-allocation-offset"}`}>
+        <div className={`relative w-full rounded-2xl py-4 px-6 text-left font-inter border border-opacityLight-10 ${tab === 'Resale' ? "bg-allocation-resale" : "bg-allocation-offset"}`}>
             <div className="text-sm uppercase text-neutral-300">{getTitle()}</div>
             <div className="text-lg font-bold text-neutral-100 mt-4">{shares.toLocaleString('en')} SHARES</div>
             <div className="text-base font-bold text-neutral-300">≈ ${value.toLocaleString('en')}</div>
