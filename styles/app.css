@@ -236,3 +236,16 @@ input::-webkit-inner-spin-button {
 .selected {
   border: 2px solid red;
 }
+
+.leader-table td {
+  min-width: min-content;
+  white-space: nowrap;
+}
+
+.leader-table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.leader-table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}

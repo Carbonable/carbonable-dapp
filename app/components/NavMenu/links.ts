@@ -1,10 +1,17 @@
 export const links = [
     {
-        href: "'/dashboard'",
+        href: '/dashboard',
         label: 'Dashboard',
         isOpen: false,
         outsideLink: false,
         icon: 'dashboard'
+    },
+    {
+        href: '/leaderboard',
+        label: 'Leaderboard',
+        isOpen: true,
+        outsideLink: false,
+        icon: 'leaderboard'
     },
     {
         href: '/launchpad',
