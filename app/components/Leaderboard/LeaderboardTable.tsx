@@ -1,5 +1,6 @@
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import Pagination from "../Common/Pagination";
+import { RankingLine } from "../Common/Table/RankingLine";
 
 export default function LeaderboardTable() {
     const currentPage = 1;
@@ -28,7 +29,7 @@ export default function LeaderboardTable() {
                             <th className="px-4 font-light border-b border-r border-t border-opacityLight-10 rounded-tr-xl">Total w/ Boost</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y">
+                    <tbody>
                         <TableResult resultsPerPage={10} />
                     </tbody>
                 </table>
@@ -51,43 +52,7 @@ function TableResult({resultsPerPage}: {resultsPerPage: number}) {
         <>
             {lines.map((line: number, index: number) => {
                 return (
-                    <tr className="h-[36px] first:rounded-bl-xl last:rounded-br-xl" key={`loader_${line}`}>
-                        <td className="px-4 border-r border-b border-opacityLight-10 first:border-l sticky left-0 z-10 bg-neutral-800">
-                            <div className="flex items-center">
-                                <div className="text-neutral-200 font-light min-w-[14px]">{index + 1}</div>
-                                <div className="ml-1 mr-2 min-w-[28px]">
-                                    { index === 0 && <>🥇</> }
-                                    { index === 1 && <>🥈</> }
-                                    { index === 2 && <>🥉</> }
-                                </div>
-                                <div className="text-neutral-50">wallet address</div>
-                            </div>
-                        </td>
-                        <td className="px-4 border-r border-b border-opacityLight-10 first:border-l">
-                            <div className="flex items-center">
-                                <img src="/assets/images/leaderboard/points.svg" alt="funding" className="h-3 w-3 mr-2" />
-                                <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
-                            </div>
-                        </td>
-                        <td className="px-4 border-r border-b border-opacityLight-10 first:border-l">
-                            <div className="flex items-center">
-                                <img src="/assets/images/leaderboard/points.svg" alt="funding" className="h-3 w-3 mr-2" />
-                                <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
-                            </div>
-                        </td>
-                        <td className="px-4 border-r border-b border-opacityLight-10 first:border-l">
-                            <div className="flex items-center">
-                                <img src="/assets/images/leaderboard/points.svg" alt="funding" className="h-3 w-3 mr-2" />
-                                <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
-                            </div>
-                        </td>
-                        <td className="px-4 border-r border-b border-opacityLight-10 first:border-l">
-                            <div className="flex items-center">
-                                <img src="/assets/images/leaderboard/points.svg" alt="funding" className="h-3 w-3 mr-2" />
-                                <div className="text-neutral-50 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
-                            </div>
-                        </td>
-                    </tr>
+                    <RankingLine index={index} points={points} key={`ranking_${line}`} />
                 )
             })}
         </>

@@ -1,6 +1,7 @@
 import LeaderboardTable from "~/components/Leaderboard/LeaderboardTable";
-import Personal from "~/components/Leaderboard/Personal";
 import Title from "~/components/Leaderboard/Title";
+import HeaderPersonal from "~/components/Leaderboard/HeaderPersonal";
+import PersonalRanking from "~/components/Leaderboard/PersonalRanking";
 
 export default function Leaderboard() {
     return (
@@ -12,13 +13,18 @@ export default function Leaderboard() {
                             <Title />
                         </div>
                         <div className="flex items-center mt-12 md:mt-0 md:justify-end">
-                            <Personal />
+                            <HeaderPersonal />
                         </div>
                     </div>
                 </div>
             </div>
             <div className="mx-auto px-4 md:w-10/12 2xl:w-9/12 2xl:max-w-6xl my-12">
-                <LeaderboardTable />
+                <div>
+                    <PersonalRanking />
+                </div>
+                <div className="mt-8">
+                    <LeaderboardTable />
+                </div>
             </div>
         </>
     )
