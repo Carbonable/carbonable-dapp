@@ -1,3 +1,8 @@
+import { useAccount } from "@starknet-react/core";
+import { useState } from "react";
+import SecondaryButton from "~/components/Buttons/ActionButton";
+import ConnectDialog from "~/components/Connection/ConnectDialog";
+
 export function RankingLine({ index, points }: { index: number, points: number }) {
     return (
         <tr className="h-[36px] first:rounded-bl-xl last:rounded-br-xl">
@@ -41,6 +46,29 @@ export function RankingLine({ index, points }: { index: number, points: number }
 }
 
 export function PersonalRankingLine({ index, points }: { index: number, points: number }) {
+    const { isConnected } = useAccount();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleConnect = () => {
+        if (isConnected) { return; }
+
+        setIsOpen(true);
+    }
+
+    if (isConnected === false) {
+        return (
+            <tr className="h-[36px]">
+                <td className="w-full flex justify-between items-center px-4">
+                    <div className="text-neutral-200 font-light">
+                        Connect your wallet to see your points and leaderboard position
+                    </div>
+                    <SecondaryButton onClick={handleConnect}>Connect wallet</SecondaryButton>
+                    <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+                </td>
+            </tr>
+        )
+    }
+
     return (
         <tr className="h-[36px]">
             <td className="px-4 sticky left-0 z-10 bg-neutral-700 w-[220px]">

@@ -14,6 +14,7 @@ export default function ConnectButton({displayIcon = false}: {displayIcon?: bool
 
         setIsOpen(true);
     }
+
     return (
         <>
             {!displayIcon && <button className="font-inter uppercase rounded-full px-4 py-2 text-sm text-neutal-500 border border-neutral-500 tracking-wide hover:bg-opacityLight-5 md:px-6 md:py-3" onClick = {handleClick}>Connect Wallet</button>}

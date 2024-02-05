@@ -10,7 +10,7 @@ export default function PersonalRanking() {
                 </div>
                 <div className="text-right">
                     <a href="https://twitter.com/intent/tweet?text=Just%20migrated%20my%20%23CarbonableNFTs%20to%20%23CarbonableSFTs%20in%20one%20click%20%F0%9F%9A%80%0AEffortless%20switch!%20%0A%0A%F0%9F%8E%81%20Retro%20rewards%20are%20calling!%20%0A%E2%9C%85%20Counting%20down%20the%20moments%20to%20the%20official%20%40carbonable_io%20farming%20launch!%20%F0%9F%8C%B1%E2%9C%A8%20%0A%0ADon%27t%20miss%20out!%20Check%20out%20the%20original%20thread%20%F0%9F%A7%B5&url=https%3A%2F%2Fcarbonable.github.io%2Fsocials%2Fmigration%2F" 
-                        className="hover:brightness-110 flex items-center"
+                        className="hover:text-neutral-100 flex items-center text-neutral-300"
                         target="_blank"
                         rel="noreferrer"
                     >
