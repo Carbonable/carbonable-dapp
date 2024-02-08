@@ -11,9 +11,13 @@
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
     "deploy": "fly deploy --remote-only",
     "start": "remix-serve build",
-    "setup": "prisma generate && prisma migrate deploy && prisma db seed"
+    "setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "compile": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.17",
+    "@graphql-tools/schema": "^10.0.0",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
     "@portabletext/react": "^2.0.0",
@@ -31,6 +35,7 @@
     "airtable": "^0.11.5",
     "bn.js": "^5.2.1",
     "get-starknet-core": "^3.2.0",
+    "graphql": "^16.7.1",
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.15.0",
     "moment": "^2.29.4",
@@ -48,6 +53,8 @@
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
     "@remix-run/dev": "^1.19.1",
     "@remix-run/eslint-config": "^1.19.1",
     "@types/bn.js": "^5.1.1",

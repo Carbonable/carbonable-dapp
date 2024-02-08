@@ -5,7 +5,7 @@ interface LinkButtonProps {
 }
 
 const footerCssClass = 'rounded-xl flex justify-center p-2 items-center justify-center text-neutal-500 border border-neutral-500 tracking-wide hover:bg-opacityLight-5 ';
-const secondaryButton = 'font-inter uppercase rounded-full px-4 py-2 text-sm text-neutal-500 border border-neutral-500 tracking-wide hover:bg-opacityLight-5 md:px-6 md:py-3 ';
+const secondaryButton = 'font-inter uppercase rounded-lg px-4 py-2 text-xs text-neutal-100 border border-opacityLight-10 tracking-wide bg-opacityLight-5 hover:bg-opacityLight-10 md:px-6 md:py-3 xl:text-sm  ';
 const greenActionButton = 'font-inter uppercase rounded-full p-4 text-sm text-neutral-100 bg-greenish-600 text-center hover:bg-greenish-500 ';
 
 export function LinkFooter({ href, children, className }: LinkButtonProps) {

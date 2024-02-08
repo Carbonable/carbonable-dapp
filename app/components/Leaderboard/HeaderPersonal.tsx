@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SecondaryButton from "../Buttons/ActionButton";
 import { useAccount } from "@starknet-react/core";
 import ConnectDialog from "../Connection/ConnectDialog";
+import EarnMoreDialog from "./EarnMoreDialog";
+import { useQuery } from "@apollo/client";
+import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
 
 export default function HeaderPersonal() {
     const { isConnected } = useAccount();
-    const [isOpen, setIsOpen] = useState(false);
-    const points = 0;
+    const [isConnectOpen, setIsConnectOpen] = useState(false);
+
+    const [isEarnMoreOpen, setIsEarnMoreOpen] = useState(false);
 
     const handleConnect = () => {
         if (isConnected) { return; }
 
-        setIsOpen(true);
+        setIsConnectOpen(true);
+    }
+
+    const handleEarnMore = () => {
+        setIsEarnMoreOpen(true);
     }
 
     return (
@@ -22,13 +30,42 @@ export default function HeaderPersonal() {
             </div>
             <div className="mt-6 flex items-center text-4xl">
                 <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-6 w-6 mr-3" />
-                <div className="text-neutral-50 font-light">{isConnected ? points.toLocaleString('en-US').replace(/,/g, ' ') : '0'}</div>
+                <div className="text-neutral-50 font-light">
+                    { !isConnected && <span>0</span> }
+                    { isConnected &&  <ConnectedHeader /> }
+                </div>
             </div>
             <div className="mt-6">
-                {isConnected  && <SecondaryButton>Earn more points</SecondaryButton>}
-                {!isConnected  && <SecondaryButton onClick={handleConnect}>Connect wallet</SecondaryButton>}
+                { !isConnected && <SecondaryButton onClick={handleConnect}>Connect wallet</SecondaryButton> }
+                { isConnected && <SecondaryButton onClick={handleEarnMore}>Earn more points</SecondaryButton> }
             </div>
-            <ConnectDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
+            <EarnMoreDialog isOpen={isEarnMoreOpen} setIsOpen={setIsEarnMoreOpen} />
         </div>
+    )
+}
+
+function ConnectedHeader() {
+    const { address } = useAccount();
+    const [points, setPoints] = useState(0);
+
+    const { error, data } = useQuery(GET_MY_RANK, {
+        variables: {
+            wallet_address: address
+        }
+    });
+
+    useEffect(() => {
+        if (data) {
+            setPoints(data.leaderboardForWallet.total_score || 0);
+        }
+    }, [data]);
+
+    if (error) {
+        console.error('Error fetching my score', error);
+    }
+
+    return (
+        <span>{points.toLocaleString('en-US').replace(/,/g, ' ')}</span>
     )
 }

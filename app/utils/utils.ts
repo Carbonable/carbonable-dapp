@@ -163,5 +163,5 @@ export function minifyAddressOrStarknetId(address: string | undefined, starknetI
     const input = starknetId !== undefined ? starknetId : address;
     if (input === undefined) { return ""; }
 
-    return input.length > 24 ? `${input.substring(0, 5)} ... ${input.substring(input.length - 5, input.length)}` : input;
+    return input.length > 24 ? `${input.substring(0, 7)} ... ${input.substring(input.length - 7, input.length)}` : input;
 }
