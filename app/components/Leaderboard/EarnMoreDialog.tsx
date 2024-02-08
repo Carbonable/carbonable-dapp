@@ -1,12 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useState } from "react";
-import SecondaryButton from '../Buttons/ActionButton';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { LinkSecondary } from '../Buttons/LinkButton';
 import { useAccount } from '@starknet-react/core';
 import { useQuery } from '@apollo/client';
 import { GET_MY_RANK } from '~/graphql/queries/leaderboard';
-import { RuleType } from '~/utils/constant';
+import { LEADERBOARD_MEDIUM, RuleType } from '~/utils/constant';
 
 export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
     const [hasFunded, setHasFunded] = useState(false);
@@ -72,7 +71,7 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                             Earn points in every action you do in Carbonable. <br/>Get perks by ranking up in the leaderboard.
                                         </div>
                                         <div className='mt-6'>
-                                            <SecondaryButton>Learn more</SecondaryButton>
+                                            <LinkSecondary href={LEADERBOARD_MEDIUM}>Learn more</LinkSecondary>
                                         </div>
                                      </div>
                                     <div className='text-right'>

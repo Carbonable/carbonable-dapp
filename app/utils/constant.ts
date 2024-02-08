@@ -9,3 +9,5 @@ export enum RuleType {
     OFFSETER = 'offseter',
     RESALER = 'resaler'
 }
+
+export const LEADERBOARD_MEDIUM='https//carbonable.medium.com/' 

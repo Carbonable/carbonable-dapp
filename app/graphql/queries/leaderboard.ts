@@ -34,11 +34,3 @@ export const GET_MY_RANK = gql`
         }
     }
 `;
-
-export const GET_MY_SCORE = gql`
-    query leaderboardForWallet($wallet_address: String!) {
-        leaderboardForWallet(wallet_address: $wallet_address) {
-            total_score
-        }
-    }
-`;

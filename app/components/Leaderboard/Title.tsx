@@ -1,4 +1,5 @@
-import SecondaryButton from "../Buttons/ActionButton";
+import { LEADERBOARD_MEDIUM } from "~/utils/constant";
+import { LinkSecondary } from "../Buttons/LinkButton";
 
 export default function Title() {
     return (
@@ -11,7 +12,7 @@ export default function Title() {
                 <p>Mint, Farm, Earn points, and win unique rewards.</p>
             </div>
             <div className="mt-6">
-                <SecondaryButton>Find out more</SecondaryButton>
+                <LinkSecondary href={LEADERBOARD_MEDIUM}>Find out more</LinkSecondary>
             </div>
         </div>
     )

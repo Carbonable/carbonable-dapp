@@ -6,7 +6,6 @@ import ConnectDialog from "~/components/Connection/ConnectDialog";
 import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
 import { minifyAddressOrStarknetId } from "~/utils/utils";
 
-// TODO: Replace with actual rank and category points
 export default function PersonalRankingLine() {
     const { isConnected } = useAccount();
     const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +35,7 @@ export default function PersonalRankingLine() {
     )
 }
 
+// TODO: Replace with actual rank and category points
 function ConnectedPersonalRankingLine() {
     const rank = 2;
     const [points, setPoints] = useState(0);
