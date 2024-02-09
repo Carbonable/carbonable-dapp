@@ -37,7 +37,7 @@ export default function PersonalRankingLine() {
 
 // TODO: Replace with actual rank and category points
 function ConnectedPersonalRankingLine() {
-    const rank = 2;
+    const rank = parseInt((Math.random() * 100).toFixed(0));
     const [points, setPoints] = useState(0);
     const { address } = useAccount();
 
@@ -61,7 +61,7 @@ function ConnectedPersonalRankingLine() {
         <tr className="h-[36px]">
             <td className="px-4 sticky left-0 z-10 bg-neutral-700 w-[240px]">
                 <div className="flex items-center">
-                    <div className="text-neutral-200 font-light min-w-[14px]">{rank}</div>
+                    <div className="text-neutral-200 font-light min-w-[14px] text-sm">{rank}</div>
                     <div className="ml-1 mr-2 min-w-[28px]">
                         { rank === 1 && <>🥇</> }
                         { rank === 2 && <>🥈</> }
