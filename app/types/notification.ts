@@ -20,5 +20,6 @@ export type ContextType = {
     lastIndexerBlock: number,
     displayPortfolioTootltip: boolean,
     setDisplayPortfolioTooltip: (b: boolean) => void,
+    avnuUrl: string,
 };
   
