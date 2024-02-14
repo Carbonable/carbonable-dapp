@@ -11,3 +11,5 @@ export enum RuleType {
 }
 
 export const LEADERBOARD_MEDIUM='https://carbonable.medium.com/' 
+export const USDC_DECIMALS = Math.pow(10, 6);
+export const ETH_DECIMALS = Math.pow(10, 18);

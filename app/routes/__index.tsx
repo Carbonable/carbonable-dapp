@@ -8,7 +8,18 @@ import Notification from "~/components/Common/Notification";
 
 export default function Index() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip } = useNotifications();
+    const { notifs,
+            setNotifs,
+            mustReloadMigration,
+            setMustReloadMigration,
+            defautlNetwork,
+            mustReloadFarmingPage,
+            setMustReloadFarmingPage,
+            lastIndexerBlock,
+            displayPortfolioTootltip,
+            setDisplayPortfolioTooltip,
+            avnuUrl
+    } = useNotifications();
 
     function handleStateChange(state: any) {
         setMenuOpen(state.isOpen);
@@ -40,8 +51,19 @@ export default function Index() {
                     <NavMenu closeMenu={closeMenu} />
                 </div>
             </nav>
-            <main className='w-full mt-[80px] lg:w-[calc(100%_-_222px)] lg:ml-[222px] lg:mt-[110px]' id="page-wrap">
-                <Outlet context={{ notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
+            <main className='w-full lg:w-[calc(100%_-_222px)] lg:ml-[222px] mt-[110px]' id="page-wrap">
+                <Outlet context={{ notifs,
+                                   setNotifs,
+                                   mustReloadMigration,
+                                   setMustReloadMigration,
+                                   defautlNetwork,
+                                   mustReloadFarmingPage,
+                                   setMustReloadFarmingPage,
+                                   lastIndexerBlock,
+                                   displayPortfolioTootltip,
+                                   setDisplayPortfolioTooltip,
+                                   avnuUrl
+                }} />
                 { notifs.map((notif) => (
                     <Notification key={notif.txHash} notif={notif} />
                 ))}

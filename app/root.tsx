@@ -28,15 +28,16 @@ export const loader: LoaderFunction = async () => {
     const defautlNetwork = process.env.NETWORK
     const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
     const rpcApiKey = process.env.RPC_API_KEY;
+    const avnuUrl = process.env.AVNU_URL;
 
-    return json({ defautlNetwork, webWalletEnabled, rpcApiKey });
+    return json({ defautlNetwork, webWalletEnabled, rpcApiKey, avnuUrl });
   } catch {
       return json([]);
   }
 };
 
 export default function App() {
-  const { defautlNetwork, webWalletEnabled, rpcApiKey } = useLoaderData();
+  const { defautlNetwork, webWalletEnabled, rpcApiKey, avnuUrl } = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
@@ -83,7 +84,18 @@ export default function App() {
       </head>
       <body>
         <StarknetProvider defautlNetwork={defautlNetwork} rpcApiKey={rpcApiKey} webWalletEnabled={webWalletEnabled} >
-          <Outlet context={{ notifs, setNotifs, defautlNetwork, mustReloadMigration, setMustReloadMigration, mustReloadFarmingPage, setMustReloadFarmingPage, lastIndexerBlock, displayPortfolioTootltip, setDisplayPortfolioTooltip }} />
+          <Outlet context={{ notifs,
+                             setNotifs,
+                             defautlNetwork,
+                             mustReloadMigration,
+                             setMustReloadMigration,
+                             mustReloadFarmingPage,
+                             setMustReloadFarmingPage,
+                             lastIndexerBlock,
+                             displayPortfolioTootltip,
+                             setDisplayPortfolioTooltip,
+                             avnuUrl
+                          }} />
           <ScrollRestoration />
           <Scripts />
           <LiveReload />
