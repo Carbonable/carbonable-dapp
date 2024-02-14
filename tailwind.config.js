@@ -66,6 +66,8 @@ module.exports = {
         opacityLight: {
           5: 'rgba(208, 209, 214, 0.05)',
           10: 'rgba(208, 209, 214, 0.1)',
+          20: 'rgba(208, 209, 214, 0.2)',
+          30: 'rgba(208, 209, 214, 0.3)',
           80: 'rgba(208, 209, 214, 0.8)',
           90: 'rgba(208, 209, 214, 0.9)',
         },
@@ -114,7 +116,8 @@ module.exports = {
         'farming-card': "linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)), url('/assets/images/backgrounds/bg-farming-card.png');",
         'allocation-resale': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
         'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);",
-        'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);"
+        'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);",
+        'karathuru': "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.85)), url('/assets/images/backgrounds/projects/karathuru.jpeg');",
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',

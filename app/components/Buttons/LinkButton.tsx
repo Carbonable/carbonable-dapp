@@ -24,3 +24,7 @@ export function FarmingGreenLinkButton({ href, children, className}: LinkButtonP
     return <a href={href} className={`font-inter text-white text-sm rounded-lg bg-greenish-600 px-4 py-3 hover:bg-greenish-500 ` + className}>{children}</a>;
 }
 
+export function TransparentLinkButton({ href, children, className }: LinkButtonProps) {
+    return <a href={href} target="_blank" rel="noreferrer" className={`font-inter text-white text-sm font-medium rounded-lg bg-opacityLight-20 border border-opacityLight-30 px-4 py-3 hover:bg-opacityLight-30 uppercase ` + className}>{children}</a>;
+}
+

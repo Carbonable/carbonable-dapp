@@ -1,6 +1,8 @@
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
+import { TransparentLinkButton } from "~/components/Buttons/LinkButton";
+import ProjectStatus from "~/components/Common/ProjectStatus";
 import LaunchpadCard from "~/components/Project/Overview/ProjectCard";
 
 export interface ProjectProps {
@@ -75,19 +77,36 @@ export const meta: V2_MetaFunction = () => {
 export default function Launchpad() {
     const projects = useLoaderData().data as LaunchpadLoaderData[];
     return (
-        <div className="mx-auto md:mt-12 lg:mt-6 max-w-7xl">
-            <div className="relative w-11/12 mx-auto border border-neutral-700 bg-launchpad-header rounded-3xl p-4 flex items-center justify-center flex-wrap md:px-10">
-                <div className="w-2/12">
-                    <img src="/assets/images/common/logo-green.svg" alt="Carbonable logo green" className="w-full md:w-9/12" />
-                </div>
-                <h1 className="uppercase w-10/12 pl-8 md:w-6/12 md:pl-2 font-bold text-xl md:text-2xl lg:text-3xl xl:text-5xl">
-                    <div className="text-neutral-100">
-                        Fund
-                        <span className="text-greenish-500"> provable</span>
+        <div className="mx-auto md:mt-12 lg:mt-4 max-w-7xl">
+            <div className="relative w-full md:w-11/12 mx-auto bg-karathuru rounded-lg md:px-10 bg-no-repeat bg-cover bg-center min-h-[360px] border-4 border-neutral-700">
+                <div className="absolute bottom-6 md:bottom-12 left-0 w-full">
+                    <div className="flex justify-between w-full items-end px-8 flex-wrap">
+                        <div className="text-left w-full md:w-1/2">
+                            <div className="text-3xl font-bold">Karathuru Project</div>
+                            <div className="text-sm font-medium flex items-center mt-1">
+                                By 
+                                <div className="text-neutral-200 font-normal ml-1">Worldview International Foundation</div>
+                                <div className="ml-1">
+                                    <img src="/assets/images/common/verified-icon.svg" alt="Verified Icon" className="h-4 w-4" />
+                                </div>
+                            </div>
+                            <div className="text-sm font-medium ">
+                                Pre-Register to access this exclusive funding opportunity
+                            </div>
+                            <div className="mt-8 flex justify-between">
+                                <div className="text-left">
+                                    <TransparentLinkButton  href="https://register.carbonable.io">Pre-register</TransparentLinkButton>
+                                </div>
+                                <div className="text-right md:hidden">
+                                    <ProjectStatus />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-right w-full md:w-1/2 mt-8 md:mt-0 hidden md:flex md:justify-end items-end">
+                            <ProjectStatus />
+                        </div>
                     </div>
-                    <div className="">Nature restoration</div>
-                </h1>
-                <img src="/assets/images/backgrounds/launchpad.svg" alt="world map" className="w-10/12 mx-auto mt-4 md:w-4/12" />
+                </div>
             </div>
             <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12 md:pl-6">
                 <div className="uppercase font-inter text-bold text-lg text-center md:text-left md:pl-1 2xl:text-xl">Projects to finance</div>
