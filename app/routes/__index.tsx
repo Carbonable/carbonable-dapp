@@ -51,7 +51,7 @@ export default function Index() {
                     <NavMenu closeMenu={closeMenu} />
                 </div>
             </nav>
-            <main className='lg:w-[calc(100%_-_222px)] lg:ml-[222px] mt-[110px]' id="page-wrap">
+            <main className='w-full lg:w-[calc(100%_-_222px)] lg:ml-[222px] mt-[110px]' id="page-wrap">
                 <Outlet context={{ notifs,
                                    setNotifs,
                                    mustReloadMigration,
