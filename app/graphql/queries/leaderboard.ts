@@ -11,11 +11,20 @@ export const GET_LEADERBOARD = gql`
                     rule
                     value
                 }
+                categories {
+                    fund
+                    farming
+                    other
+                }
+                position
             }
             page_info {
-                total
+                max_page
                 page
                 limit
+                count
+                has_next_page
+                has_previous_page
             }
         }
     }
@@ -31,6 +40,12 @@ export const GET_MY_RANK = gql`
                 rule
                 value
             }
+            categories {
+                fund
+                farming
+                other
+            }
+            position
         }
     }
 `;

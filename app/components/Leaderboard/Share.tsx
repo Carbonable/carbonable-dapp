@@ -7,9 +7,7 @@ import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
 export default function Share() {
     const { address } = useAccount();
     const [points, setPoints] = useState(0);
-
-    // TODO: Replace with actual rank
-    const rank = 12;
+    const [rank, setRank] = useState<number|string>(0);
 
     const { error, data } = useQuery(GET_MY_RANK, {
         variables: {
@@ -20,6 +18,7 @@ export default function Share() {
     useEffect(() => {
         if (data) {
             setPoints(data.leaderboardForWallet.total_score || 0);
+            setRank(data.leaderboardForWallet.position || 'last');
         }
     }, [data]);
 
@@ -40,7 +39,10 @@ export default function Share() {
     )
 }
 
-function formatRank(rank: number) {
+function formatRank(rank: number|string) {
+    if (rank === 'last') {
+        return 'last';
+    }
     if (rank === 1) {
         return "1st";
     }

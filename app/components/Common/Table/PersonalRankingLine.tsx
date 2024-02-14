@@ -7,7 +7,7 @@ import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
 import { minifyAddressOrStarknetId } from "~/utils/utils";
 
 export default function PersonalRankingLine() {
-    const { isConnected } = useAccount();
+    const { isConnected, address } = useAccount();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleConnect = () => {
@@ -16,7 +16,7 @@ export default function PersonalRankingLine() {
         setIsOpen(true);
     }
 
-    if (isConnected === false) {
+    if (isConnected === false || address === undefined) {
         return (
             <tr className="h-[36px]">
                 <td className="w-full flex justify-between items-center px-4">
@@ -31,15 +31,18 @@ export default function PersonalRankingLine() {
     }
 
     return (
-        <ConnectedPersonalRankingLine />
+        <ConnectedPersonalRankingLine
+            address={address}
+        />
     )
 }
 
-// TODO: Replace with actual rank and category points
-function ConnectedPersonalRankingLine() {
-    const rank = parseInt((Math.random() * 100).toFixed(0));
-    const [points, setPoints] = useState(0);
-    const { address } = useAccount();
+function ConnectedPersonalRankingLine({ address }: { address: string }) {
+    const [totalPoints, setTotalPoints] = useState(0);
+    const [fundingPoints, setFundingPoints] = useState(0);
+    const [farmingPoints, setFarmingPoints] = useState(0);
+    const [otherPoints, setOtherPoints] = useState(0);
+    const [rank, setRank] = useState<number|string>(0);
 
     const { error, data } = useQuery(GET_MY_RANK, {
         variables: {
@@ -49,7 +52,11 @@ function ConnectedPersonalRankingLine() {
 
     useEffect(() => {
         if (data) {
-            setPoints(data.leaderboardForWallet.total_score || 0);
+            setTotalPoints(data.leaderboardForWallet.total_score || 0);
+            setFundingPoints(data.leaderboardForWallet.categories.fund || 0);
+            setFarmingPoints(data.leaderboardForWallet.categories.farming || 0);
+            setOtherPoints(data.leaderboardForWallet.categories.other || 0);
+            setRank(data.leaderboardForWallet.position || '🆕');
         }
     }, [data]);
 
@@ -67,31 +74,31 @@ function ConnectedPersonalRankingLine() {
                         { rank === 2 && <>🥈</> }
                         { rank === 3 && <>🥉</> }
                     </div>
-                    <div className="text-neutral-50">{minifyAddressOrStarknetId(address, undefined)}</div>
+                    <div className="text-neutral-50 text-sm">{minifyAddressOrStarknetId(address, undefined)}</div>
                 </div>
             </td>
             <td className="px-4">
                 <div className="flex items-center">
                     <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 mr-2" />
-                    <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
+                    <div className="text-neutral-200 font-light">{fundingPoints.toLocaleString('en-US').replace(/,/g, ' ')}</div>
                 </div>
             </td>
             <td className="px-4">
                 <div className="flex items-center">
                     <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 mr-2" />
-                    <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
+                    <div className="text-neutral-200 font-light">{farmingPoints.toLocaleString('en-US').replace(/,/g, ' ')}</div>
                 </div>
             </td>
             <td className="px-4">
                 <div className="flex items-center">
                     <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 mr-2" />
-                    <div className="text-neutral-200 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
+                    <div className="text-neutral-200 font-light">{otherPoints.toLocaleString('en-US').replace(/,/g, ' ')}</div>
                 </div>
             </td>
             <td className="px-4 w-[160px]">
                 <div className="flex items-center">
                     <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 mr-2" />
-                    <div className="text-neutral-50 font-light">{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
+                    <div className="text-neutral-50 font-light">{totalPoints.toLocaleString('en-US').replace(/,/g, ' ')}</div>
                 </div>
             </td>
         </tr>

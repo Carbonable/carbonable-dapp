@@ -20,17 +20,13 @@ export default function LeaderboardTable() {
         }
     });
 
-    const refetchData = () => {
+    useEffect(() => {
         refetch({
             pagination: {
                 page: currentPage,
                 limit: RESULT_PER_PAGE
             }
         });
-    }
-
-    useEffect(() => {
-        refetchData();
     }, [currentPage]);
 
     useEffect(() => {
@@ -53,7 +49,7 @@ export default function LeaderboardTable() {
             <div className="mt-4 w-full font-inter text-sm overflow-x-scroll">
                 <table className="table-auto text-left min-w-full border-separate rounded-xl border-spacing-0 leader-table">
                     <thead className="bg-neutral-800 text-neutral-100 whitespace-nowrap h-10">
-                        <TableHeader />
+                        <TableHeader userCount={pagination?.count} />
                     </thead>
                     <tbody>
                         <TableResult leaderboard={leaderboard} />
@@ -63,7 +59,7 @@ export default function LeaderboardTable() {
             <div className="mt-8">
                 <Pagination 
                     currentPage={currentPage}
-                    pageCount={loading ? 1 :pagination?.total} 
+                    pageCount={loading ? 1 :pagination?.max_page} 
                     handlePageClick={handlePageClick}
                 />
             </div>
@@ -71,13 +67,13 @@ export default function LeaderboardTable() {
     )
 }
 
-function TableHeader() {
+function TableHeader({userCount}: {userCount: number | undefined}) {
     return (
         <tr className="table-style text-neutral-200 ">
             <th className="px-4 sticky left-0 z-10 bg-neutral-800 font-light border border-opacityLight-10 rounded-tl-xl">
                 <div className="flex items-center">
                     <UserGroupIcon className="h-5 w-5 mr-2" />
-                    567654 users
+                    {userCount} users
                 </div>
             </th>
             <th className="px-4 font-light border-r border-b border-t border-opacityLight-10">Funding</th>
@@ -106,7 +102,7 @@ function TableResult({leaderboard}: {leaderboard: LeaderboardLineData[] | undefi
                     <RankingLine 
                         key={`ranking_${line.id}`} 
                         index={index}
-                        points={parseInt(line.total_score)}
+                        data={line}
                         address={line.wallet_address}
                     />
                 )
