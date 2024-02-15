@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Actions from "./Actions";
 import ProjectInformation from "./ProjectInformation";
-import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { getImageUrlFromMetadata } from "~/utils/utils";
 import SVGMetadata from "~/components/Images/SVGMetadata";
+import type { LaunchpadProps, MintProps, ProjectProps } from "~/types/project";
 
 export enum SaleStatusType {
     Loading,
@@ -61,13 +61,14 @@ export default function ProjectOverview({project, launchpad, mint, whitelist, ha
                     <div className="flex flex-wrap mt-8 w-full mx-auto md:w-[55%] md:order-1 md:mt-0">
                         <ProjectInformation project={project} launchpad={launchpad} mint={mint} priceToDisplay={project.payment_token.displayable_value} projectState={projectState} />
                         <div className="mt-4 w-full flex items-center justify-center">
-                            <Actions projectState={projectState} 
-                                     project={project}
-                                     launchpad={launchpad}
-                                     mint={mint}
-                                     priceToDisplay={project.payment_token.displayable_value} 
-                                     whitelist={whitelist} 
-                                     hasReports={hasReports}
+                            <Actions 
+                                projectState={projectState} 
+                                project={project}
+                                launchpad={launchpad}
+                                mint={mint}
+                                priceToDisplay={project.payment_token.displayable_value} 
+                                whitelist={whitelist} 
+                                hasReports={hasReports}
                              />
                         </div>
                     </div>

@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 export const meta: V2_MetaFunction = ({ data }) => {
-    if (data === undefined || data.content === undefined || data.content.length === 0 ) return [];
+    if (data === undefined) return [];
   
     const content: SanityContent = data.content[0];
     const tags = content.seo.ogarticletag.split(" ") || [];
@@ -62,17 +62,17 @@ export default function Index() {
     const { project, content, mapboxKey, trackingActivated } = useLoaderData();
 
     return (
-      <div className="w-full">
-        <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
-            <ContentWrapper
-              content={content[0]}
-              mapboxKey={mapboxKey}
-              trackingActivated={trackingActivated}
-              slug={project.data.project.slug}
-            >
-                <Content />
-            </ContentWrapper>
+        <div className="w-full">
+            <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
+                <ContentWrapper
+                  content={content[0]}
+                  mapboxKey={mapboxKey}
+                  trackingActivated={trackingActivated}
+                  slug={project.data.project.slug}
+                >
+                    <Content />
+                </ContentWrapper>
+            </div>
         </div>
-      </div>
     )
 }

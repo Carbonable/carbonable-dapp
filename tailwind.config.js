@@ -117,7 +117,7 @@ module.exports = {
         'allocation-resale': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #0AF7B1 0%, #09AD7C 44.27%, #087051 100%);",
         'allocation-offset': "linear-gradient(166.49deg, #13151B 32.69%, rgba(0, 0, 0, 0) 170.72%), linear-gradient(180deg, #A1BCF0 0%, #7B90BA 40.1%, #394D73 100%);",
         'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);",
-        'leaderboard': "linear-gradient(rgba(19, 21, 28, 1) 0%, rgba(19, 21, 28, 0.86) 80%, rgba(19, 21, 28, 1) 100%), url('/assets/images/backgrounds/bg-leaderboard.jpg');"
+        'leaderboard': "linear-gradient(rgba(19, 21, 28, 1) 0%, rgba(19, 21, 28, 0.86) 80%, rgba(19, 21, 28, 1) 100%), url('/assets/images/backgrounds/bg-leaderboard.jpg');",
         'karathuru': "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.85)), url('/assets/images/backgrounds/projects/karathuru.jpeg');",
       },
       backgroundColor: {

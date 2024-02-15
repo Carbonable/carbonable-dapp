@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SVGMetadata from "~/components/Images/SVGMetadata";
-import type { LaunchpadLoaderData } from "~/routes/__index/launchpad";
+import { type LaunchpadLoaderData } from "~/types/project";
 import { getImageUrlFromMetadata } from "~/utils/utils";
 
 export default function LaunchpadCard(project: LaunchpadLoaderData) {
@@ -18,7 +18,7 @@ export default function LaunchpadCard(project: LaunchpadLoaderData) {
 
     return (
         <div className="relative">
-            {isRawSVG === false && <img src={imageSrc.startsWith('https') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" /> }
+            {isRawSVG === false && <img src={imageSrc.startsWith('https') || imageSrc.startsWith('/assets') ? imageSrc : `data:image/png;base64,${imageSrc}`} alt={`${project.project.slug} NFT card`} className="w-full rounded-[8.8%]" /> }
             {isRawSVG === true && <div className="w-full"><SVGMetadata svg={imageSrc} id={project.project.id}/></div>}
         </div>
     )

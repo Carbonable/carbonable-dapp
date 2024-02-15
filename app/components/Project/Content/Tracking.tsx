@@ -8,31 +8,56 @@ import { ChevronLeftIcon, ChevronRightIcon, QuestionMarkCircleIcon } from "@hero
 import moment from "moment";
 import { MapButton } from "~/components/Buttons/ActionButton";
 import TrackingModal from "./TrackingModal";
+import { useFetcher } from "@remix-run/react";
+import { useContent } from "./ContentWrapper";
 
 export enum TrackingIndicator {
     NDVI = "ndvi",
     RGB = "rgb"
 }
 
-export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dmrv}) {
+export default function Tracking({ mapboxKey }: { mapboxKey: string }) {
     mapboxgl.accessToken = mapboxKey;
     const mapContainer = useRef<any>(null);
     const map = useRef<mapboxgl.Map | null>(null);
-    const [bounds] = useState<any>(dmrv.bounds);
-    const [coordinates] = useState<any>(dmrv.coordinates[0]);
-    const [ndvis] = useState<any[]>(dmrv.ndvis);
-    const [rgbs] = useState<any[]>(dmrv.rgbs);
+    const fetcherDmrv = useFetcher();
+    const { slug } = useContent();
+
+    const [bounds, setBounds] = useState<any>("");
+    const [coordinates, setCoordinates] = useState<any>("");
+    const [ndvis, setNdvis] = useState<any[]>([]);
+    const [rgbs, setRgbs] = useState<any[]>([]);
     const [selectedIndicator, setSelectedIndicator] = useState<ValueProps | undefined>(undefined);
     const [selectIndicators, setSelectIndicators] = useState<any[]>([]);
     const [mapLoaded, setMapLoaded] = useState<boolean>(true);
-    const [selectedDateIndex, setSelectedDateIndex] = useState<number>(dmrv.ndvis.length - 1);
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(dmrv.ndvis.length - 1);
+    const [selectedDateIndex, setSelectedDateIndex] = useState<number | undefined>(undefined);
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(undefined);
+    const [indicators, setIndicators] = useState<string[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (fetcherDmrv.data !== undefined) return;
+    
+          fetcherDmrv.load(`/launchpad/dmrv?slug=${slug}`);
+      }, []);
+    
+      useEffect(() => {
+        if (fetcherDmrv.data === undefined) return;
+    
+        const data: Dmrv = fetcherDmrv.data;
+        setBounds(data.bounds);
+        setCoordinates(data.coordinates[0]);
+        setNdvis(data.ndvis);
+        setRgbs(data.rgbs);
+        setSelectedDateIndex(data.ndvis.length - 1);
+        setSelectedImageIndex(data.ndvis.length - 1);
+        setIndicators(data.indicators);
+      }, [fetcherDmrv.data]);
     
     useEffect(() => {
         const selectData = [];
         
-        for (const indicator of dmrv.indicators) {
+        for (const indicator of indicators) {
             selectData.push({
                 id: indicator,
                 name: indicator
@@ -40,10 +65,10 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
         }
         setSelectIndicators(selectData);
         setSelectedIndicator(selectData[0]);
-    }, [dmrv.indicators]);
+    }, [indicators]);
 
     useEffect(() => {
-        if (selectedIndicator === undefined) return;
+        if (selectedIndicator === undefined || selectedImageIndex === undefined) return;
 
         const source = map.current?.getSource('data-viz') as mapboxgl.ImageSource;
         if (source === undefined) return;
@@ -62,7 +87,7 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
 
 
     useEffect(() => {
-        if (map.current) return; // initialize map only once
+        if (map.current || selectedImageIndex === undefined) return; // initialize map only once
 
         // Init the map
         map.current = new mapboxgl.Map({
@@ -150,6 +175,12 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
         });
     });
 
+    if (ndvis.length === 0 || rgbs.length === 0) return (
+        <div className="w-full h-[400px] flex justify-start items-start">
+            Loading...
+        </div>
+    );
+
     return (
         <>
             <div className="relative">
@@ -164,14 +195,23 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
                 </div>
             
                 <div ref={mapContainer} className="mapContainer w-full mt-8">
-                    <div className="absolute top-4 left-4 w-fit z-10">
-                        { selectedIndicator !== undefined && <MapSelect values={selectIndicators} selectedValue={selectedIndicator} setSelectedValue={setSelectedIndicator} /> }
+                    <div className="absolute top-4 left-4 w-fit z-50">
+                        { selectedIndicator !== undefined && 
+                            <MapSelect
+                                values={selectIndicators}
+                                selectedValue={selectedIndicator}
+                                setSelectedValue={setSelectedIndicator} 
+                            />
+                        }
                     </div>
                     <div className="absolute top-4 right-4 w-fit z-10">
-                        { selectedIndicator !== undefined && <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>Learn More <QuestionMarkCircleIcon className="w-5 ml-2" /></MapButton> }
+                        { selectedIndicator !== undefined && 
+                            <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>
+                                Learn More <QuestionMarkCircleIcon className="w-5 ml-2" />
+                            </MapButton> }
                     </div>
                     {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-10">
-                        <TrackingSlider data={dmrv.ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
+                        <TrackingSlider data={ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
                     </div>}
                 </div>
                 {mapLoaded && 
@@ -185,7 +225,10 @@ export default function Tracking({mapboxKey, dmrv}: {mapboxKey: string, dmrv: Dm
             </div>
             {mapLoaded && 
                 <div className="w-fit mx-auto mt-6 py-2 pl-3 pr-2 border border-neutral-300 bg-opacityLight-10 rounded-xl text-sm">
-                    {moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")} <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">🌳 {Math.round(ndvis[selectedDateIndex].value * 100)}%</span>
+                    {selectedDateIndex && moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")}
+                    <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">
+                        🌳 {selectedDateIndex && Math.round(ndvis[selectedDateIndex].value * 100)}%
+                    </span>
                 </div>
             }
             <TrackingModal isOpen={isOpen} setIsOpen={setIsOpen} indicator={selectedIndicator} />

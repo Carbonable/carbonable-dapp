@@ -9,4 +9,4 @@ export async function action({ request }: ActionArgs) {
     const redirectPath = selectedNetwork === 'testnet' ? 'https://testnet.carbonable.io' : 'https://app.carbonable.io';
   
     return redirect(redirectPath);
-  };
+}
