@@ -121,6 +121,7 @@ module.exports = {
         'beta-button': "linear-gradient(180deg, rgba(11, 255, 138, 0.4) 0%, rgba(113, 170, 255, 0.4) 100%);",
         'leaderboard': "linear-gradient(rgba(19, 21, 28, 1) 0%, rgba(19, 21, 28, 0.86) 80%, rgba(19, 21, 28, 1) 100%), url('/assets/images/backgrounds/bg-leaderboard.jpg');",
         'karathuru': "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.85)), url('/assets/images/backgrounds/projects/karathuru.jpeg');",
+        'mint-boost': "linear-gradient(270deg, rgba(168, 196, 239, 1), rgba(10, 242, 173, 1));"
       },
       backgroundColor: {
         'light-5': 'rgba(208, 209, 214, 0.05);',
@@ -128,6 +129,7 @@ module.exports = {
         'dark-40': 'rgba(11, 13, 19, 0.4);',
         'undeposited': '#292A2B',
         'farming-card-bg': '#15171e',
+        'mint-boost-overlay': "rgba(0, 0, 0, 0.6)"
       },
       backgroundSize: {
         'auto': 'auto',
