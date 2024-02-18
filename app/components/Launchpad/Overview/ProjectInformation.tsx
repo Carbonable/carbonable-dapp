@@ -3,8 +3,8 @@ import moment from "moment";
 import { useState } from "react";
 import { shortenNumber } from "~/utils/utils";
 import { SaleStatusType } from "./ProjectOverview";
-import type { LaunchpadProps, MintProps, ProjectProps } from "~/routes/__index/launchpad";
 import { useNotifications } from "~/root";
+import type{ LaunchpadProps, MintProps, ProjectProps } from "~/types/project";
 
 export function Tag({label, type}: {label: string, type:SaleStatusType}) {
     return (

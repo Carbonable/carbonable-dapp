@@ -2,6 +2,8 @@ import { json, type LoaderFunction } from "@remix-run/node";
 import { useLoaderData, type V2_MetaFunction } from "@remix-run/react";
 import Content from "~/components/Project/Content/Content";
 import ContentWrapper from "~/components/Project/Content/ContentWrapper";
+import ProjectWrapper from "~/components/Project/ProjectWrapper";
+import ProjectOverview from "~/components/Project/Selection/ProjectOverview";
 import { client } from "~/utils/sanity/client";
 import { urlFor } from "~/utils/sanity/image";
 import { type SanityContent } from "~/utils/sanity/types";
@@ -63,6 +65,12 @@ export default function Index() {
 
     return (
       <div className="w-full">
+        <ProjectWrapper 
+          project={project.data.project}
+          launchpad={project.data.launchpad}
+        >
+          <ProjectOverview />
+        </ProjectWrapper>
         <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
             <ContentWrapper
               content={content[0]}
@@ -70,7 +78,7 @@ export default function Index() {
               trackingActivated={trackingActivated}
               slug={project.data.project.slug}
             >
-                <Content />
+              <Content />
             </ContentWrapper>
         </div>
       </div>

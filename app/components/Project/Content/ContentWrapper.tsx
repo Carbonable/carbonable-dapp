@@ -9,7 +9,7 @@ type ContentContextType = {
 };
 
 type ContentWrapperProps = {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     content: SanityContent | undefined;
     mapboxKey: string;
     trackingActivated: boolean;

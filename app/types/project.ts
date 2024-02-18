@@ -35,3 +35,11 @@ export interface LaunchpadLoaderData {
     launchpad: LaunchpadProps,
     mint: MintProps
 }
+
+export enum SaleStatusType {
+    Loading,
+    ComingSoon,
+    Whitelist,
+    Public,
+    Soldout
+}
