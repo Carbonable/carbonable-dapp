@@ -15,7 +15,7 @@ export default function BoostAndPoints() {
                 <div className="pl-1 mt-1 lg:mt-0 lg:pl-3 font-light uppercase text-xs flex items-center order-3 lg:order-2 flex-grow">
                     You would earn a total of 
                     <span className="ml-2 py-1 px-2 bg-opacityLight-10 rounded-md flex items-center text-sm">
-                        <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 mr-1" />
+                        <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 md:mr-1 mr-2" />
                         {points} points
                     </span> 
                 </div>

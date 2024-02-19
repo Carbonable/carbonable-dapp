@@ -12,8 +12,8 @@ export default function ProjectKPIs() {
 function ProjectKPI({ label, value, className }: { label: string, value: string, className?: string}) {
     return (
         <div className={`px-4 py-2 border border-opacityLight-10 rounded-lg ${className}`}>
-            <div className="font-light text-sm uppercase text-neutral-200 whitespace-nowrap overflow-hidden text-ellipsis">{label}</div>
-            <div className="font-medium text-lg mt-1 text-neutral-100">{value}</div>
+            <div className="font-light text-xs uppercase text-neutral-200 whitespace-nowrap overflow-hidden text-ellipsis">{label}</div>
+            <div className="font-medium mt-1 text-neutral-100">{value}</div>
         </div>
     )
 }

@@ -7,7 +7,7 @@ export default function SaleInformation() {
             <div className="w-full">
                 <ProjectInformation />
             </div>
-            <div className="w-11/12">
+            <div className="w-[96%] mx-auto mt-6">
                 <SaleAction />
             </div>
         </>
