@@ -61,7 +61,7 @@ export default function ProjectInformation({project, launchpad, mint, priceToDis
     const [maxSupplyForMint] = useState(parseInt(mint.total_value.displayable_value));
     const [supplyLeft] = useState(parseInt(mint.remaining_value.displayable_value));
 
-    const { defautlNetwork } = useNotifications();
+    const { defaultNetwork: defaultNetwork } = useNotifications();
 
     return (
         <div className="relative rounded-3xl w-full bg-project-info-border p-[1px]">
@@ -81,7 +81,7 @@ export default function ProjectInformation({project, launchpad, mint, priceToDis
                         Offset Simulator <ChevronRightIcon className="w-4 ml-2" />
                     </a>
                 </div>
-                {defautlNetwork === "mainnet" && moment(launchpad.sale_date).isBefore(moment(new Date('2022-12-31'))) && 
+                {defaultNetwork === "mainnet" && moment(launchpad.sale_date).isBefore(moment(new Date('2022-12-31'))) && 
                 <div className="mt-2 font-inter text-xs text-neutral-100 flex flex-wrap items-center w-fit mx-auto md:mx-1">
                     Have NFTs on JUNO? 
                     <a href="https://bridge.carbonable.io" target="_blank" rel="noreferrer" className="underline flex flex-nowrap hover:no-underline ml-2">

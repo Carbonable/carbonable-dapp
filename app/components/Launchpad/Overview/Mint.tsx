@@ -13,7 +13,7 @@ import { NotificationSource } from "~/utils/notifications/sources";
 export default function Mint({ project, launchpad, mint, priceToDisplay, whitelist }:
     { project: ProjectProps, launchpad: LaunchpadProps, mint: MintProps, priceToDisplay: number, whitelist: any }) {
     const { address, status } = useAccount();
-    const { notifs, setNotifs, defautlNetwork } = useNotifications();
+    const { notifs, setNotifs, defaultNetwork: defaultNetwork } = useNotifications();
 
     const whitelistInfo = whitelist?.leaves.filter((leaf: any) => simplifyAddress(leaf.address) === simplifyAddress(address))[0];
     const isWhitelisted = !launchpad.public_sale_open && whitelistInfo ? true : false;
@@ -26,7 +26,7 @@ export default function Mint({ project, launchpad, mint, priceToDisplay, whiteli
     const canBuy: boolean = (isWhitelisted || launchpad.public_sale_open) && status === "connected";
 
     let [isConnectOpen, setIsConnectOpen] = useState(false);
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
+    const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
 
     const handleAmountChange = (e: any) => {
         if (e.target.value === "") {

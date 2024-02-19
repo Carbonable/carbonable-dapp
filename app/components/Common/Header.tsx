@@ -15,7 +15,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
     const { disconnect } = useDisconnect();
     const navigate = useNavigate();
     const resolvedPath = useLocation();
-    const { defautlNetwork } = useNotifications();
+    const { defaultNetwork: defaultNetwork } = useNotifications();
 
     return (
         <>
@@ -29,7 +29,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
                 <div className="w-3/12 lg:w-full flex justify-end items-center">
                     { resolvedPath.pathname.split( '/' ).length > 2 && <div className="items-center hidden lg:block absolute left-[300px]"><span className="flex cursor-pointer text-neutral-200 hover:text-neutral-400" onClick={() => navigate(`/${resolvedPath.pathname.split( '/' )[1]}`)}><ArrowLeftIcon className="w-4 mr-2" />Back</span></div>}
                     <div className="hidden lg:flex justify-end">
-                        <div className="mr-6 w-fit">{<FormSelect values={networksList} selectedValue={defautlNetwork} action="/network/preference" />}</div>
+                        <div className="mr-6 w-fit">{<FormSelect values={networksList} selectedValue={defaultNetwork} action="/network/preference" />}</div>
                     </div>
                     {status === 'disconnected' && <ConnectButton displayIcon={true} /> }
 
@@ -37,7 +37,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
                         <>
                             <span className="mr-12 font-trash hidden lg:flex items-center justify-center pt-2">
                                 <Address />
-                                {connector?.id === 'argentWebWallet' && <a href={defautlNetwork === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
+                                {connector?.id === 'argentWebWallet' && <a href={defaultNetwork === 'mainnet' ? "https://web.argent.xyz" : "https://web.hydrogen.argent47.net"} target="_blank" rel="noreferrer" className="ml-2"><ArrowTopRightOnSquareIcon className="w-4 h-4" /></a>}
                             </span>
                             <SecondaryButton onClick={() => disconnect()}>Disconnect</SecondaryButton>
                         </>

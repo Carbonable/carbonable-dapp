@@ -61,8 +61,8 @@ export default function FarmingPage() {
    
     const [calls, setCalls] = useState<Call[]>([]);
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, defautlNetwork, lastIndexerBlock } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
+    const { notifs, setNotifs, defaultNetwork: defaultNetwork, lastIndexerBlock } = useNotifications();
+    const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
     
     const [imageSrc, setImageSrc] = useState<string|undefined>(undefined);
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);

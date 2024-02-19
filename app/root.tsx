@@ -25,19 +25,19 @@ export function links() {
 
 export const loader: LoaderFunction = async () => {
   try {
-    const defautlNetwork = process.env.NETWORK
+    const defaultNetwork = process.env.NETWORK
     const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
     const rpcApiKey = process.env.RPC_API_KEY;
     const avnuUrl = process.env.AVNU_URL;
 
-    return json({ defautlNetwork, webWalletEnabled, rpcApiKey, avnuUrl });
+    return json({ defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl });
   } catch {
       return json([]);
   }
 };
 
 export default function App() {
-  const { defautlNetwork, webWalletEnabled, rpcApiKey, avnuUrl } = useLoaderData();
+  const { defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl } = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
@@ -83,10 +83,10 @@ export default function App() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
       <body>
-        <StarknetProvider defautlNetwork={defautlNetwork} rpcApiKey={rpcApiKey} webWalletEnabled={webWalletEnabled} >
+        <StarknetProvider defaultNetwork={defaultNetwork} rpcApiKey={rpcApiKey} webWalletEnabled={webWalletEnabled} >
           <Outlet context={{ notifs,
                              setNotifs,
-                             defautlNetwork,
+                             defaultNetwork: defaultNetwork,
                              mustReloadMigration,
                              setMustReloadMigration,
                              mustReloadFarmingPage,

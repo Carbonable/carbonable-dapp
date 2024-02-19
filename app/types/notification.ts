@@ -12,7 +12,7 @@ export type Notification = {
 export type ContextType = { 
     notifs: Notification[], 
     setNotifs: (n: Notification[]) => void,
-    defautlNetwork: any, 
+    defaultNetwork: any, 
     mustReloadMigration: boolean, 
     setMustReloadMigration: (b: boolean) => void,
     mustReloadFarmingPage: boolean,

@@ -3,22 +3,20 @@ import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import ConnectDialog from "~/components/Connection/ConnectDialog";
+import CheckoutDialog from "../Checkout/CheckoutDialog";
 
 export default function SaleAction() {
     const { isConnected } = useAccount();
-    const [isOpen, setIsOpen] = useState(false);
+    const [openConnect, setOpenConnect] = useState(false);
+    const [openCheckout, setOpenCheckout] = useState(false);
 
-    const handleBuy = () => {
-        console.log("Buy now");
-    }
-
-    if (isConnected === true) {
+    if (isConnected === false) {
         return (
             <div className="w-full flex items-center">
-                <GreenButton onClick={() => setIsOpen(true)} className="w-full">Connect Wallet</GreenButton>
+                <GreenButton onClick={() => setOpenConnect(true)} className="w-full">Connect Wallet</GreenButton>
                 <ConnectDialog
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
+                    isOpen={openConnect}
+                    setIsOpen={setOpenConnect}
                 />
             </div>
         )
@@ -30,7 +28,11 @@ export default function SaleAction() {
                 <SharesInput />
             </div>
             <div className="w-full lg:w-fit mt-2 lg:mt-0">
-                <GreenButton onClick={handleBuy} className="whitespace-nowrap w-full lg:w-fit">Buy now</GreenButton>
+                <GreenButton onClick={() => setOpenCheckout(true)} className="whitespace-nowrap w-full lg:w-fit">Buy now</GreenButton>
+                <CheckoutDialog
+                    isOpen={openCheckout}
+                    setIsOpen={setOpenCheckout}
+                />
             </div>
         </div>
     )

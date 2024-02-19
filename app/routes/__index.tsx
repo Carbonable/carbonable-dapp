@@ -12,7 +12,7 @@ export default function Index() {
             setNotifs,
             mustReloadMigration,
             setMustReloadMigration,
-            defautlNetwork,
+            defaultNetwork: defaultNetwork,
             mustReloadFarmingPage,
             setMustReloadFarmingPage,
             lastIndexerBlock,
@@ -39,7 +39,7 @@ export default function Index() {
                 <NavMenuMobile handleStateChange={handleStateChange} closeMenu={closeMenu} menuOpen={menuOpen} canClose={true} />
             </div>
             <header className="pb-2 fixed top-0 w-full bg-neutral-800 z-50">
-                { defautlNetwork === 'testnet' && 
+                { defaultNetwork === 'testnet' && 
                     <div className="w-full lg:w-[calc(100%_-_222px)] text-center bg-greenish-700 text-neutral-50 py-1 mb-2 text-sm lg:ml-[222px]">
                         You are currently on the testnet. You can switch to the mainnet here: <a href="https://app.carbonable.io" className="underline">https://app.carbonable.io</a>
                     </div>
@@ -56,7 +56,7 @@ export default function Index() {
                                    setNotifs,
                                    mustReloadMigration,
                                    setMustReloadMigration,
-                                   defautlNetwork,
+                                   defaultNetwork,
                                    mustReloadFarmingPage,
                                    setMustReloadFarmingPage,
                                    lastIndexerBlock,

@@ -41,8 +41,8 @@ export default function FarmingCard({project, portfolio}: {project: any, portfol
     const [calls, setCalls] = useState<Call[]>([]);
     const [contracts, setContracts] = useState<ContractsProps | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, defautlNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
+    const { notifs, setNotifs, defaultNetwork: defaultNetwork, mustReloadFarmingPage, setMustReloadFarmingPage } = useNotifications();
+    const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
     const [claimContext, setClaimContext] = useState<any>("Resale");
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
 

@@ -1,0 +1,21 @@
+{
+    "tokens": [
+        {
+            "symbol": "USDC",
+            "address": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+            "decimals": 6
+        },
+        {
+            "symbol": "STRK",
+            "address": "",
+            "decimals": 18,
+            "powered_by": "avnu"
+        },
+        {
+            "symbol": "ETH",
+            "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+            "decimals": 18,
+            "powered_by": "avnu"
+        }
+    ]
+}

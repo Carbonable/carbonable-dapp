@@ -4,17 +4,17 @@ import { StarknetConfig, argent, braavos, nethermindProvider } from "@starknet-r
 import { devnet, goerli, mainnet } from "@starknet-react/chains";
 import { useMemo } from "react";
 
-export function StarknetProvider({ children, defautlNetwork, rpcApiKey, webWalletEnabled }: { children: React.ReactNode, defautlNetwork: string, rpcApiKey: string, webWalletEnabled: boolean }) {
+export function StarknetProvider({ children, defaultNetwork, rpcApiKey, webWalletEnabled }: { children: React.ReactNode, defaultNetwork: string, rpcApiKey: string, webWalletEnabled: boolean }) {
     const chains = useMemo(() => {
-        if (defautlNetwork === 'mainnet') {
+        if (defaultNetwork === 'mainnet') {
           return [mainnet];
         }
     
-        if (defautlNetwork === 'testnet2') {
+        if (defaultNetwork === 'testnet2') {
           return [devnet];
         }
         return [goerli]
-      }, [defautlNetwork]);
+      }, [defaultNetwork]);
     
       const provider = nethermindProvider({ apiKey: rpcApiKey });
       const connectors = useMemo(() => webWalletEnabled ? [

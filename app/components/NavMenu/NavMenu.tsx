@@ -7,7 +7,7 @@ import { useNotifications } from "~/root";
 import Address from "../Connection/Address";
 
 export default function NavMenu({ closeMenu }: any) {
-    const { defautlNetwork } = useNotifications();
+    const { defaultNetwork: defaultNetwork } = useNotifications();
     return (
         <div className="bg-neutral-900 h-screen text-left pt-[24px]">
             <div className="w-full text-left pl-[24px] hidden lg:block">
@@ -27,7 +27,7 @@ export default function NavMenu({ closeMenu }: any) {
                     <NavLinkOutside link={linkSimulator} />
                 </div>
                 <div className="lg:hidden w-9/12 mb-12 pl-8">
-                    <FormSelect values={networksList} selectedValue={defautlNetwork} action="/network/preference" />
+                    <FormSelect values={networksList} selectedValue={defaultNetwork} action="/network/preference" />
                 </div>
                 <div className="w-full flex items-center justify-start pl-9 lg:justify-center lg:pl-0 mt-4 text-xs">Powered by <img className="w-[92px] ml-2" src="/assets/images/common/starknet.svg" alt="Starknet logo" /></div>
             </div>

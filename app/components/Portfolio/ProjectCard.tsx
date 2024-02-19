@@ -17,8 +17,8 @@ export default function ProjectCard({project, toMigrate, setRefreshData}: {proje
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const calls: Call[] = [];
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defautlNetwork } = useNotifications();
-    const [starkscanUrl] = useState(getStarkscanUrl(defautlNetwork));
+    const { notifs, setNotifs, mustReloadMigration, setMustReloadMigration, defaultNetwork: defaultNetwork } = useNotifications();
+    const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
     const { address } = useAccount();
 
     // check if project is in notification list
