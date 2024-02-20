@@ -5,6 +5,10 @@ export default function SVGMetadata({svg, id, area, carbonUnits}: {svg: any, id:
     useEffect(() => {
         // Function to modify SVGs
         function modifySVG(containerId: string) {
+            if (!svg) {
+                return;
+            }
+
             const image = svg.replaceAll('%23', '#');
             const selector = '#' + containerId;
             const container = SVG().addTo(selector);
