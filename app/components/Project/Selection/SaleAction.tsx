@@ -51,7 +51,7 @@ function SharesInput() {
                 </div>
             </div>
             <div className="uppercase text-xs flex items-center ml-1 mt-2 text-neutral-200">
-                Add 400$ to unlocl x5 boost
+                Add 400$ to unlock x5 boost
                 <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
                     <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
                 </a>
