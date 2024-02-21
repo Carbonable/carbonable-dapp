@@ -68,6 +68,7 @@ export default function Index() {
         <ProjectWrapper 
           project={project.data.project}
           launchpad={project.data.launchpad}
+          mint={project.data.mint}
         >
           <ProjectOverview />
         </ProjectWrapper>

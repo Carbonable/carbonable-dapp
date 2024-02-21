@@ -1,7 +1,9 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useProject } from "../ProjectWrapper";
 
 export default function BoostAndPoints() {
+    const { launchpad } = useProject();
     const boost =  4;
     const points = 1670;
 
@@ -13,7 +15,8 @@ export default function BoostAndPoints() {
                     <img src={`/assets/images/leaderboard/boost_${boost}.svg`} alt="Boost" className="w-24" />
                 </div>
                 <div className="pl-1 mt-1 lg:mt-0 lg:pl-3 font-light uppercase text-xs flex items-center order-3 lg:order-2 flex-grow">
-                    You would earn a total of 
+                    { launchpad.is_sold_out && <span>You have earned a total of </span> }
+                    { !launchpad.is_sold_out && <span>You would earn a total of </span> }
                     <span className="ml-2 py-1 px-2 bg-opacityLight-10 rounded-md flex items-center text-sm">
                         <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 md:mr-1 mr-2" />
                         {points} points
