@@ -2,8 +2,7 @@ import ProjectImage from "../Common/ProjectImage";
 import { useProject } from "../ProjectWrapper";
 
 export default function ImageAndQuantity() {
-    const { project } = useProject();
-    const quantity = 1;
+    const { project, quantity } = useProject();
 
     return (
         <>

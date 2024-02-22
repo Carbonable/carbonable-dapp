@@ -28,6 +28,8 @@ export default function QuoteComponent() {
         }
         const abortController = new AbortController();
 
+        console.log(params, AVNU_OPTIONS);
+
         fetchQuotes(params, {...AVNU_OPTIONS, abortSignal: abortController.signal})
         .then((quotes) => {
             setQuotes(quotes);

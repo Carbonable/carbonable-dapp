@@ -1,7 +1,7 @@
 export const networksList = [
     {
-        "id": "testnet",
-        "name": "Testnet"
+        "id": "goerli",
+        "name": "Goerli"
     },
     {
         "id": "mainnet",

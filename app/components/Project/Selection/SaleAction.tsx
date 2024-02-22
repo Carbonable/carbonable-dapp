@@ -85,14 +85,14 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
 
     return (
         <>
-            <div className="w-full flex items-center border border-opacityLight-10 rounded-lg">
+            <div className="w-full flex items-center border border-opacityLight-10 rounded-lg focus-within:border-opacityLight-30">
                 <div className="flex-grow border-r border-opacityLight-10 flex items-center justify-between px-4 py-2">
                     <input type="number"
                            className="bg-transparent flex-grow outline-none w-1/2" 
                            value={quantity === null  ? '' : quantity} 
                            onChange={handleQuantityChange}
                     />
-                    <div className="text-neutral-200 font-extralight text-sm ml-2 text-right">&cong; {quantity} USDC</div>
+                    <div className="text-neutral-200 font-extralight text-sm ml-2 text-right">= {quantity} USDC</div>
                 </div>
                 <div className="px-4 py-2 bg-opacityLight-10 font-extralight uppercase text-right rounded-r-lg">
                     Shares

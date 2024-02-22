@@ -4,7 +4,7 @@ import { type Token } from "~/types/tokens";
 export default function Currencies({ tokens, selectedToken, setSelectedToken }: { tokens: Token[], selectedToken: Token, setSelectedToken: (token: Token) => void }){
     return (
         <div className="border rounded-lg border-opacityLight-20">
-            <div className="flex justify-between bg-opacityLight-5 py-2 px-4">
+            <div className="flex justify-between bg-opacityLight-5 py-2 px-3">
                 <div className="uppercase text-sm flex-grow">Currency</div>
                 {selectedToken?.powered_by !== undefined &&
                     <img src={`/assets/images/mint/${selectedToken.powered_by}.svg`} alt={selectedToken.powered_by} />

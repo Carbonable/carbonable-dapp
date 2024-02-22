@@ -15,7 +15,7 @@ export default function Header({toggleMenu, menuOpen}: any) {
     const { disconnect } = useDisconnect();
     const navigate = useNavigate();
     const resolvedPath = useLocation();
-    const { defaultNetwork: defaultNetwork } = useNotifications();
+    const { defaultNetwork } = useNotifications();
 
     return (
         <>
