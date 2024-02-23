@@ -23,6 +23,7 @@ export default function CheckoutDetails() {
     const [firstQuote, setFirstQuote] = useState<Quote | undefined>(undefined);
     const [finalQuote, setFinalQuote] = useState<Quote | undefined>(undefined);
     const [avnuCallData, setAvnuCallData] = useState<BuildSwapTransaction | undefined>(undefined);
+    const [avnuFees, setAvnuFees] = useState<number | undefined>(0);
     const [conversionRate, setConversionRate] = useState<string>("1");
     const [finalTokenAmount, setFinalTokenAmount] = useState<number | string>(quantity === null ? 0 : quantity);
     const [canBuy, setCanBuy] = useState<boolean>(true);
@@ -55,6 +56,13 @@ export default function CheckoutDetails() {
         watch: true
     })
 
+    const handleErrors = () => {
+        setFinalQuote(undefined);
+        setConversionRate('n/a');
+        setFinalTokenAmount('n/a');
+        setAvnuFees(undefined);
+    }
+
     useEffect(() => {
         setCanBuy(typeof finalTokenAmount === 'number' || selectedToken.symbol === 'USDC' || calls !== undefined);
         setMargin(selectedToken.symbol === 'USDC' ? 1 : 1.01);
@@ -78,6 +86,7 @@ export default function CheckoutDetails() {
             setFinalQuote(undefined);
             setConversionRate("1");
             setFinalTokenAmount(quantity === null ? '0' : quantity.toString());
+            setAvnuFees(undefined);
             return;
         }
 
@@ -102,9 +111,7 @@ export default function CheckoutDetails() {
         fetchQuotes(quoteParams, {...AVNU_OPTIONS, abortSignal: abortController.signal})
         .then((firstQuotes) => {
             if (firstQuotes.length === 0 || firstQuotes[0].sellTokenPriceInUsd === undefined) {
-                setFinalQuote(undefined);
-                setConversionRate('n/a');
-                setFinalTokenAmount('n/a');
+                handleErrors();
                 return;
             }
 
@@ -112,9 +119,7 @@ export default function CheckoutDetails() {
         })
         .catch((error) => {
             if (!abortController.signal.aborted) {
-                setFinalQuote(undefined);
-                setConversionRate('n/a');
-                setFinalTokenAmount('n/a');
+                handleErrors();
                 console.error(error);
             }
         });
@@ -123,18 +128,14 @@ export default function CheckoutDetails() {
 
     useEffect(() => {
         if (firstQuote === undefined || quantity === null || firstQuote.sellTokenPriceInUsd === undefined) {
-            setFinalQuote(undefined);
-            setConversionRate('n/a');
-            setFinalTokenAmount('n/a');
+            handleErrors();
             return;
         }
 
         const amount = quantity * (1 / firstQuote.sellTokenPriceInUsd) * Math.pow(10, selectedToken.decimals);
 
         if (amount.toString().includes('.')) {
-            setFinalQuote(undefined);
-            setConversionRate('n/a');
-            setFinalTokenAmount('n/a');
+            handleErrors();
             setError(`Amount too low to pay in ${selectedToken.symbol}`);
             return;
         }
@@ -151,20 +152,17 @@ export default function CheckoutDetails() {
         fetchQuotes(params, {...AVNU_OPTIONS, abortSignal: abortController.signal})
         .then((quotes) => {
             if (quotes.length === 0 || quotes[0].sellTokenPriceInUsd === undefined) {
-                setFinalQuote(undefined);
-                setConversionRate('n/a');
-                setFinalTokenAmount('n/a');
+                handleErrors();
                 return;
             }
 
             setFinalQuote(quotes[0]);
             setConversionRate((1 / quotes[0].sellTokenPriceInUsd).toFixed(6));
             setFinalTokenAmount((quantity * (1 / quotes[0].sellTokenPriceInUsd) * margin));
+            setAvnuFees(quotes[0].avnuFeesInUsd);
         }).catch((error) => {
             if (!abortController.signal.aborted) {
-                setFinalQuote(undefined);
-                setConversionRate('n/a');
-                setFinalTokenAmount('n/a');
+                handleErrors();
                 console.error(error);
             }
         });
@@ -259,7 +257,8 @@ export default function CheckoutDetails() {
                     selectedToken={selectedToken}
                     conversionRate={conversionRate}
                     finalTokenAmount={finalTokenAmount}
-                    priceInUsd={quantity === null ? '0' : (quantity * margin).toFixed(2)}
+                    priceInUsd={quantity === null ? '0' : avnuFees ? ((quantity * margin) + avnuFees).toFixed(2) :  (quantity * margin).toFixed(2)}
+                    avnuFees={avnuFees}
                 />
             </div>
             <div className="mt-4">

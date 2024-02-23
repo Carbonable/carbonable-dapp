@@ -1,6 +1,6 @@
 import { type Token } from "~/types/tokens";
 
-export default function PaymentDetails({ selectedToken, conversionRate, finalTokenAmount, priceInUsd }: { selectedToken: Token, conversionRate: string, finalTokenAmount: number | string, priceInUsd: string}) {
+export default function PaymentDetails({ selectedToken, conversionRate, finalTokenAmount, priceInUsd, avnuFees }: { selectedToken: Token, conversionRate: string, finalTokenAmount: number | string, priceInUsd: string, avnuFees: number | undefined}) {
     const boost = 2;
 
     return (
@@ -15,6 +15,14 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
                         1 SHARE {selectedToken.symbol === 'USDC' ? <span>=</span> : <span>&cong;</span>} {conversionRate} {selectedToken.symbol}
+                    </div>
+                </div>
+                <div className="flex justify-between items-center mt-4">
+                    <div className="text-sm text-left">
+                        Fees
+                    </div>
+                    <div className="text-sm text-right text-neutral-300 font-light">
+                        {avnuFees === undefined ? 'n/a' : '$' + avnuFees.toFixed(2)}
                     </div>
                 </div>
                 <div className="flex justify-between items-center mt-4">
