@@ -1,3 +1,32 @@
+export interface ValueProps {
+    value: string,
+    decimals: number
+}
+
+export interface DisplayableProps {
+    displayable_value: string,
+    type: string
+    value: ValueProps
+}
+
+export interface CurrentMilestoneProps {
+    id: number,
+    milestone_ceil: number,
+    remaining: DisplayableProps
+}
+
+export interface MilestoneProps {
+    id: number,
+    boost: string,
+    ceil: string,
+}
+
+export interface MetadataProps {
+    milestones: MilestoneProps[],
+    rating: string,
+    ton_price: string,
+}
+
 export interface ProjectProps {
     id: string,
     slug: string,
@@ -7,7 +36,9 @@ export interface ProjectProps {
     forecasted_apr: string,
     total_value: string,
     value_decimals: string,
-    payment_token?: any
+    payment_token?: any,
+    current_milestone: CurrentMilestoneProps,
+    metadata: MetadataProps
 }
 
 export interface LaunchpadProps {

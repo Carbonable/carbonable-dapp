@@ -62,6 +62,7 @@ export const meta: V2_MetaFunction = ({ data }) => {
 
 export default function Index() {
     const { project, content, mapboxKey, trackingActivated } = useLoaderData();
+    console.log(project)
 
     return (
       <div className="w-full">

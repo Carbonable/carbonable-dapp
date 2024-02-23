@@ -1,10 +1,13 @@
+import { useProject } from "../ProjectWrapper";
+
 export default function ProjectKPIs() {
+    const { project } = useProject();
     return (
         <>
-            <ProjectKPI className="col-span-2 md:col-span-1" label="Shares" value="100,000" />
-            <ProjectKPI className="col-span-2 md:col-span-1" label="Remaining" value="10,000" />
-            <ProjectKPI className="col-span-2 md:col-span-1" label="$ per t/CO2" value="11.5" />
-            <ProjectKPI className="col-span-2 md:col-span-1" label="Rating" value="AA" />
+            <ProjectKPI className="col-span-2 md:col-span-1" label="Shares" value={(project.current_milestone.milestone_ceil * Math.pow(10, -6)).toFixed(0)} />
+            <ProjectKPI className="col-span-2 md:col-span-1" label="Remaining" value={parseFloat(project.current_milestone.remaining.displayable_value).toFixed(0)} />
+            <ProjectKPI className="col-span-2 md:col-span-1" label="$ per t/CO2" value={project.metadata.ton_price} />
+            <ProjectKPI className="col-span-2 md:col-span-1" label="Rating" value={project.metadata.rating} />
         </>
     )
 }

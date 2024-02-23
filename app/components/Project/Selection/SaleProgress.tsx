@@ -1,19 +1,21 @@
 import { useProject } from "../ProjectWrapper";
 
 export default function SaleProgress() {
-    const { launchpad } = useProject();
+    const { launchpad, project } = useProject();
+    const currentMilestone = project.metadata.milestones.find((milestone) => milestone.id === project.current_milestone.id);
+    const nextMilestone = project.metadata.milestones.find((milestone) => milestone.id === project.current_milestone.id + 1);
 
     return (
         <>
             <div className="flex items-center w-full flex-nowrap justify-between px-6">
                 <div className="w-fit">
-                    <PhaseAndBoost phase={1} boost={4} />
+                    <PhaseAndBoost phase={currentMilestone?.id} boost={currentMilestone?.boost} />
                 </div>
                 <div className="flex-grow px-6 hidden lg:block">
                     <img src="/assets/images/leaderboard/separator.svg" alt="Progress" className="w-full" />
                 </div>
                 <div className="w-fit text-right">
-                    <PhaseAndBoost phase={2} boost={3} align="right" isSoldout={launchpad.is_sold_out} />
+                    <PhaseAndBoost phase={nextMilestone?.id} boost={nextMilestone?.boost} align="right" isSoldout={launchpad.is_sold_out} />
                 </div>
             </div>
             <div className="mt-2 w-full">
@@ -24,12 +26,17 @@ export default function SaleProgress() {
     )
 }
 
-function PhaseAndBoost({ phase, boost, align, isSoldout }: { phase: number, boost: number, align?: string, isSoldout?: boolean}) {
+function PhaseAndBoost({ phase, boost, align, isSoldout }: { phase: number | undefined, boost: string | undefined, align?: string, isSoldout?: boolean}) {
     if (isSoldout) return (
         <div className={`flex items-center justify-between flex-nowrap w-fit ${align === "right" ? "justify-end" : ""}`}>
             <span className="text-xs font-light text-neutral-100 whitespace-nowrap">Completed</span>
         </div>
     )
+
+    if (phase === undefined || boost === undefined) {
+        return null;
+    }
+
 
     return (
         <div className={`flex items-center justify-between flex-nowrap w-fit ${align === "right" ? "justify-end" : ""}`}>
@@ -40,6 +47,7 @@ function PhaseAndBoost({ phase, boost, align, isSoldout }: { phase: number, boos
 }
 
 function ProgressBar({ isSoldout }: { isSoldout?: boolean}) {
+    const { project, launchpad } = useProject();
     if (isSoldout) return (
         <div className="w-full mt-1 bg-opacityLight-10 h-1 rounded-full">
             <div className="h-full bg-green-blue w-full rounded-full"></div>
@@ -48,7 +56,7 @@ function ProgressBar({ isSoldout }: { isSoldout?: boolean}) {
 
     return (
         <div className="w-full mt-1 bg-opacityLight-10 h-1 rounded-full">
-            <div className="h-full bg-green-blue w-1/2 rounded-full"></div>
+            <div className={`h-full bg-green-blue rounded-full`} style={{width: launchpad.is_sold_out ? '100%' : `${(1 - (parseFloat(project.current_milestone.remaining.displayable_value) / (project.current_milestone.milestone_ceil * Math.pow(10, -6)))) * 100}%`}}></div>
         </div>
     )
 }
