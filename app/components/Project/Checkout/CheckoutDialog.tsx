@@ -51,7 +51,7 @@ export default function CheckoutDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                     <ImageAndQuantity />
                                 </div>
                                 <div className='w-full px-2 md:col-span-3 mt-8 md:mt-0'>
-                                    <CheckoutDetails />
+                                    <CheckoutDetails setIsOpen={setIsOpen} />
                                 </div>
                             </div>
                         </Dialog.Panel>

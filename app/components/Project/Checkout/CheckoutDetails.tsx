@@ -9,16 +9,19 @@ import PaymentDetails from "./PaymentDetails";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { useAccount, useBalance, useContractWrite } from "@starknet-react/core";
 import { type QuoteRequest, fetchQuotes, type BuildSwapTransaction, type Quote, fetchBuildExecuteTransaction } from "@avnu/avnu-sdk";
-import { num } from "starknet";
+import { TransactionStatus, num } from "starknet";
 import { useProject } from "../ProjectWrapper";
+import { NotificationSource } from "~/utils/notifications/sources";
+import { getStarkscanUrl } from "~/utils/utils";
+import _ from "lodash";
 
 const MIN_ETH = 0.25;
 const MIN_STRK = 500;
 
-export default function CheckoutDetails() {
-    const { defaultNetwork, avnuUrl } = useNotifications();
+export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) {
+    const { defaultNetwork, avnuUrl, notifs, setNotifs } = useNotifications();
     const { address } = useAccount();
-    const { quantity, launchpad } = useProject();
+    const { quantity, launchpad, project } = useProject();
     const AVNU_OPTIONS = useMemo(() => ({ baseUrl: avnuUrl }), [avnuUrl]);
     const [firstQuote, setFirstQuote] = useState<Quote | undefined>(undefined);
     const [finalQuote, setFinalQuote] = useState<Quote | undefined>(undefined);
@@ -29,6 +32,8 @@ export default function CheckoutDetails() {
     const [canBuy, setCanBuy] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [margin, setMargin] = useState<number>(1);
+    const [txHash, setTxHash] = useState<string | undefined>("");
+    const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
 
     const tokens: Token[] = useMemo(() => {
         let config: Token[] = [];
@@ -238,10 +243,30 @@ export default function CheckoutDetails() {
 
     const { writeAsync } = useContractWrite({ calls });
 
-    const handleClick = () => {
-        const result = writeAsync();
-        console.log(result);
+    const handleClick = async () => {
+        const result = await writeAsync();
+        setTxHash(result?.transaction_hash);
     }
+
+    useEffect(() => {
+        // When txHash is set, add toast notification
+        if (txHash !== undefined && txHash !== "" && _.find(notifs, (notification: any) => notification.txHash === txHash) === undefined) {
+            setNotifs([...notifs, {
+                txHash: txHash,
+                project: project.id,
+                source: NotificationSource.MINT,
+                txStatus: TransactionStatus.RECEIVED,
+                walletAddress: address,
+                message: {
+                    title: `Minting ${quantity} shares of ${project.name}`,
+                    message: 'Your transaction is ' + TransactionStatus.RECEIVED, 
+                    link: `${starkscanUrl}/tx/${txHash}`
+                }
+            }]);
+
+            setIsOpen(false);
+        }
+    }, [txHash]);
 
     return (
         <>
