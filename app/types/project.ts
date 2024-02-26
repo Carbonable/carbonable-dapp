@@ -12,13 +12,18 @@ export interface DisplayableProps {
 export interface CurrentMilestoneProps {
     id: number,
     milestone_ceil: number,
-    remaining: DisplayableProps
+    boost: string,
+    remaining: DisplayableProps,
+    ha: string,
+    ton: string,
 }
 
 export interface MilestoneProps {
     id: number,
     boost: string,
     ceil: string,
+    ha: string,
+    ton: string,
 }
 
 export interface MetadataProps {

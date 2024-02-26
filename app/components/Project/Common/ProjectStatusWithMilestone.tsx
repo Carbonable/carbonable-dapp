@@ -3,9 +3,7 @@ import { useProject } from "../ProjectWrapper";
 import { SaleStatusType } from "~/types/project";
 
 export default function ProjectStatusWithMilestone() {
-    // TODO: Replace with actual phase and status
-    const phase = 1;
-    const { launchpad } = useProject();
+    const { launchpad, project } = useProject();
     const [saleState, setSaleState] = useState<SaleStatusType>(SaleStatusType.ComingSoon);
 
     useEffect(() => {
@@ -39,7 +37,7 @@ export default function ProjectStatusWithMilestone() {
         <div className="w-fit rounded-lg bg-greenish-700/50 flex items-center py-[2px] pl-2 pr-[2px] font-light uppercase text-xs">
             <div className="text-greenish-400">Live</div>
             <div className="ml-2 border border-opacityLight-30 bg-opacityLight-20 py-[1px] px-2 rounded-md">
-                Phase {phase}
+                Phase {project.current_milestone.id + 1}
             </div>
         </div>
     )
