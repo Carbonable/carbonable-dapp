@@ -3,11 +3,10 @@ import { getImageUrlFromMetadata } from "~/utils/utils";
 import SVGMetadata from "../../Images/SVGMetadata";
 import { useProject } from "../ProjectWrapper";
 
-export default function ProjectImage() {
-    const { project } = useProject();
+export default function ProjectImage({ imageId }: { imageId: string }) {
     const [imageSrc, setImageSrc] = useState<string>("/assets/images/backgrounds/bg-farming-card.png");
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
-    console.log(project);
+    const { project } = useProject();
 
     useEffect(() => {
         if (project.uri.uri) {
@@ -27,9 +26,9 @@ export default function ProjectImage() {
                 <div className="w-full">
                     <SVGMetadata 
                         svg={imageSrc} 
-                        id={project.id}
-                        area={project.current_milestone.ha + " ha"}
-                        carbonUnits={project.current_milestone.ton + " t"}
+                        id={imageId}
+                        area={project.current_milestone.ha ? project.current_milestone.ha + "ha" : undefined}
+                        carbonUnits={project.current_milestone.ton ? project.current_milestone.ton + "t" : undefined}
                     />
                 </div>
             }
