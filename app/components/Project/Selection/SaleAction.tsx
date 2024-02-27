@@ -6,6 +6,9 @@ import ConnectDialog from "~/components/Connection/ConnectDialog";
 import CheckoutDialog from "../Checkout/CheckoutDialog";
 import { useProject } from "../ProjectWrapper";
 import { GreenLinkButton } from "~/components/Buttons/LinkButton";
+import { NextBoostForValue } from "~/graphql/__generated__/graphql";
+import { useQuery } from "@apollo/client";
+import { GET_NEXT_BOOST_FOR_WALLET } from "~/graphql/queries/boost";
 
 export default function SaleAction() {
     const { isConnected } = useAccount();
@@ -63,7 +66,36 @@ export default function SaleAction() {
 
 function SharesInput({ canBuy }: { canBuy: boolean }) {
     const { quantity, setQuantity, mint } = useProject();
+    const { address } = useAccount();
     const minValue = parseFloat(mint.min_value_per_tx.displayable_value);
+    const [boost, setBoost] = useState<NextBoostForValue | undefined>(undefined);
+    const { error, data, refetch } = useQuery(GET_NEXT_BOOST_FOR_WALLET, {
+        variables: {
+            wallet_address: address,
+            value_to_buy: quantity,
+            address: "",
+            slot: 1
+        }
+    });
+
+    useEffect(() => {
+        refetch({
+            wallet_address: address,
+            value_to_buy: quantity,
+            address: "",
+            slot: 1
+        });
+    }, [quantity, address]);
+
+    useEffect(() => {
+        if (data) {
+            setBoost(data.nextBoostForWallet);
+        }
+    }, [data]);
+
+    if (error) {
+        console.error(error);
+    }
 
     const handleQuantityChange = (e: any) => {
         if (e.target.value === "") {
@@ -99,7 +131,7 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
                 </div>
             </div>
             <div className="uppercase text-xs flex items-center ml-1 mt-2 text-neutral-200">
-                Add 400$ to unlock x5 boost
+                {boost && <span>Add {boost?.missing}$ to unlock x{boost?.boost} boost</span>}
                 <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
                     <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
                 </a>

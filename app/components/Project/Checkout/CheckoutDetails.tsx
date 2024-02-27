@@ -141,7 +141,7 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
 
         if (amount.toString().includes('.')) {
             handleErrors();
-            setError(`Amount too low to pay in ${selectedToken.symbol}`);
+            setError(`Amount too low to pay in ${selectedToken.symbol}. You can pay in USDC instead.`);
             return;
         }
 

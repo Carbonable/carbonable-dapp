@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from "@apollo/client";
 import { json, type LoaderFunction } from "@remix-run/node";
 import { useLoaderData, type V2_MetaFunction } from "@remix-run/react";
 import Content from "~/components/Project/Content/Content";
@@ -23,7 +24,12 @@ export const loader: LoaderFunction = async ({ params }) => {
         { slug: params.slug }
       );
   
-      return json({project, content, mapboxKey: process.env.MAPBOX, trackingActivated: process.env.TRACKING_ACTIVATED === "true"});
+      return json({ project,
+                    content,
+                    mapboxKey: process.env.MAPBOX,
+                    trackingActivated: process.env.TRACKING_ACTIVATED === "true",
+                    graphQLEndpoint: process.env.GRAPHQL_ENDPOINT
+                  });
 
     } catch (e) {
       console.error(e)
@@ -61,27 +67,40 @@ export const meta: V2_MetaFunction = ({ data }) => {
 };
 
 export default function Index() {
-    const { project, content, mapboxKey, trackingActivated } = useLoaderData();
+    const { project, content, mapboxKey, trackingActivated, graphQLEndpoint } = useLoaderData();
+
+    const graphQLClient = new ApolloClient({
+      ssrMode: true,
+      link: createHttpLink({
+      uri: graphQLEndpoint,
+      headers: {
+          'Access-Control-Allow-Origin': '*',
+      },
+      }),
+      cache: new InMemoryCache(),
+  });
 
     return (
       <div className="w-full">
-        <ProjectWrapper 
-          project={project.data.project}
-          launchpad={project.data.launchpad}
-          mint={project.data.mint}
-        >
-          <ProjectOverview />
-        </ProjectWrapper>
-        <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
-            <ContentWrapper
-              content={content[0]}
-              mapboxKey={mapboxKey}
-              trackingActivated={trackingActivated}
-              slug={project.data.project.slug}
-            >
-              <Content />
-            </ContentWrapper>
-        </div>
+        <ApolloProvider client={graphQLClient}>
+          <ProjectWrapper 
+            project={project.data.project}
+            launchpad={project.data.launchpad}
+            mint={project.data.mint}
+          >
+            <ProjectOverview />
+          </ProjectWrapper>
+          <div className="mt-20 w-11/12 mx-auto px-2 xl:w-10/12 2xl:w-9/12 2xl:max-w-6xl">
+              <ContentWrapper
+                content={content[0]}
+                mapboxKey={mapboxKey}
+                trackingActivated={trackingActivated}
+                slug={project.data.project.slug}
+              >
+                <Content />
+              </ContentWrapper>
+          </div>
+        </ApolloProvider>
       </div>
     )
 }
