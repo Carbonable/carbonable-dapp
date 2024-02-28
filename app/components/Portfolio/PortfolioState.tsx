@@ -13,7 +13,7 @@ export default function PortfolioState({isConnected, state, projects, badges, re
     if (reloadData) {
         return (
             <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
-                <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
+                <div className="uppercase font-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
                 <GreenButton className="w-fit mt-2" onClick={() => setReloadData(false)}>Reload data</GreenButton>
             </div>
         )
@@ -21,7 +21,7 @@ export default function PortfolioState({isConnected, state, projects, badges, re
 
     return (
         <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12">
-            <div className="uppercase font-trash text-bold text-lg text-left md:pl-1 2xl:text-xl">My Assets</div>
+            <div className="uppercase font-bold text-xl text-left md:pl-1 2xl:text-2xl">My Assets</div>
             {state === 'loading' && <LoaderProjects /> }
             {state !== 'loading' && <ProjectsList projects={projects} setRefreshData={setRefreshData} />}
         </div>

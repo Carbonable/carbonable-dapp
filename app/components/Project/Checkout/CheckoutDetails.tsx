@@ -244,8 +244,12 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
     const { writeAsync } = useContractWrite({ calls });
 
     const handleClick = async () => {
-        const result = await writeAsync();
-        setTxHash(result?.transaction_hash);
+        try {
+            const result = await writeAsync();
+            setTxHash(result?.transaction_hash);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {

@@ -86,7 +86,7 @@ export default function App() {
         <StarknetProvider defaultNetwork={defaultNetwork} rpcApiKey={rpcApiKey} webWalletEnabled={webWalletEnabled} >
           <Outlet context={{ notifs,
                              setNotifs,
-                             defaultNetwork: defaultNetwork,
+                             defaultNetwork,
                              mustReloadMigration,
                              setMustReloadMigration,
                              mustReloadFarmingPage,

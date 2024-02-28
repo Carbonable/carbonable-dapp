@@ -1,8 +1,13 @@
 import { type Token } from "~/types/tokens";
 import { useProject } from "../ProjectWrapper";
+import { useMemo } from "react";
 
 export default function PaymentDetails({ selectedToken, conversionRate, finalTokenAmount, priceInUsd, avnuFees }: { selectedToken: Token, conversionRate: string, finalTokenAmount: number | string, priceInUsd: string, avnuFees: number | undefined}) {
     const { boost } = useProject();
+    const boostValue = useMemo(() => {
+        if (boost === undefined) return 0;
+        return parseInt(boost.boost) / 100;
+    }, [boost]);
 
     return (
         <div className="border rounded-lg border-opacityLight-20">
@@ -29,7 +34,7 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                 <div className="flex justify-between items-center mt-4">
                     <div className="text-sm text-left flex items-center">
                         Points
-                        <img src={`/assets/images/leaderboard/boost_${boost?.boost}.svg`} alt="Boost" className="w-20 ml-2" />
+                        {boostValue !== 0 && <img src={`/assets/images/leaderboard/boost_${boostValue}.svg`} alt="Boost" className="w-20 ml-2" />}
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
                         {boost?.total_score}

@@ -12,7 +12,7 @@ export default function Index() {
             setNotifs,
             mustReloadMigration,
             setMustReloadMigration,
-            defaultNetwork: defaultNetwork,
+            defaultNetwork,
             mustReloadFarmingPage,
             setMustReloadFarmingPage,
             lastIndexerBlock,

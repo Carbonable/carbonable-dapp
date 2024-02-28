@@ -18,7 +18,7 @@ export default function Management({context, tab, assetsAllocation, contracts, p
     const [disclaimer, setDisclaimer] = useState("");
     const [calls, setCalls] = useState<Call[] | undefined>(undefined);
     const [txHash, setTxHash] = useState<string | undefined>("");
-    const { notifs, setNotifs, defaultNetwork: defaultNetwork } = useNotifications();
+    const { notifs, setNotifs, defaultNetwork } = useNotifications();
     const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
     const [hasErrror, setHasError] = useState(false);
     const { address } = useAccount();

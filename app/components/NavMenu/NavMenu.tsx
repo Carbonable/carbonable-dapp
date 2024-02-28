@@ -7,7 +7,7 @@ import { useNotifications } from "~/root";
 import Address from "../Connection/Address";
 
 export default function NavMenu({ closeMenu }: any) {
-    const { defaultNetwork: defaultNetwork } = useNotifications();
+    const { defaultNetwork } = useNotifications();
     return (
         <div className="bg-neutral-900 h-screen text-left pt-[24px]">
             <div className="w-full text-left pl-[24px] hidden lg:block">

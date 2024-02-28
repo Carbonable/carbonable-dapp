@@ -29,8 +29,8 @@ export const meta: V2_MetaFunction = () => {
 
 function KPI({title, value}: {title: string, value: string}) {
     return (
-        <div className="flex flex-col items-start justify-start text-neutral-100 font-trash">
-            <h1 className="font-bold uppercase text-xs md:text-sm lg:text-lg">{title}</h1>
+        <div className="flex flex-col items-start justify-start text-neutral-100 font-bold">
+            <h1 className="uppercase text-xs md:text-sm lg:text-lg">{title}</h1>
             <div className="text-xl mt-3 md:text-2xl lg:text-4xl">{value}</div>
         </div>
     )

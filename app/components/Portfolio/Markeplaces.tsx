@@ -3,7 +3,7 @@ import { useNotifications } from "~/root";
 import { ASPECT_LINK, ASPECT_TESTNET_LINK, MINTSQUARE_LINK } from "~/utils/links";
 
 export default function Marketplaces({ project }: { project: any }) {
-    const { defaultNetwork: defaultNetwork } = useNotifications();
+    const { defaultNetwork } = useNotifications();
 
     return (
         <div className="absolute invisible top-0 left-0 bg-transparent group-hover:bg-dark-40 group-hover:visible w-full h-[100%] rounded-[8.8%]">
