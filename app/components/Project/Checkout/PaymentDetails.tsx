@@ -3,11 +3,17 @@ import { useProject } from "../ProjectWrapper";
 import { useMemo } from "react";
 
 export default function PaymentDetails({ selectedToken, conversionRate, finalTokenAmount, priceInUsd, avnuFees }: { selectedToken: Token, conversionRate: string, finalTokenAmount: number | string, priceInUsd: string, avnuFees: number | undefined}) {
-    const { boost } = useProject();
-    const boostValue = useMemo(() => {
+    const { boost, project } = useProject();
+    const quantityBoostValue = useMemo(() => {
         if (boost === undefined) return 0;
         return parseInt(boost.boost) / 100;
     }, [boost]);
+
+    const milestoneBoostValue = useMemo(() => {
+        if (project?.current_milestone?.boost === undefined) return 0;
+
+        return parseFloat(project?.current_milestone.boost);
+    }, [project]);
 
     return (
         <div className="border rounded-lg border-opacityLight-20">
@@ -34,10 +40,13 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                 <div className="flex justify-between items-center mt-4">
                     <div className="text-sm text-left flex items-center">
                         Points
-                        {boostValue !== 0 && <img src={`/assets/images/leaderboard/boost_${boostValue}.svg`} alt="Boost" className="w-20 ml-2" />}
+                        <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
+                        {quantityBoostValue !== 0 && 
+                            <img src={`/assets/images/leaderboard/boost_${quantityBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
+                        }
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
-                        {boost?.total_score}
+                        {(boost?.total_score ? parseFloat(boost.total_score) : 1) * milestoneBoostValue}
                     </div>
                 </div>
             </div>
