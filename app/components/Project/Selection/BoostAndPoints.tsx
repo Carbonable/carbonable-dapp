@@ -16,14 +16,16 @@ export default function BoostAndPoints() {
     const { address } = useAccount();
     const { error, data, refetch } = useQuery(GET_BOOST_FOR_WALLET, {
         variables: {
-            wallet_address: address,
-            value_to_buy: quantity,
+            wallet_address: address ? address : "",
+            value_to_buy: quantity ? quantity : 0,
             address: "",
             slot: 1
         }
     });
 
     useEffect(() => {
+        if (quantity === null || address === undefined) return;
+
         refetch({
             wallet_address: address,
             value_to_buy: quantity,

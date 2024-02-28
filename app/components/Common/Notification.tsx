@@ -37,7 +37,7 @@ export default function Notification({ notif }: { notif: Notification }) {
     }, [notifs]);
 
     const { data } = useWaitForTransaction({ hash: notif.txHash, watch: true, retry: true, });
-    const { data: lastBlockNumber } = useBlockNumber({ refetchInterval: 1000 });
+    const { data: lastBlockNumber } = useBlockNumber({ refetchInterval: 2000 });
 
     useEffect(() => {
         if (data?.status === TransactionStatus.REJECTED) {
@@ -53,7 +53,7 @@ export default function Notification({ notif }: { notif: Notification }) {
             setTimeout(() => {
                 toast.done(notif.txHash);
                 setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
-            }, 2000);
+            }, 4000);
             return;
         }
 
@@ -84,7 +84,7 @@ export default function Notification({ notif }: { notif: Notification }) {
             setTimeout(() => {
                 toast.done(notif.txHash);
                 setNotifs(notifs.filter((n) => n.txHash !== notif.txHash));
-            }, 2000);
+            }, 4000);
         }
     }, [data]);
 

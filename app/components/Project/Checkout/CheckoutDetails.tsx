@@ -15,8 +15,8 @@ import { NotificationSource } from "~/utils/notifications/sources";
 import { getStarkscanUrl } from "~/utils/utils";
 import _ from "lodash";
 
-const MIN_ETH = 0.25;
-const MIN_STRK = 500;
+const MIN_ETH = 0.1;
+const MIN_STRK = 100;
 
 export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) {
     const { defaultNetwork, avnuUrl, notifs, setNotifs } = useNotifications();
@@ -101,7 +101,6 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
 
         const sellAmount = selectedToken.symbol === 'ETH' ? MIN_ETH * Math.pow(10, selectedToken.decimals) : MIN_STRK * Math.pow(10, selectedToken.decimals);
 
-        // Params to get a buy USDC quote for 0.5 ETH or 1000 STRK
         const quoteParams: QuoteRequest = {
             sellTokenAddress: selectedToken.address,
             buyTokenAddress: tokens.filter((token) => token.symbol === 'USDC')[0].address,
@@ -137,7 +136,7 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
             return;
         }
 
-        const amount = quantity * (1 / firstQuote.sellTokenPriceInUsd) * Math.pow(10, selectedToken.decimals);
+        const amount = (quantity * (1 / firstQuote.sellTokenPriceInUsd) * margin) * Math.pow(10, selectedToken.decimals);
 
         if (amount.toString().includes('.')) {
             handleErrors();
@@ -244,12 +243,13 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
     const { writeAsync } = useContractWrite({ calls });
 
     const handleClick = async () => {
-        try {
-            const result = await writeAsync();
-            setTxHash(result?.transaction_hash);
-        } catch (error) {
-            console.error(error);
+        if (calls === undefined || calls.length === 0 ) {
+            setError(`Amount too low to pay in ${selectedToken.symbol}. You can pay in USDC instead.`);
+            return;
         }
+
+        const result = await writeAsync();
+        setTxHash(result?.transaction_hash);
     }
 
     useEffect(() => {
