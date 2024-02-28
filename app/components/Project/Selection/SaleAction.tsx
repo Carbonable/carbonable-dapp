@@ -138,11 +138,15 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
                     Shares
                 </div>
             </div>
-            <div className="uppercase text-xs flex items-center ml-1 mt-2 text-neutral-200">
-                {boost && <span>Add {boost?.missing}$ to unlock x{boostValue} boost</span>}
-                <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
-                    <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
-                </a>
+            <div className="uppercase text-xs flex items-center ml-1 mt-2 text-neutral-200 min-h-[24px]">
+                {boost && boost.boost !== "0" &&
+                    <>
+                        <span>Add {boost?.missing}$ to unlock x{boostValue} boost</span>
+                        <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
+                            <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
+                        </a>
+                    </>
+                }
             </div>
         </>
         
