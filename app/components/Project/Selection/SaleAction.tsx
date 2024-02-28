@@ -1,12 +1,12 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { useAccount } from "@starknet-react/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import ConnectDialog from "~/components/Connection/ConnectDialog";
 import CheckoutDialog from "../Checkout/CheckoutDialog";
 import { useProject } from "../ProjectWrapper";
 import { GreenLinkButton } from "~/components/Buttons/LinkButton";
-import { NextBoostForValue } from "~/graphql/__generated__/graphql";
+import { type NextBoostForValue } from "~/graphql/__generated__/graphql";
 import { useQuery } from "@apollo/client";
 import { GET_NEXT_BOOST_FOR_WALLET } from "~/graphql/queries/boost";
 
@@ -69,6 +69,11 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
     const { address } = useAccount();
     const minValue = parseFloat(mint.min_value_per_tx.displayable_value);
     const [boost, setBoost] = useState<NextBoostForValue | undefined>(undefined);
+    const boostValue = useMemo(() => {
+        if (boost === undefined) return 0;
+        return parseInt(boost.boost) / 100;
+    }, [boost]);
+
     const { error, data, refetch } = useQuery(GET_NEXT_BOOST_FOR_WALLET, {
         variables: {
             wallet_address: address,
@@ -112,6 +117,9 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
             setQuantity(minValue);
             return;
         }
+
+        if (e.target.value === quantity) return;
+
         setQuantity(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value));
     }
 
@@ -131,7 +139,7 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
                 </div>
             </div>
             <div className="uppercase text-xs flex items-center ml-1 mt-2 text-neutral-200">
-                {boost && <span>Add {boost?.missing}$ to unlock x{boost?.boost} boost</span>}
+                {boost && <span>Add {boost?.missing}$ to unlock x{boostValue} boost</span>}
                 <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
                     <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
                 </a>

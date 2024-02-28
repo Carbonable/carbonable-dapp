@@ -3,11 +3,16 @@ import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useProject } from "../ProjectWrapper";
 import { useQuery } from "@apollo/client";
 import { GET_BOOST_FOR_WALLET } from "~/graphql/queries/boost";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
 
 export default function BoostAndPoints() {
     const { launchpad, quantity, boost, setBoost } = useProject();
+    const boostValue = useMemo(() => {
+        if (boost === undefined) return 0;
+        return parseInt(boost.boost) / 100;
+    }, [boost]);
+
     const { address } = useAccount();
     const { error, data, refetch } = useQuery(GET_BOOST_FOR_WALLET, {
         variables: {
@@ -41,11 +46,12 @@ export default function BoostAndPoints() {
         <div className="w-full rounded-xl relative bg-mint-boost">
             <div className="absolute inset-0 bg-mint-boost-overlay rounded-xl"></div>
             <div className="pl-4 pr-2 py-2 text-neutral-100 relative z-10 flex items-center w-full flex-wrap lg:flex-nowrap">
-                <div className="order-1 pr-3 border-r border-opacityLight-10">
-                    {boost === undefined && <img src={`/assets/images/leaderboard/boost_1.1.svg`} alt="Boost" className="w-24" />}
-                    {boost && <img src={`/assets/images/leaderboard/boost_${boost.boost}.svg`} alt="Boost" className="w-24" />}
-                </div>
-                <div className="pl-1 mt-1 lg:mt-0 lg:pl-3 font-light uppercase text-xs flex items-center order-3 lg:order-2 flex-grow">
+                {boostValue !== 0 && 
+                    <div className="order-1 pr-3 border-r border-opacityLight-10">
+                        <img src={`/assets/images/leaderboard/boost_${boostValue}.svg`} alt="Boost" className="w-24" />
+                    </div>
+                }
+                <div className={`${boostValue === 0 ? "pl-0" : "pl-1 lg:pl-3 "} mt-1 lg:mt-0 font-light uppercase text-xs flex items-center order-3 lg:order-2 flex-grow`}>
                     { launchpad.is_sold_out && <span>You would have earned a total of </span> }
                     { !launchpad.is_sold_out && <span>You would earn a total of </span> }
                     <span className="ml-2 py-1 px-2 bg-opacityLight-10 rounded-md flex items-center text-sm">
