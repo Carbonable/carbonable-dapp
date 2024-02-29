@@ -46,6 +46,7 @@ DMRV_API=""
 
 WEB_WALLET_ENABLED=true|false
 TRACKING_ACTIVATED=true|false #False if no DMRV API
+DISPLAY_LAUNCHPAD_HEADER=true|false
 ```
 
 ### ⛏️ Run for dev
