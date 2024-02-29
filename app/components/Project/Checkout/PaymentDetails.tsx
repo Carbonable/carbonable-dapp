@@ -40,7 +40,7 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                 <div className="flex justify-between items-center mt-4">
                     <div className="text-sm text-left flex items-center">
                         Points
-                        <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
+                        <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-2" />
                         {quantityBoostValue !== 0 && 
                             <img src={`/assets/images/leaderboard/boost_${quantityBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
                         }
