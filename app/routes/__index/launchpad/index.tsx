@@ -1,7 +1,8 @@
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import NextSale from "~/components/Launchpad/NextSale";
+import { TransparentLinkButton } from "~/components/Buttons/LinkButton";
+import ProjectStatus from "~/components/Common/ProjectStatus";
 import LaunchpadCard from "~/components/Launchpad/Overview/ProjectCard";
 import { type LaunchpadLoaderData } from "~/types/project";
 
