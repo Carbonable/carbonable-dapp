@@ -31,10 +31,10 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                 </div>
                 <div className="flex justify-between items-center mt-4">
                     <div className="text-sm text-left">
-                        Fees
+                        Swap fees
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
-                        {avnuFees === undefined ? 'free' : '$' + avnuFees.toFixed(2)}
+                        {avnuFees === undefined ? 'None' : '$' + avnuFees.toFixed(2)}
                     </div>
                 </div>
                 <div className="flex justify-between items-center mt-4">

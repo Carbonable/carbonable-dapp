@@ -62,7 +62,7 @@ export default function BoostAndPoints() {
                         }
                     </div>
                 <div className="pl-1 lg:pl-3 mt-1 lg:mt-0 font-light uppercase text-xs flex items-center order-3 lg:order-2 flex-grow">
-                    <span>Earn a total of </span>
+                    <span>Earn </span>
                     <span className="ml-2 py-1 px-2 bg-opacityLight-10 rounded-md flex items-center text-sm">
                         <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-3 w-3 md:mr-1 mr-2" />
                         {(boost?.total_score ? parseFloat(boost.total_score) : 1) * milestoneBoostValue} points

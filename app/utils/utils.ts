@@ -1,4 +1,4 @@
-import { IPFS_GATEWAY, STARKSCAN_MAINNET, STARKSCAN_TESTNET, STARKSCAN_TESTNET2 } from "./links";
+import { IPFS_GATEWAY, STARKSCAN_MAINNET, STARKSCAN_SEPOLIA, STARKSCAN_TESTNET } from "./links";
 
 /**
  * Validate user email format
@@ -152,10 +152,10 @@ export function getStarkscanUrl(network: string): string {
     switch (network) {
         case "mainnet":
             return STARKSCAN_MAINNET;
-        case "testnet":
+        case "goerli":
             return STARKSCAN_TESTNET;
-        case "testnet2":
-            return STARKSCAN_TESTNET2;
+        case "sepolia":
+            return STARKSCAN_SEPOLIA;
         default:
             return STARKSCAN_MAINNET;
     }
