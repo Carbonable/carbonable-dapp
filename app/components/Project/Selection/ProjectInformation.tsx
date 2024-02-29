@@ -8,7 +8,6 @@ import SaleProgress from "./SaleProgress";
 export default function ProjectInformation() {
     const { project } = useProject();
 
-    // TODO: Replace with real KPIs
     return (
         <div className="relative rounded-lg w-full bg-project-info-border p-[1px]">
             <div className="relative rounded-lg bg-project-info pt-4 w-full overflow-hidden">
