@@ -90,6 +90,7 @@ export async function getImageUrl(url: string): Promise<string> {
 export async function getImageUrlFromMetadata(url: string): Promise<any> {
     if (url.startsWith("data:application/json")) {
         const jsonData = JSON.parse(url.split("data:application/json,").pop() || "");
+
         const image = 
             jsonData.image_data ? jsonData.image_data : 
                 jsonData.image ? jsonData.image : null;
