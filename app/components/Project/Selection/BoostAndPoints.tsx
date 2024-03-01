@@ -74,10 +74,10 @@ export default function BoostAndPoints() {
             <div className="absolute inset-0 bg-mint-boost-overlay rounded-xl"></div>
             <div className="pl-4 pr-2 py-2 text-neutral-100 relative z-10 flex items-center w-full flex-wrap lg:flex-nowrap">
                 <div className="order-1 pr-3 border-r border-opacityLight-10 flex items-center">
-                    {milestoneBoostValue && milestoneBoostValue !== 0 && 
+                    {milestoneBoostValue && milestoneBoostValue > 0 && 
                         <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-24" />
                     }
-                    {quantityBoostValue && quantityBoostValue !== 0 && 
+                    {quantityBoostValue > 0 && 
                         <img src={`/assets/images/leaderboard/boost_${quantityBoostValue}.svg`} alt="Boost" className="w-24 ml-2" />
                     }
                 </div>

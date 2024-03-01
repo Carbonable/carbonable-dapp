@@ -43,7 +43,7 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                         {milestoneBoostValue && milestoneBoostValue !== 0 && 
                             <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-2" />
                         }
-                        {quantityBoostValue && quantityBoostValue !== 0 && 
+                        {quantityBoostValue > 0 && 
                             <img src={`/assets/images/leaderboard/boost_${quantityBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
                         }
                     </div>
