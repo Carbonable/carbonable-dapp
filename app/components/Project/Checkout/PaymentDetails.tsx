@@ -40,13 +40,15 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                 <div className="flex justify-between items-center mt-4">
                     <div className="text-sm text-left flex items-center">
                         Points
-                        <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-2" />
-                        {quantityBoostValue !== 0 && 
+                        {milestoneBoostValue && milestoneBoostValue !== 0 && 
+                            <img src={`/assets/images/leaderboard/boost_${milestoneBoostValue}.svg`} alt="Boost" className="w-18 ml-2" />
+                        }
+                        {quantityBoostValue && quantityBoostValue !== 0 && 
                             <img src={`/assets/images/leaderboard/boost_${quantityBoostValue}.svg`} alt="Boost" className="w-18 ml-1" />
                         }
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
-                        {(boost?.total_score ? parseFloat(boost.total_score) : 1) * milestoneBoostValue}
+                        {(boost?.total_score ? parseFloat(boost.total_score) : 1) * milestoneBoostValue > 0 ? milestoneBoostValue : 1}
                     </div>
                 </div>
             </div>

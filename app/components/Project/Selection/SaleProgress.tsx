@@ -41,7 +41,9 @@ function PhaseAndBoost({ phase, boost, align, isSoldout }: { phase: number | und
     return (
         <div className={`flex items-center justify-between flex-nowrap w-fit ${align === "right" ? "justify-end" : ""}`}>
             <span className="text-xs font-light text-neutral-100 whitespace-nowrap">Phase {phase + 1}</span>
-            <img src={`/assets/images/leaderboard/boost_${boost}.svg`} alt="Boost" className="w-[72px] ml-2" />
+            {boost && boost !== "0" &&
+                <img src={`/assets/images/leaderboard/boost_${boost}.svg`} alt="Boost" className="w-[72px] ml-2" />
+            }
         </div>
     )
 }
