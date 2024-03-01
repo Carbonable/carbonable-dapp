@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from "@apollo/client";
 import { json, type LoaderFunction } from "@remix-run/node";
-import { useLoaderData, type V2_MetaFunction } from "@remix-run/react";
+import { useFetcher, useLoaderData, type V2_MetaFunction } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import Content from "~/components/Project/Content/Content";
 import ContentWrapper from "~/components/Project/Content/ContentWrapper";
 import ProjectWrapper from "~/components/Project/ProjectWrapper";
@@ -68,25 +69,51 @@ export const meta: V2_MetaFunction = ({ data }) => {
 
 export default function Index() {
     const { project, content, mapboxKey, trackingActivated, graphQLEndpoint } = useLoaderData();
+    const [launchpad, setLaunchpad] = useState(project.data.launchpad);
+    const [mint, setMint] = useState(project.data.mint);
+    const [projectData, setProjectData] = useState(project.data.project);
+    const fetcher = useFetcher();
 
     const graphQLClient = new ApolloClient({
       ssrMode: true,
       link: createHttpLink({
-      uri: graphQLEndpoint,
-      headers: {
+        uri: graphQLEndpoint,
+        headers: {
           'Access-Control-Allow-Origin': '*',
-      },
+        },
       }),
       cache: new InMemoryCache(),
-  });
+    });
+
+    useEffect(() => {
+      async function refreshData() {
+        fetcher.load(`/launchpad/refresh?slug=${project.data.project.slug}`);
+      }
+  
+      const interval = setInterval(() => {
+        refreshData();
+      }, 5000);
+  
+      return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+      if (fetcher.data === undefined) return;
+  
+      const data = fetcher.data.data;
+  
+      setProjectData(data.project);
+      setLaunchpad(data.launchpad);
+      setMint(data.mint);
+    }, [fetcher.data]);
 
     return (
       <div className="w-full">
         <ApolloProvider client={graphQLClient}>
           <ProjectWrapper 
-            project={project.data.project}
-            launchpad={project.data.launchpad}
-            mint={project.data.mint}
+            project={projectData}
+            launchpad={launchpad}
+            mint={mint}
           >
             <ProjectOverview />
           </ProjectWrapper>
