@@ -48,7 +48,7 @@ export default function PaymentDetails({ selectedToken, conversionRate, finalTok
                         }
                     </div>
                     <div className="text-sm text-right text-neutral-300 font-light">
-                        {(boost?.total_score ? parseFloat(boost.total_score) : 1) * milestoneBoostValue > 0 ? milestoneBoostValue : 1}
+                        {(boost?.total_score ? parseFloat(boost.total_score) : 1) * (milestoneBoostValue > 0 ? milestoneBoostValue : 1)}
                     </div>
                 </div>
             </div>
