@@ -10,6 +10,6 @@ export enum RuleType {
     RESALER = 'resaler'
 }
 
-export const LEADERBOARD_MEDIUM='https://carbonable.medium.com/' 
+export const LEADERBOARD_MEDIUM='https://medium.com/@carbonable/introducing-the-carbonable-leaderboard-f70e8b8f5f4d' 
 export const USDC_DECIMALS = Math.pow(10, 6);
 export const ETH_DECIMALS = Math.pow(10, 18);

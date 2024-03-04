@@ -9,6 +9,7 @@ import { GreenLinkButton } from "~/components/Buttons/LinkButton";
 import { type NextBoostForValue } from "~/graphql/__generated__/graphql";
 import { useQuery } from "@apollo/client";
 import { GET_NEXT_BOOST_FOR_WALLET } from "~/graphql/queries/boost";
+import { LEADERBOARD_MEDIUM } from "~/utils/constant";
 
 export default function SaleAction() {
     const { isConnected } = useAccount();
@@ -144,7 +145,7 @@ function SharesInput({ canBuy }: { canBuy: boolean }) {
                 {boost && boost.boost !== "0" &&
                     <>
                         <span>Add {boost?.missing}$ to unlock x{boostValue} boost</span>
-                        <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer">
+                        <a href={LEADERBOARD_MEDIUM} target="_blank" rel="noreferrer">
                             <InformationCircleIcon className="w-4 ml-2 hover:text-neutral-100" />
                         </a>
                     </>

@@ -6,6 +6,7 @@ import { GET_BOOST_FOR_WALLET } from "~/graphql/queries/boost";
 import { useEffect, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
 import { NavLink } from "@remix-run/react";
+import { LEADERBOARD_MEDIUM } from "~/utils/constant";
 
 export default function BoostAndPoints() {
     const { quantity, boost, setBoost, project, launchpad } = useProject();
@@ -60,7 +61,7 @@ export default function BoostAndPoints() {
                     Check your points on the <NavLink className="text-greenish-500 underline" to="/leaderboard">leaderboard</NavLink>
                 </div>
                 <div className="order-2 lg:order-3 w-max pl-3 lg:pl-0 pr-2">
-                    <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer" className="text-neutral-200 font-light uppercase hover:text-neutral-100 w-fit">
+                    <a href={LEADERBOARD_MEDIUM} target="_blank" rel="noreferrer" className="text-neutral-200 font-light uppercase hover:text-neutral-100 w-fit">
                         <span className="flex xl:hidden lg:justify-end"><QuestionMarkCircleIcon className="w-6" /></span>
                         <span className="hidden xl:flex items-center text-sm justify-end">Learn more <ChevronRightIcon className="ml-1 w-4" /></span>
                     </a>
@@ -89,7 +90,7 @@ export default function BoostAndPoints() {
                     </span> 
                 </div>
                 <div className="order-2 lg:order-3 w-max pl-3 lg:pl-0 pr-2">
-                    <a href="https://carbonable.medium.com" target="_blank" rel="noreferrer" className="text-neutral-200 font-light uppercase hover:text-neutral-100 w-fit">
+                    <a href={LEADERBOARD_MEDIUM} target="_blank" rel="noreferrer" className="text-neutral-200 font-light uppercase hover:text-neutral-100 w-fit">
                         <span className="flex xl:hidden lg:justify-end"><QuestionMarkCircleIcon className="w-6" /></span>
                         <span className="hidden xl:flex items-center text-sm justify-end">Learn more <ChevronRightIcon className="ml-1 w-4" /></span>
                     </a>
