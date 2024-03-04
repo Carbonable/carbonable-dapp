@@ -11,9 +11,9 @@ export function RankingLine({ index, data, address }: { index: number, data: Lea
                 <div className="flex items-center">
                     <div className={`text-neutral-200 font-light ${index < 100 ? 'min-w-[14px]' : 'min-w-[22px]' }`}>{data.position}</div>
                     <div className="ml-1 mr-2 min-w-[28px]">
-                        { index === 0 && <>🥇</> }
-                        { index === 1 && <>🥈</> }
-                        { index === 2 && <>🥉</> }
+                        { data.position === 1 && <>🥇</> }
+                        { data.position === 2 && <>🥈</> }
+                        { data.position === 3 && <>🥉</> }
                     </div>
                     <div className="text-neutral-50">{minifyAddressOrStarknetId(address, undefined)}</div>
                 </div>
