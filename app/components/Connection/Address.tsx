@@ -15,7 +15,7 @@ export default function Address() {
     }, [address, data]);
 
     const pfp = useMemo(() => {
-        if (data !== undefined) {
+        if (data !== undefined && data.profilePicture !== undefined) {
             return data.profilePicture;
         }
 
