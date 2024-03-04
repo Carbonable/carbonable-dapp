@@ -1,17 +1,16 @@
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import Pagination from "../Common/Pagination";
 import { RankingLine } from "../Common/Table/RankingLine";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_LEADERBOARD } from "~/graphql/queries/leaderboard";
 import { RESULT_PER_PAGE } from "~/utils/constant";
-import type { LeaderboardLineData, PageInfo } from "~/graphql/__generated__/graphql";
+import type { LeaderboardLineData } from "~/graphql/__generated__/graphql";
 
 export default function LeaderboardTable() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [pagination, setPagination] = useState<PageInfo | undefined>(undefined);
     const [leaderboard, setLeaderboard] = useState<LeaderboardLineData[] | undefined>(undefined);
-    const { loading, error, data, refetch } = useQuery(GET_LEADERBOARD, {
+    const { error, data, refetch } = useQuery(GET_LEADERBOARD, {
         variables: {
             pagination: {
                 page: currentPage,
@@ -19,6 +18,12 @@ export default function LeaderboardTable() {
             }
         }
     });
+
+    const pagination = useMemo(() => {
+        if (data === undefined) return;
+
+        return data.leaderboard.page_info;
+    }, [data]);
 
     useEffect(() => {
         refetch({
@@ -32,7 +37,6 @@ export default function LeaderboardTable() {
     useEffect(() => {
         if (data) {
             setLeaderboard(data.leaderboard.data);
-            setPagination(data.leaderboard.page_info);
         }
     }, [data]);
 
@@ -57,11 +61,11 @@ export default function LeaderboardTable() {
                 </table>
             </div>
             <div className="mt-8">
-                <Pagination 
+                {pagination && <Pagination 
                     currentPage={currentPage}
-                    pageCount={loading ? 1 :pagination?.max_page} 
+                    pageCount={pagination.max_page} 
                     handlePageClick={handlePageClick}
-                />
+                />}
             </div>
         </>
     )

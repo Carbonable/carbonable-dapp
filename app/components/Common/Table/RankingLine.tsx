@@ -1,10 +1,19 @@
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useStarkName } from "@starknet-react/core";
+import { useMemo } from "react";
 import { type LeaderboardLineData } from "~/graphql/__generated__/graphql";
 import { minifyAddressOrStarknetId } from "~/utils/utils";
 
 export function RankingLine({ index, data, address }: { index: number, data: LeaderboardLineData, address: string }) {
     const { address: walletAddress } = useAccount();
-    console.log(address, walletAddress)
+    const { data: starknetId } = useStarkName({address});
+    const starkName = useMemo(() => {
+        if (starknetId) {
+            return minifyAddressOrStarknetId(address, starknetId);
+        }
+
+        return minifyAddressOrStarknetId(address, undefined);
+    }, [starknetId, address]);
+
     return (
         <tr className={`h-[36px] first:rounded-bl-xl last:rounded-br-xl ${address === walletAddress ? "bg-neutral-700" : ""}`}>
             <td className={`px-4 border-r border-b border-opacityLight-10 first:border-l sticky left-0 z-10 ${address === walletAddress ? "bg-neutral-700" : "bg-neutral-800"} w-[240px]`}>
@@ -15,7 +24,7 @@ export function RankingLine({ index, data, address }: { index: number, data: Lea
                         { data.position === 2 && <>🥈</> }
                         { data.position === 3 && <>🥉</> }
                     </div>
-                    <div className="text-neutral-50">{minifyAddressOrStarknetId(address, undefined)}</div>
+                    <div className="text-neutral-50">{starkName}</div>
                 </div>
             </td>
             <td className="px-4 border-r border-b border-opacityLight-10 first:border-l">

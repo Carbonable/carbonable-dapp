@@ -64,7 +64,7 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                         <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-lg border border-neutral-500 bg-neutral-700 p-6 text-left align-middle shadow-xl transition-all">
                         <div className="p-4">
                             <div className='border border-neutral-500 bg-opacityLight-10 py-4 px-6 rounded-lg'>
-                                <div className='flex justify-between items-center gap-x-6'>
+                                <div className='block md:flex md:justify-between md:items-center md:gap-x-6'>
                                     <div className='text-left'>
                                         <div className="font-medium text-neutral-100">Earn Points, Get Perks</div>
                                         <div className="text-neutral-200 mt-2 text-sm">
@@ -74,12 +74,13 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                             <LinkSecondary href={LEADERBOARD_MEDIUM}>Learn more</LinkSecondary>
                                         </div>
                                      </div>
-                                    <div className='text-right'>
+                                    <div className='mt-8 md:mt-0 md:text-right'>
                                         <div className='flex items-center'>
                                             <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-6 w-6 mr-3" />
                                             <div className='text-3xl'>{points.toLocaleString('en-US').replace(/,/g, ' ')}</div>
+                                            <span className='block md:hidden ml-2'>Points</span>
                                         </div>
-                                        Points
+                                        <span className='hidden md:block'>Points</span>
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +88,7 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                 <div className='bg-opacityLight-5 uppercase font-light py-2 px-4 rounded-tl-lg rounded-tr-lg border-b border-neutral-500'>
                                     Main missions
                                 </div>
-                                <div className='p-4 border-b border-neutral-500 flex items-center justify-between'>
+                                <div className='p-4 border-b border-neutral-500 flex items-center justify-between flex-wrap'>
                                     <div className='text-left flex items-center'>
                                         {hasFunded ? <CheckCircleIcon className='h-6 w-6 text-green-500 mr-4' /> : <div className='h-5 w-5 border border-neutral-100 mr-4 rounded-full'></div>}
                                         <div className='flex items-center'>
@@ -96,11 +97,11 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                             <span className='text-neutral-300'>1$ = 1 Point</span>
                                         </div>
                                     </div>
-                                    <div className='text-right'>
+                                    <div className='text-left mt-4 md:text-right md:mt-0 w-full md:w-fit'>
                                         <LinkSecondary href='/launchpad'>Go funding</LinkSecondary>
                                     </div>
                                 </div>
-                                <div className='p-4 flex items-center justify-between'>
+                                <div className='p-4 flex items-center justify-between flex-wrap'>
                                     <div className='text-left flex items-center'>
                                         {hasFarmed ? <CheckCircleIcon className='h-6 w-6 fill-greenish-500 mr-4' /> : <div className='h-5 w-5 border border-neutral-100 mr-4 rounded-full'></div>}
                                         <div className='flex items-center'>
@@ -109,7 +110,7 @@ export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, 
                                             <span className='text-neutral-300'>1CC = 100 Points</span>
                                         </div>
                                     </div>
-                                    <div className='text-right'>
+                                    <div className='text-left mt-4 md:text-right md:mt-0 w-full md:w-fit'>
                                         <LinkSecondary href='/farming'>Go farming</LinkSecondary>
                                     </div>
                                 </div>

@@ -162,7 +162,7 @@ export function getStarkscanUrl(network: string): string {
     }
 }
 
-export function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined) {
+export function minifyAddressOrStarknetId(address: string | undefined, starknetId: string | undefined): string {
     const input = starknetId !== undefined ? starknetId : address;
     if (input === undefined) { return ""; }
 
