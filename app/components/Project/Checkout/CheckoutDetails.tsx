@@ -14,6 +14,8 @@ import { useProject } from "../ProjectWrapper";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { getStarkscanUrl } from "~/utils/utils";
 import _ from "lodash";
+import Countries from "./Countries";
+import { useFetcher } from "@remix-run/react";
 
 const MIN_ETH = 0.1;
 const MIN_STRK = 100;
@@ -34,6 +36,8 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
     const [margin, setMargin] = useState<number>(1);
     const [txHash, setTxHash] = useState<string | undefined>("");
     const [starkscanUrl] = useState(getStarkscanUrl(defaultNetwork));
+    const [selectedCountry, setSelectedCountry] = useState<string | undefined>(undefined);
+    const fetcher = useFetcher();
 
     const tokens: Token[] = useMemo(() => {
         let config: Token[] = [];
@@ -69,9 +73,6 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
     }
 
     useEffect(() => {
-        setCanBuy(typeof finalTokenAmount === 'number' || selectedToken.symbol === 'USDC' || calls !== undefined);
-        setMargin(selectedToken.symbol === 'USDC' ? 1 : 1.01);
-
         if (typeof finalTokenAmount !== 'number') {
             return;
         }
@@ -79,8 +80,20 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
         if (tokenBalance !== undefined && parseFloat(tokenBalance.formatted) < finalTokenAmount) {
             setCanBuy(false);
             setError(`Insufficient ${selectedToken.symbol} balance`);
+            return;
         }
-    }, [finalTokenAmount, selectedToken, tokenBalance]);
+
+        if (selectedCountry === undefined) {
+            setCanBuy(false);
+            setError("Please select a country");
+            return;
+        }
+
+        setCanBuy(selectedToken.symbol === 'USDC' || calls !== undefined);
+        setError("");
+        setMargin(selectedToken.symbol === 'USDC' ? 1 : 1.01);
+
+    }, [finalTokenAmount, selectedToken, tokenBalance, selectedCountry]);
 
     useEffect(() => {
         setError("");
@@ -90,7 +103,7 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
         if (selectedToken.symbol === 'USDC') {
             setFinalQuote(undefined);
             setConversionRate("1");
-            setFinalTokenAmount(quantity === null ? '0' : quantity.toString());
+            setFinalTokenAmount(quantity === null ? '0' : quantity);
             setAvnuFees(undefined);
             return;
         }
@@ -248,6 +261,24 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
             return;
         }
 
+        if (address === undefined || selectedCountry === undefined || defaultNetwork === undefined) {
+            setError("Please select a country");
+            return;
+        }
+
+        fetcher.submit(
+            {
+                "wallet": address,
+                "country": selectedCountry,
+                "network": defaultNetwork
+            },
+            {
+                method: "POST",
+                encType: "application/json",
+                action: "/api/customers",
+            }
+        );
+
         const result = await writeAsync();
         setTxHash(result?.transaction_hash);
     }
@@ -275,6 +306,12 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
     return (
         <>
             <div className="w-full">
+                <Countries
+                    selectedCountry={selectedCountry}
+                    setSelectedCountry={setSelectedCountry}
+                />
+            </div>
+            <div className="w-full mt-4">
                 <Currencies 
                     tokens={tokens}
                     selectedToken={selectedToken}
