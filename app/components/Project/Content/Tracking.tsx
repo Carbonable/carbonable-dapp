@@ -16,7 +16,7 @@ export enum TrackingIndicator {
     RGB = "rgb"
 }
 
-export default function Tracking({ mapboxKey }: { mapboxKey: string }) {
+export default function Tracking({ mapboxKey, trackingActivated }: { mapboxKey: string, trackingActivated: boolean}) {
     mapboxgl.accessToken = mapboxKey;
     const mapContainer = useRef<any>(null);
     const map = useRef<mapboxgl.Map | null>(null);
@@ -42,9 +42,10 @@ export default function Tracking({ mapboxKey }: { mapboxKey: string }) {
       }, []);
     
       useEffect(() => {
-        if (fetcherDmrv.data === undefined) return;
+        if (fetcherDmrv.data === undefined || !fetcherDmrv.data.hasOwnProperty('ndvis')) return;
     
         const data: Dmrv = fetcherDmrv.data;
+
         setBounds(data.bounds);
         setCoordinates(data.coordinates[0]);
         setNdvis(data.ndvis);
@@ -173,66 +174,70 @@ export default function Tracking({ mapboxKey }: { mapboxKey: string }) {
                 }
               });
         });
-    });
+    }, []);
 
-    if (ndvis.length === 0 || rgbs.length === 0) return (
-        <div className="w-full h-[400px] flex justify-start items-start">
-            Loading...
-        </div>
-    );
+    if (!trackingActivated) return null;
+
+    if (ndvis.length === 0 || rgbs.length === 0) return null;
 
     return (
-        <>
-            <div className="relative">
-                <div className="text-neutral-100">
-                    <p className="mt-2">
-                        We're excited to release the Beta version of our digital Monitoring feature. Utilizing satellite imagery and artificial intelligence, this innovative tool offers real-time data and sophisticated analysis on the performance and evolution of carbon removal projects.
-                        Through the implementation of this feature (dMRV), our aim is to enhance the integrity and accountability of carbon removal initiatives. Our collaboration with independent third-party providers ensures precision and transparency, maintaining an unbiased approach.
-                    </p>
-                    <p className="mt-2">Please note, as a Beta feature, digital Monitoring is a work in progress. It represents our commitment to constant improvement and evolution, as we refine this solution to optimally serve our clients and the environment. Our objective is to deliver comprehensive tracking and reporting on the carbon sequestration and biodiversity protection across all Carbonable projects.</p>
-                    <p className="mt-2">In interpreting the data, it's important to consider the effects of seasonal changes on vegetation and leaf growth. Year-on-year comparisons typically provide a more accurate view of carbon removal dynamics than month-to-month comparisons. Given that weather conditions can significantly vary from year to year, examining broader trends, rather than strict comparisons, is key to a robust understanding of these dynamics.</p>
-                    <p className="mt-2">Also, when it comes to monitoring Blue Carbon Projects - initiatives that focus on carbon sequestration in coastal ecosystems such as mangroves, salt marshes, and seagrass meadows - current metrics might not be as directly applicable due to their tidal nature. Vegetation and water levels can fluctuate dramatically throughout the day  affecting considerably the indicator readings. </p>
-                </div>
-            
-                <div ref={mapContainer} className="mapContainer w-full mt-8">
-                    <div className="absolute top-4 left-4 w-fit z-50">
-                        { selectedIndicator !== undefined && 
-                            <MapSelect
-                                values={selectIndicators}
-                                selectedValue={selectedIndicator}
-                                setSelectedValue={setSelectedIndicator} 
-                            />
-                        }
+        <div className="hidden md:block">
+            <div className="font-inter font-bold text-neutral-100 text-lg mt-12 flex items-center">
+                🌱 <span className="ml-2 uppercase">Tracking</span>
+                <span className="px-3 py-1 ml-3 bg-beta-button text-xs rounded-md font-light">Beta version</span>
+            </div>
+            <div className="mt-4 pt-8 border-t border-neutral-500">
+                <div className="relative">
+                    <div className="text-neutral-100">
+                        <p className="mt-2">
+                            We're excited to release the Beta version of our digital Monitoring feature. Utilizing satellite imagery and artificial intelligence, this innovative tool offers real-time data and sophisticated analysis on the performance and evolution of carbon removal projects.
+                            Through the implementation of this feature (dMRV), our aim is to enhance the integrity and accountability of carbon removal initiatives. Our collaboration with independent third-party providers ensures precision and transparency, maintaining an unbiased approach.
+                        </p>
+                        <p className="mt-2">Please note, as a Beta feature, digital Monitoring is a work in progress. It represents our commitment to constant improvement and evolution, as we refine this solution to optimally serve our clients and the environment. Our objective is to deliver comprehensive tracking and reporting on the carbon sequestration and biodiversity protection across all Carbonable projects.</p>
+                        <p className="mt-2">In interpreting the data, it's important to consider the effects of seasonal changes on vegetation and leaf growth. Year-on-year comparisons typically provide a more accurate view of carbon removal dynamics than month-to-month comparisons. Given that weather conditions can significantly vary from year to year, examining broader trends, rather than strict comparisons, is key to a robust understanding of these dynamics.</p>
+                        <p className="mt-2">Also, when it comes to monitoring Blue Carbon Projects - initiatives that focus on carbon sequestration in coastal ecosystems such as mangroves, salt marshes, and seagrass meadows - current metrics might not be as directly applicable due to their tidal nature. Vegetation and water levels can fluctuate dramatically throughout the day  affecting considerably the indicator readings. </p>
                     </div>
-                    <div className="absolute top-4 right-4 w-fit z-10">
-                        { selectedIndicator !== undefined && 
-                            <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>
-                                Learn More <QuestionMarkCircleIcon className="w-5 ml-2" />
-                            </MapButton> }
+                
+                    <div ref={mapContainer} className="mapContainer w-full mt-8">
+                        <div className="absolute top-4 left-4 w-fit z-50">
+                            { selectedIndicator !== undefined && 
+                                <MapSelect
+                                    values={selectIndicators}
+                                    selectedValue={selectedIndicator}
+                                    setSelectedValue={setSelectedIndicator} 
+                                />
+                            }
+                        </div>
+                        <div className="absolute top-4 right-4 w-fit z-10">
+                            { selectedIndicator !== undefined && 
+                                <MapButton className="flex flex-nowrap justify-center items-center" onClick={() => setIsOpen(true)}>
+                                    Learn More <QuestionMarkCircleIcon className="w-5 ml-2" />
+                                </MapButton> }
+                        </div>
+                        {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-10">
+                            <TrackingSlider data={ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
+                        </div>}
                     </div>
-                    {mapLoaded && <div className="absolute bottom-0 left-0 w-full z-10">
-                        <TrackingSlider data={ndvis} setSelectedImageIndex={setSelectedImageIndex} selectedDateIndex={selectedDateIndex} setSelectedDateIndex={setSelectedDateIndex} />
-                    </div>}
+                    {mapLoaded && 
+                        <div className="absolute bottom-[-12px] w-full z-50">
+                            <div className="w-[24px] h-[24px] flex justify-center items-center bg-opacityLight-80 rounded-full mx-auto">
+                                <ChevronLeftIcon className="w-[20px] text-neutral-900" />
+                                <ChevronRightIcon className="w-[20px]  text-neutral-900" />
+                            </div>
+                        </div>
+                    }
                 </div>
                 {mapLoaded && 
-                    <div className="absolute bottom-[-12px] w-full z-50">
-                        <div className="w-[24px] h-[24px] flex justify-center items-center bg-opacityLight-80 rounded-full mx-auto">
-                            <ChevronLeftIcon className="w-[20px] text-neutral-900" />
-                            <ChevronRightIcon className="w-[20px]  text-neutral-900" />
-                        </div>
+                    <div className="w-fit mx-auto mt-6 py-2 pl-3 pr-2 border border-neutral-300 bg-opacityLight-10 rounded-xl text-sm">
+                        {selectedDateIndex && moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")}
+                        <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">
+                            🌳 {selectedDateIndex && Math.round(ndvis[selectedDateIndex].value * 100)}%
+                        </span>
                     </div>
                 }
+                <TrackingModal isOpen={isOpen} setIsOpen={setIsOpen} indicator={selectedIndicator} />
             </div>
-            {mapLoaded && 
-                <div className="w-fit mx-auto mt-6 py-2 pl-3 pr-2 border border-neutral-300 bg-opacityLight-10 rounded-xl text-sm">
-                    {selectedDateIndex && moment(ndvis[selectedDateIndex].date).format("MMM. Do YYYY")}
-                    <span className="border border-neutral-300 bg-opacityLight-10 rounded-lg py-1 px-2 ml-2 text-xs">
-                        🌳 {selectedDateIndex && Math.round(ndvis[selectedDateIndex].value * 100)}%
-                    </span>
-                </div>
-            }
-            <TrackingModal isOpen={isOpen} setIsOpen={setIsOpen} indicator={selectedIndicator} />
-        </>
+        </div>
        
     )
 }
