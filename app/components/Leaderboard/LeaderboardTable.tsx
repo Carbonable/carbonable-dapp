@@ -1,15 +1,16 @@
 import { UserGroupIcon } from "@heroicons/react/24/outline";
-import Pagination from "../Common/Pagination";
+import PaginationComponent from "../Common/Pagination";
 import { RankingLine } from "../Common/Table/RankingLine";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_LEADERBOARD } from "~/graphql/queries/leaderboard";
 import { RESULT_PER_PAGE } from "~/utils/constant";
-import type { LeaderboardLineData } from "~/graphql/__generated__/graphql";
+import { type LeaderboardLineData, type PageInfo } from "~/graphql/__generated__/graphql";
 
 export default function LeaderboardTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [leaderboard, setLeaderboard] = useState<LeaderboardLineData[] | undefined>(undefined);
+    const [pagination, setPagination] = useState<PageInfo | undefined>(undefined);
     const { error, data, refetch } = useQuery(GET_LEADERBOARD, {
         variables: {
             pagination: {
@@ -19,11 +20,11 @@ export default function LeaderboardTable() {
         }
     });
 
-    const pagination = useMemo(() => {
-        if (data === undefined) return;
+    const numberOfUsers = useMemo(() => {
+        if (pagination === undefined) return;
 
-        return data.leaderboard.page_info;
-    }, [data]);
+        return pagination.count;
+    }, [pagination]);
 
     useEffect(() => {
         refetch({
@@ -37,6 +38,7 @@ export default function LeaderboardTable() {
     useEffect(() => {
         if (data) {
             setLeaderboard(data.leaderboard.data);
+            setPagination(data.leaderboard.page_info);
         }
     }, [data]);
 
@@ -53,7 +55,7 @@ export default function LeaderboardTable() {
             <div className="mt-4 w-full font-inter text-sm overflow-x-scroll">
                 <table className="table-auto text-left min-w-full border-separate rounded-xl border-spacing-0 leader-table">
                     <thead className="bg-neutral-800 text-neutral-100 whitespace-nowrap h-10">
-                        <TableHeader userCount={pagination?.count} />
+                        <TableHeader userCount={numberOfUsers} />
                     </thead>
                     <tbody>
                         <TableResult leaderboard={leaderboard} />
@@ -61,7 +63,7 @@ export default function LeaderboardTable() {
                 </table>
             </div>
             <div className="mt-8">
-                {pagination && <Pagination 
+                {pagination && <PaginationComponent 
                     currentPage={currentPage}
                     pageCount={pagination.max_page} 
                     handlePageClick={handlePageClick}
