@@ -1,6 +1,6 @@
 import ReactPaginate from "react-paginate";
 
-export default function Pagination({ currentPage, pageCount, handlePageClick }: { pageCount?: number, handlePageClick: any , currentPage: number}) {
+export default function PaginationComponent({ currentPage, pageCount, handlePageClick }: { pageCount?: number, handlePageClick: any , currentPage: number}) {
     if (!pageCount) return null;
     
     return (
