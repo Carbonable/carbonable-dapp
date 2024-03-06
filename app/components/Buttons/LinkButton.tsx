@@ -1,3 +1,5 @@
+import { NavLink } from "@remix-run/react";
+
 interface LinkButtonProps {
     href: string;
     children: React.ReactNode;
@@ -28,3 +30,6 @@ export function TransparentLinkButton({ href, children, className }: LinkButtonP
     return <a href={href} target="_blank" rel="noreferrer" className={`font-inter text-white text-sm font-medium rounded-lg bg-opacityLight-20 border border-opacityLight-30 px-4 py-3 hover:bg-opacityLight-30 uppercase ` + className}>{children}</a>;
 }
 
+export function TransparentInsideLinkButton({ href, children, className }: LinkButtonProps) {
+    return <NavLink to={href} className={`font-inter text-white text-sm font-medium rounded-lg bg-opacityLight-20 border border-opacityLight-30 px-4 py-3 hover:bg-opacityLight-30 uppercase ` + className}>{children}</NavLink>;
+}

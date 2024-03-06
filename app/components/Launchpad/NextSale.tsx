@@ -1,7 +1,9 @@
-import { TransparentLinkButton } from "../Buttons/LinkButton";
+import { TransparentInsideLinkButton } from "../Buttons/LinkButton";
 import ProjectStatus from "../Common/ProjectStatus";
 
-export default function NextSale() {
+export default function NextSale({ displayHeader }: { displayHeader: boolean }) {
+    if (!displayHeader) return null;
+
     return (
         <div className="relative w-full md:w-11/12 mx-auto bg-karathuru rounded-lg md:px-10 bg-no-repeat bg-cover bg-center min-h-[360px] border-4 border-neutral-700">
             <div className="absolute bottom-6 md:bottom-12 left-0 w-full">
@@ -20,7 +22,7 @@ export default function NextSale() {
                         </div>
                         <div className="mt-8 flex justify-between">
                             <div className="text-left">
-                                <TransparentLinkButton href="https://register.carbonable.io">Pre-register</TransparentLinkButton>
+                                <TransparentInsideLinkButton href="/launchpad/mangroves-regeneration-karathuru-myanmar">View Project</TransparentInsideLinkButton>
                             </div>
                             <div className="text-right md:hidden">
                                 <ProjectStatus />

@@ -49,6 +49,19 @@ export default function SaleAction() {
         )
     }
 
+    if (launchpad.public_sale_open === false) {
+        return (
+            <div className="w-full flex items-start md:justify-between gap-x-6 flex-wrap lg:flex-nowrap">
+                <div className="lg:flex-grow w-full lg:w-fit">
+                    <SharesInput canBuy={canBuy} />
+                </div>
+                <div className="w-full lg:w-fit mt-2 lg:mt-0">
+                    <GreenLinkButton href="https://register.carbonable.io" className="inline-block text-center whitespace-nowrap w-full lg:w-fit">Pre register</GreenLinkButton>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="w-full flex items-start md:justify-between gap-x-6 flex-wrap lg:flex-nowrap">
             <div className="lg:flex-grow w-full lg:w-fit">
