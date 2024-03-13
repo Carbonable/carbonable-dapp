@@ -7,14 +7,15 @@ import { useQuery } from '@apollo/client';
 import { GET_MY_RANK } from '~/graphql/queries/leaderboard';
 import { LEADERBOARD_MEDIUM, RuleType } from '~/utils/constant';
 
-export default function EarnMoreDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
+export default function EarnMoreDialog({ isOpen, setIsOpen, walletAddress }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void, walletAddress?: string }) {
     const [hasFunded, setHasFunded] = useState(false);
     const [hasFarmed, setHasFarmed] = useState(false);
     const [points, setPoints] = useState(0);
     const { address } = useAccount();
+    const addressToUse = walletAddress || address;
     const { error, data } = useQuery(GET_MY_RANK, {
         variables: {
-            wallet_address: address
+            wallet_address: addressToUse
         }
     });
 

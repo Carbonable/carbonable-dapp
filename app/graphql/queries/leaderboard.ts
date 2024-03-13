@@ -39,6 +39,13 @@ export const GET_MY_RANK = gql`
             points {
                 rule
                 value
+                metadata {
+                    project_name
+                    slot
+                    date
+                    event
+                    boosts
+                }
             }
             categories {
                 fund

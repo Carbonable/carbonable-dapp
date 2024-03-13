@@ -5,8 +5,9 @@ import ConnectDialog from "../Connection/ConnectDialog";
 import EarnMoreDialog from "./EarnMoreDialog";
 import { useQuery } from "@apollo/client";
 import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
+import { LeaderboardSource } from "~/utils/constant";
 
-export default function HeaderPersonal() {
+export default function HeaderPersonal({ source, walletAddress }: { source: LeaderboardSource, walletAddress?: string }) {
     const { isConnected } = useAccount();
     const [isConnectOpen, setIsConnectOpen] = useState(false);
 
@@ -31,8 +32,12 @@ export default function HeaderPersonal() {
             <div className="mt-6 flex items-center text-4xl">
                 <img src="/assets/images/leaderboard/points.svg" alt="points" className="h-6 w-6 mr-3" />
                 <div className="text-neutral-50 font-light">
-                    { !isConnected && <span>0</span> }
-                    { isConnected &&  <ConnectedHeader /> }
+                    { !isConnected && source === LeaderboardSource.GLOBAL && <
+                        span>0</span> 
+                    }
+                    { (isConnected || source === LeaderboardSource.PERSONAL) && 
+                        <ConnectedHeader walletAddress={walletAddress} />
+                    }
                 </div>
             </div>
             <div className="mt-6">
@@ -40,18 +45,19 @@ export default function HeaderPersonal() {
                 { isConnected && <SecondaryButton onClick={handleEarnMore}>Earn more points</SecondaryButton> }
             </div>
             <ConnectDialog isOpen={isConnectOpen} setIsOpen={setIsConnectOpen} />
-            <EarnMoreDialog isOpen={isEarnMoreOpen} setIsOpen={setIsEarnMoreOpen} />
+            <EarnMoreDialog isOpen={isEarnMoreOpen} setIsOpen={setIsEarnMoreOpen} walletAddress={walletAddress} />
         </div>
     )
 }
 
-function ConnectedHeader() {
+function ConnectedHeader({walletAddress}: {walletAddress?: string}) {
     const { address } = useAccount();
     const [points, setPoints] = useState(0);
+    const addressToUse = walletAddress || address;
 
     const { error, data } = useQuery(GET_MY_RANK, {
         variables: {
-            wallet_address: address
+            wallet_address: addressToUse
         }
     });
 
