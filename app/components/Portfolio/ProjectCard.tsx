@@ -23,7 +23,6 @@ export default function ProjectCard({ project, toMigrate, setRefreshData }: { pr
 
     // check if project is in notification list
     const [isMigrating, setIsMigrating] = useState(false);
-    console.log(project)
 
     useEffect(() => {
         setIsMigrating(_.some(notifs, (notification: any) => notification.project === project.id && notification.source === NotificationSource.MIGRATION));
