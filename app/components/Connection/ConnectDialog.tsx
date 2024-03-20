@@ -3,11 +3,11 @@ import { Fragment, useEffect } from "react";
 import { type Connector, useAccount, useConnect } from "@starknet-react/core";
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
-    const { connectors, connect } = useConnect();
+    const { connectors, connectAsync } = useConnect();
     const { isConnected } = useAccount();
 
     const handleClick = (connector: Connector) => {
-        connect({ connector });
+        connectAsync({ connector });
         setIsOpen(false);
     }
 

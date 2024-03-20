@@ -15,7 +15,7 @@ export default function SaleAction() {
     const { isConnected } = useAccount();
     const [openConnect, setOpenConnect] = useState(false);
     const [openCheckout, setOpenCheckout] = useState(false);
-    const { quantity, mint, launchpad } = useProject();
+    const { quantity, mint, launchpad, canAccessPresale } = useProject();
     const [canBuy, setCanBuy] = useState(false);
     const minValue = parseFloat(mint.min_value_per_tx.displayable_value);
     const maxValue = parseFloat(mint.max_value_per_tx.displayable_value);
@@ -24,10 +24,10 @@ export default function SaleAction() {
         setCanBuy(quantity !== null && 
                   quantity >= minValue &&
                   isConnected === true && 
-                  launchpad.public_sale_open === true &&
+                  (launchpad.public_sale_open === true || canAccessPresale === true) &&
                   launchpad.is_sold_out === false
         );
-    }, [quantity, minValue, maxValue, isConnected, launchpad.public_sale_open, launchpad.is_sold_out]);
+    }, [quantity, minValue, maxValue, isConnected, launchpad.public_sale_open, launchpad.is_sold_out, canAccessPresale]);
 
     if (isConnected === false) {
         return (
@@ -45,6 +45,23 @@ export default function SaleAction() {
         return (
             <div className="w-full flex items-center justify-center">
                 <GreenLinkButton className="w-full text-center" href="/farming">Go to farming</GreenLinkButton>
+            </div>
+        )
+    }
+
+    if (canAccessPresale) {
+        return (
+            <div className="w-full flex items-start md:justify-between gap-x-6 flex-wrap lg:flex-nowrap">
+                <div className="lg:flex-grow w-full lg:w-fit">
+                    <SharesInput canBuy={canBuy} />
+                </div>
+                <div className="w-full lg:w-fit mt-2 lg:mt-0">
+                    <GreenButton disabled={canBuy === false} onClick={() => setOpenCheckout(true)} className="whitespace-nowrap w-full lg:w-fit">Buy now</GreenButton>
+                    <CheckoutDialog
+                        isOpen={openCheckout}
+                        setIsOpen={setOpenCheckout}
+                    />
+                </div>
             </div>
         )
     }
