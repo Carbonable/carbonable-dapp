@@ -1,10 +1,19 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect } from "react";
 import { type Connector, useAccount, useConnect } from "@starknet-react/core";
+import { isInArgentMobileAppBrowser } from 'starknetkit/argentMobile';
 
 export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {
     const { connectors, connectAsync } = useConnect();
     const { isConnected } = useAccount();
+
+    // Special case when in Argent Mobile App Browser
+    const inAppBrowserFilter = (c: Connector) => {
+        if (typeof window !== 'undefined' && isInArgentMobileAppBrowser()) {
+          return c.id === "argentX"
+        }
+        return c
+    }
 
     const handleClick = (connector: Connector) => {
         connectAsync({ connector });
@@ -55,7 +64,7 @@ export default function ConnectDialog({ isOpen, setIsOpen }: {isOpen: boolean, s
                                 Connect your wallet
                             </Dialog.Title>
                             <div className="mt-6">
-                                { connectors.map((connector) => (
+                                { connectors.filter(inAppBrowserFilter).map((connector) => (
                                     <div key={connector.id + "_modal"}>
                                         {connector.available() && <div className="p-4 my-2 flex items-center justify-start cursor-pointer rounded-2xl bg-opacityLight-5 hover:bg-opacityLight-10 w-full" onClick={() => handleClick(connector)}>
                                             {!connector.icon.dark?.startsWith("<svg") && <img className="w-8 h-8 mr-3" src={connector.icon.dark} alt={`Connect with ${connector.id}`} /> }

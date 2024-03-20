@@ -20,8 +20,10 @@ export function StarknetProvider({ children, defaultNetwork, rpcApiKey, webWalle
       const connectors = useMemo(() => webWalletEnabled ? [
         braavos(),
         argent(),
+        new ArgentMobileConnector({
+          dappName: "Carbonable",
+        }),
         new WebWalletConnector({ url: "https://web.argent.xyz" }),
-        new ArgentMobileConnector(),
       ] : 
       [
         braavos(),
