@@ -10,6 +10,7 @@ type ProjectContextType = {
     setQuantity: (quantity: number | null) => void;
     boost: BoostForValue | undefined;
     setBoost: (boost: BoostForValue | undefined) => void;
+    canAccessPresale: boolean;
 };
 
 type ProjectWrapperProps = {
@@ -17,18 +18,19 @@ type ProjectWrapperProps = {
     project: ProjectProps;
     launchpad: LaunchpadProps;
     mint: MintProps;
+    canAccessPresale: boolean;
 };
 
 const ProjectContext = createContext<ProjectContextType>({} as ProjectContextType);
 
-export default function ProjectWrapper({ children, project, launchpad, mint }: ProjectWrapperProps) {
+export default function ProjectWrapper({ children, project, launchpad, mint, canAccessPresale }: ProjectWrapperProps) {
     const [quantity, setQuantity] = useState<number | null>(1);
     const [boost, setBoost] = useState<BoostForValue | undefined>(undefined);
 
     if (project === undefined) return null;
 
     return (
-        <ProjectContext.Provider value={{project, launchpad, quantity, setQuantity, mint, boost, setBoost}}>
+        <ProjectContext.Provider value={{project, launchpad, quantity, setQuantity, mint, boost, setBoost, canAccessPresale}}>
             {children}
         </ProjectContext.Provider>
     )

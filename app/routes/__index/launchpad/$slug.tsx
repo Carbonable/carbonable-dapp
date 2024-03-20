@@ -10,10 +10,16 @@ import { client } from "~/utils/sanity/client";
 import { urlFor } from "~/utils/sanity/image";
 import { type SanityContent } from "~/utils/sanity/types";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
     try {
       const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/details/${params.slug}`, {});
       const project = await projects.json();
+
+      const canAccessPresale = 
+        process.env.PRESALE_OPEN === "true" &&
+        process.env.PRESALE_TOKEN ?
+          request.url.includes(`?access=${process.env.PRESALE_TOKEN}`) :
+          false;
 
       // If the project is not found, or is not display, throw a 404.
       if (project === null || project === undefined){
@@ -29,7 +35,8 @@ export const loader: LoaderFunction = async ({ params }) => {
                     content,
                     mapboxKey: process.env.MAPBOX,
                     trackingActivated: process.env.TRACKING_ACTIVATED === "true",
-                    graphQLEndpoint: process.env.GRAPHQL_ENDPOINT
+                    graphQLEndpoint: process.env.GRAPHQL_ENDPOINT,
+                    canAccessPresale,
                   });
 
     } catch (e) {
@@ -68,7 +75,7 @@ export const meta: V2_MetaFunction = ({ data }) => {
 };
 
 export default function Index() {
-    const { project, content, mapboxKey, trackingActivated, graphQLEndpoint } = useLoaderData();
+    const { project, content, mapboxKey, trackingActivated, graphQLEndpoint, canAccessPresale } = useLoaderData();
     const [launchpad, setLaunchpad] = useState(project.data.launchpad);
     const [mint, setMint] = useState(project.data.mint);
     const [projectData, setProjectData] = useState(project.data.project);
@@ -114,6 +121,7 @@ export default function Index() {
             project={projectData}
             launchpad={launchpad}
             mint={mint}
+            canAccessPresale={canAccessPresale}
           >
             <ProjectOverview />
           </ProjectWrapper>
