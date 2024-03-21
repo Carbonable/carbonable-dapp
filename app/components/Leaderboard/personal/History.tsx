@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { type Maybe } from "graphql/jsutils/Maybe";
 import { useEffect, useState } from "react";
 import { type PointDetails } from "~/graphql/__generated__/graphql";
 import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
+import FormattedDate from "./FormattedDate";
+import FormattedBoosts from "./FormattedBoost";
+import FormattedEvent from "./FormattedEvent";
 
 export default function History({ walletAddress }: { walletAddress: string }) {
     const [points, setPoints] = useState<PointDetails[] | undefined>(undefined);
@@ -76,47 +78,10 @@ function HistoryResult({points}: {points: PointDetails[] | undefined}) {
                         <FormattedDate timestamp={point.metadata?.date} />
                     </td>
                     <td className="px-4 py-2 border-r border-b border-opacityLight-10 first:border-l">{point.metadata?.project_name}</td>
-                    <td className="px-4 py-2 border-r border-b border-opacityLight-10 first:border-l">{point.metadata?.event}</td>
+                    <td className="px-4 py-2 border-r border-b border-opacityLight-10 first:border-l"><FormattedEvent event={point.metadata?.rule} /></td>
                     <td className="px-4 py-2 border-r border-b border-opacityLight-10 first:border-l"><FormattedBoosts boosts={point.metadata?.boosts} /></td>
                     <td className="px-4 py-2 border-r border-b border-opacityLight-10 text-right first:border-l">{point.value ? (point.value / Math.pow(10, 6)).toLocaleString('en-US').replace(/,/g, ' ') : ''}</td>
                 </tr>
-            ))}
-        </>
-    )
-}
-
-function FormattedDate({ timestamp }: { timestamp: Maybe<string> | undefined }) {
-    if (!timestamp) {
-        return (
-            <>
-                No date
-            </>
-        )
-    }
-    const timestampInMilliseconds = parseInt(timestamp);
-    const date = new Date(timestampInMilliseconds);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Month is 0-indexed, so we add 1
-    const day = date.getDate();
-
-    return (
-        <>
-            {`${day}-${month}-${year}`}
-        </>
-    )
-}
-
-function FormattedBoosts({ boosts }: { boosts: Maybe<string> | undefined }) {
-    if (!boosts) {
-        return null;
-    }
-
-    const boostArray = boosts.split(' // ');
-
-    return (
-        <>
-            {boostArray.map((boost, index) => (
-                <div key={index} className={index > 0 ? "pt-1" : ""}>{boost}</div>
             ))}
         </>
     )
