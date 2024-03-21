@@ -45,6 +45,7 @@ export const GET_MY_RANK = gql`
                     date
                     event
                     boosts
+                    rule
                 }
             }
             categories {
