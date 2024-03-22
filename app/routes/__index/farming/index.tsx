@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useAccount } from "@starknet-react/core";
 import { useEffect, useState } from "react";
+import ClaimAll from "~/components/Farming/ClaimAll";
 import FarmingCard from "~/components/Farming/FarmingCard";
 import FilterButton from "~/components/Filters/FilterButton";
 import { GRAMS_PER_TON } from "~/utils/constant";
@@ -107,12 +108,17 @@ export default function FarmingIndex() {
             </div>
             <div className="relative w-11/12 mx-auto mt-12 lg:mt-12 xl:mt-16 mb-12 md:pl-6">
                 <div className="uppercase text-xl font-bold text-center md:text-left md:pl-1 lg:text-xl">Farming Projects</div>
-                <div className="items-center justify-start mt-4">
-                    {
-                        filterButtons.map((button, index) => {
-                            return <FilterButton onClick={() => {handleclick(button.filter)}} active={button.active} key={index} disabled={button.isDisabled}>{button.filter}</FilterButton>
-                        })
-                    }
+                <div className="flex justify-between items-center">
+                    <div className="items-center justify-start mt-4">
+                        {
+                            filterButtons.map((button, index) => {
+                                return <FilterButton onClick={() => {handleclick(button.filter)}} active={button.active} key={index} disabled={button.isDisabled}>{button.filter}</FilterButton>
+                            })
+                        }
+                    </div>
+                    <div className="justify-end pr-2">
+                        <ClaimAll />
+                    </div>
                 </div>
                 <div className="flex flex-wrap justify-start mt-8 gap-8 w-full">
                     {
