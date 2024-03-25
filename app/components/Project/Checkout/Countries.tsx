@@ -1,6 +1,24 @@
+import { useEffect, useState } from 'react';
 import countries from '../../../config/countries/countries.json';
 
 export default function Countries({selectedCountry, setSelectedCountry}: {selectedCountry: string | undefined, setSelectedCountry: (country: string) => void }) {
+    const [sortedCountries, setSortedCountries] = useState<any[]>([]);
+
+    useEffect(() => {
+        const sortCountries = () => {
+            const sortedCountries = [...countries].sort((a, b) => {
+                const nameA = a.name.common.toLowerCase();
+                const nameB = b.name.common.toLowerCase();
+
+                if (nameA < nameB) return -1;
+                if (nameA > nameB) return 1;
+                return 0;
+            });
+            setSortedCountries(sortedCountries);
+        };
+
+        sortCountries();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCountry(e.target.value);
@@ -21,8 +39,8 @@ export default function Countries({selectedCountry, setSelectedCountry}: {select
                         <option key='undefined_country' value={undefined}>
                             Select your country
                         </option>
-                        {countries.map((country: any) => (
-                            <option key={country.cca2} value={country.cca2}>
+                        {sortedCountries.map((country: any) => (
+                            <option key={country.name.common} value={country.cca2}>
                                 {country.flag} &nbsp; {country.name.common}
                             </option>
                         ))}
