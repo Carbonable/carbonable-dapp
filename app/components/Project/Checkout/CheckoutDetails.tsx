@@ -190,7 +190,7 @@ export default function CheckoutDetails({setIsOpen}: {setIsOpen: (isOpen: boolea
             return;
         }
 
-        fetchBuildExecuteTransaction(finalQuote.quoteId, undefined, address, 0.05, {...AVNU_OPTIONS})
+        fetchBuildExecuteTransaction(finalQuote.quoteId, undefined, address, 0.01, {...AVNU_OPTIONS})
         .then((tx) => {
             setAvnuCallData(tx);
         })
