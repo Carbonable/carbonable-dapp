@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { useStarkName } from "@starknet-react/core";
+import { useStarkProfile } from "@starknet-react/core";
 import { useEffect, useMemo, useState } from "react";
 import { GET_MY_RANK } from "~/graphql/queries/leaderboard";
 import { minifyAddressOrStarknetId } from "~/utils/utils";
@@ -11,15 +11,29 @@ export default function Title({ walletAddress }: { walletAddress: string }) {
             wallet_address: walletAddress
         }
     });
-
-    const { data: starknetId } = useStarkName({address: walletAddress});
+    const { data: starknetId } = useStarkProfile({ address: walletAddress });
     const starkName = useMemo(() => {
         if (starknetId) {
-            return minifyAddressOrStarknetId(walletAddress, starknetId);
+            return minifyAddressOrStarknetId(walletAddress, starknetId.name);
         }
 
         return minifyAddressOrStarknetId(walletAddress, undefined);
     }, [starknetId, walletAddress]);
+
+    const pfp = useMemo(() => {
+        if (starknetId !== undefined && starknetId.profile?.startsWith('data:application/json;base64,')) {
+            const profileData = starknetId.profile.split(",")[1].slice(0, -1);
+            const profile = JSON.parse(window.atob(profileData));
+            return profile.image;
+
+        }
+
+        if (starknetId !== undefined && starknetId.profilePicture !== undefined) {
+            return starknetId.profilePicture;
+        }
+
+        return null;
+    }, [starknetId]);
 
     useEffect(() => {
         if (data) {
@@ -36,7 +50,8 @@ export default function Title({ walletAddress }: { walletAddress: string }) {
             <div className="text-neutral-100 font-semibold text-4xl">
                 {rank === '🆕' ? '🆕' : <Rank rank={rank} />}
             </div>
-            <div className="uppercase text-2xl lg:text-3xl mt-2 text-neutral-300">
+            <div className="uppercase text-2xl lg:text-3xl mt-2 text-neutral-300 flex items-center">
+                {pfp && <img className="w-8 h-8 mr-3 rounded-full" src={pfp} alt="PFP" />}
                 {starkName}
             </div>
         </div>
