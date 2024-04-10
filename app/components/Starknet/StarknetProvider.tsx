@@ -1,7 +1,7 @@
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { WebWalletConnector } from "starknetkit/webwallet";
 import { StarknetConfig, argent, braavos, nethermindProvider } from "@starknet-react/core";
-import { devnet, goerli, mainnet } from "@starknet-react/chains";
+import { sepolia, mainnet } from "@starknet-react/chains";
 import { useMemo } from "react";
 
 export function StarknetProvider({ children, defaultNetwork, rpcApiKey, webWalletEnabled }: { children: React.ReactNode, defaultNetwork: string, rpcApiKey: string, webWalletEnabled: boolean }) {
@@ -10,10 +10,7 @@ export function StarknetProvider({ children, defaultNetwork, rpcApiKey, webWalle
           return [mainnet];
         }
     
-        if (defaultNetwork === 'testnet2') {
-          return [devnet];
-        }
-        return [goerli]
+        return [sepolia]
       }, [defaultNetwork]);
     
       const provider = nethermindProvider({ apiKey: rpcApiKey });
