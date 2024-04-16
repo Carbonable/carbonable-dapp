@@ -19,9 +19,6 @@ export default function NextSale({ displayHeader }: { displayHeader: boolean }) 
                                     <img src="/assets/images/common/verified-icon.svg" alt="Verified Icon" className="h-4 w-4" />
                                 </div>
                             </div>
-                            <div className="text-sm font-medium ">
-                                Pre-Register to access this exclusive funding opportunity
-                            </div>
                             <div className="mt-4 flex justify-between flex-wrap items-center">
                                 <div className="text-left w-full md:w-fit">
                                     <ProjectStatus />
@@ -31,7 +28,6 @@ export default function NextSale({ displayHeader }: { displayHeader: boolean }) 
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
