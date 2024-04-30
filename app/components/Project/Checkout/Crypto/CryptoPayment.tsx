@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import Currencies from "./Currencies";
 import { useNotifications } from "~/root";
 import mainnetTokens from "~/config/tokens/mainnet-tokens.json";
 import goerliTokens from "~/config/tokens/goerli-tokens.json";
 import sepoliaTokens from "~/config/tokens/sepolia-tokens.json";
 import { type Token } from "~/types/tokens";
-import PaymentDetails from "./PaymentDetails";
 import { GreenButton } from "~/components/Buttons/ActionButton";
 import { useAccount, useBalance, useContractWrite } from "@starknet-react/core";
 import { type QuoteRequest, fetchQuotes, type BuildSwapTransaction, type Quote, fetchBuildExecuteTransaction } from "@avnu/avnu-sdk";
 import { TransactionStatus, num } from "starknet";
-import { useProject } from "../ProjectWrapper";
+import { useProject } from "../../ProjectWrapper";
 import { NotificationSource } from "~/utils/notifications/sources";
 import { getStarkscanUrl } from "~/utils/utils";
 import _ from "lodash";
-import Countries from "./Countries";
 import { useFetcher } from "@remix-run/react";
+import Countries from "./Countries";
+import Currencies from "./Currencies";
+import PaymentDetails from "./PaymentDetails";
 
 const MIN_ETH = 0.1;
 const MIN_STRK = 100;

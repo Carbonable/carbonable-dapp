@@ -1,12 +1,20 @@
 import { PaymentMethodValues } from "~/utils/constant";
-import CryptoPayment from "./CryptoPayment";
+import CryptoPayment from "./Crypto/CryptoPayment";
+import CreditCardPayment from "./CreditCard/CreditCardPayment";
 
-export default function CheckoutDetails({ setIsOpen, paymentMethod }: {setIsOpen: (isOpen: boolean) => void, paymentMethod: PaymentMethodValues}) {
+interface CheckoutDetailsProps {
+    setIsOpen: (isOpen: boolean) => void,
+    paymentMethod: PaymentMethodValues
+}
+
+export default function CheckoutDetails({ setIsOpen, paymentMethod }: CheckoutDetailsProps) {
     if (paymentMethod === PaymentMethodValues.CRYPTO) {
         return <CryptoPayment setIsOpen={setIsOpen} />;
     }
 
     return (
-        <></>
+        <>
+            <CreditCardPayment setIsOpen={setIsOpen} />
+        </>
     )
 }

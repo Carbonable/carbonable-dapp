@@ -18,7 +18,8 @@ export default function Index() {
             lastIndexerBlock,
             displayPortfolioTootltip,
             setDisplayPortfolioTooltip,
-            avnuUrl
+            avnuUrl,
+            stripePublicKey
     } = useNotifications();
 
     function handleStateChange(state: any) {
@@ -62,7 +63,8 @@ export default function Index() {
                                    lastIndexerBlock,
                                    displayPortfolioTootltip,
                                    setDisplayPortfolioTooltip,
-                                   avnuUrl
+                                   avnuUrl,
+                                   stripePublicKey
                 }} />
                 { notifs.map((notif) => (
                     <Notification key={notif.txHash} notif={notif} />

@@ -1,9 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Fragment, useState } from "react";
-import ImageAndQuantity from './ImageAndQuantity';
+import ImageAndQuantity from './Common/ImageAndQuantity';
 import CheckoutDetails from './CheckoutDetails';
-import PaymentMethod from './PaymentMethod';
+import PaymentMethod from './Common/PaymentMethod';
 import { PaymentMethodValues } from '~/utils/constant';
 
 export default function CheckoutDialog({ isOpen, setIsOpen }: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void}) {

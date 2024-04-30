@@ -23,3 +23,6 @@ export enum PaymentMethodValues {
 export const LEADERBOARD_MEDIUM='https://medium.com/@carbonable/introducing-the-carbonable-leaderboard-f70e8b8f5f4d' 
 export const USDC_DECIMALS = Math.pow(10, 6);
 export const ETH_DECIMALS = Math.pow(10, 18);
+
+export const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+export const STRIPE_FEES = 2;

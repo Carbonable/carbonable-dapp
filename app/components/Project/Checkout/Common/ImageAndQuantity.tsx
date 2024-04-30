@@ -1,5 +1,5 @@
-import ProjectImage from "../Common/ProjectImage";
-import { useProject } from "../ProjectWrapper";
+import ProjectImage from "../../Common/ProjectImage";
+import { useProject } from "../../ProjectWrapper";
 
 export default function ImageAndQuantity() {
     const { project, quantity } = useProject();
