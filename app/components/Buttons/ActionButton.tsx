@@ -1,7 +1,7 @@
 interface ButtonProps {
     children: React.ReactNode;
     className?: string;
-    onClick?: () => void;
+    onClick?: (event: any) => void | Promise<void>;
     disabled?: boolean;
 }
 

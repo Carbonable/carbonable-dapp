@@ -29,15 +29,16 @@ export const loader: LoaderFunction = async () => {
     const webWalletEnabled = process.env.WEB_WALLET_ENABLED === 'true';
     const rpcApiKey = process.env.RPC_API_KEY;
     const avnuUrl = process.env.AVNU_URL;
+    const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
 
-    return json({ defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl });
+    return json({ defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey });
   } catch {
       return json([]);
   }
 };
 
 export default function App() {
-  const { defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl } = useLoaderData();
+  const { defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey} = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
@@ -94,7 +95,8 @@ export default function App() {
                              lastIndexerBlock,
                              displayPortfolioTootltip,
                              setDisplayPortfolioTooltip,
-                             avnuUrl
+                             avnuUrl,
+                             stripePublicKey
                           }} />
           <ScrollRestoration />
           <Scripts />

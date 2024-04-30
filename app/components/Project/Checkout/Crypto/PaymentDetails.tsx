@@ -1,5 +1,5 @@
 import { type Token } from "~/types/tokens";
-import { useProject } from "../ProjectWrapper";
+import { useProject } from "../../ProjectWrapper";
 import { useMemo } from "react";
 
 export default function PaymentDetails({ selectedToken, conversionRate, finalTokenAmount, priceInUsd, avnuFees }: { selectedToken: Token, conversionRate: string, finalTokenAmount: number | string, priceInUsd: string, avnuFees: number | undefined}) {

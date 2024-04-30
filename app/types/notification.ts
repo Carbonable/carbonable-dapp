@@ -21,5 +21,6 @@ export type ContextType = {
     displayPortfolioTootltip: boolean,
     setDisplayPortfolioTooltip: (b: boolean) => void,
     avnuUrl: string,
+    stripePublicKey: string
 };
   

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import countries from '../../../config/countries/countries.json';
+import countries from '../../../../config/countries/countries.json';
 
 export default function Countries({selectedCountry, setSelectedCountry}: {selectedCountry: string | undefined, setSelectedCountry: (country: string) => void }) {
     const [sortedCountries, setSortedCountries] = useState<any[]>([]);
