@@ -5,7 +5,7 @@ import { useNotifications } from "~/root";
 import { useProject } from "../../ProjectWrapper";
 import StripeForm from "./StripeForm";
 
-export default function StripeElements({ email }: { email: string }) {
+export default function StripeElements({ email, setIsOpen }: { email: string, setIsOpen: (isOpen: boolean) => void }) {
     const { stripePublicKey } = useNotifications();
     const { quantity } = useProject();
     const stripePromise = loadStripe(stripePublicKey);
@@ -31,7 +31,7 @@ export default function StripeElements({ email }: { email: string }) {
                 </div>
                 <div className="flex items-center pt-8 pb-4 px-3 gap-x-3 border-t border-opacityLight-20">
                     <Elements stripe={stripePromise} options={options}>
-                        <StripeForm email={email} />
+                        <StripeForm email={email} setIsOpen={setIsOpen} />
                     </Elements>
                 </div>
             </div>
