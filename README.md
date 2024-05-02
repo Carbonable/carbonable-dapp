@@ -47,6 +47,13 @@ DMRV_API=""
 WEB_WALLET_ENABLED=true|false
 TRACKING_ACTIVATED=true|false #False if no DMRV API
 DISPLAY_LAUNCHPAD_HEADER=true|false
+PRESALE_TOKEN=presale_verification_token
+PRESALE_OPEN=true|false
+CUSTOMER_API_URL=customer_api_url
+
+STRIPE_PUBLIC_KEY=your_stripe_public_key
+STRIPE_SECRET_KEY=your_stripe_secret_key
+PAYMENT_GATEWAY_URL=payment_gateway_url
 ```
 
 ### ⛏️ Run for dev
