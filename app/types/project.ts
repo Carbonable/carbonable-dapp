@@ -37,6 +37,7 @@ export interface ProjectProps {
     slug: string,
     name: string,
     address: string,
+    slot: string,
     uri: any,
     forecasted_apr: string,
     total_value: string,

@@ -14,7 +14,10 @@ export default function CreditCardPayment({ setIsOpen }: {setIsOpen: (isOpen: bo
                 />
             </div>
             <div className="mt-8">
-                <StripeElements email={email} />
+                <StripeElements 
+                    email={email}
+                    setIsOpen={setIsOpen}
+                />
             </div>
         </>
     )
