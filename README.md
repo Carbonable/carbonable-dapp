@@ -51,6 +51,7 @@ PRESALE_TOKEN=presale_verification_token
 PRESALE_OPEN=true|false
 CUSTOMER_API_URL=customer_api_url
 
+ACTIVATE_STRIPE_PAYMENT=true|false
 STRIPE_PUBLIC_KEY=your_stripe_public_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 PAYMENT_GATEWAY_URL=payment_gateway_url
