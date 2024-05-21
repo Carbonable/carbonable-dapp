@@ -18,7 +18,7 @@ export default function ClaimAll() {
     const fetcher = useFetcher();
 
     useEffect(() => {
-        if (fetcher.data === undefined) {
+        if (fetcher.data === undefined && address !== undefined) {
             fetcher.load(`/farming/claimall?wallet=${address}`);
         }
 
