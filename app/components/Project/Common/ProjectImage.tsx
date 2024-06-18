@@ -6,7 +6,7 @@ import { useProject } from "../ProjectWrapper";
 export default function ProjectImage({ imageId }: { imageId: string }) {
     const [imageSrc, setImageSrc] = useState<string>("/assets/images/backgrounds/bg-farming-card.png");
     const [isRawSVG, setIsRawSVG] = useState<boolean>(false);
-    const { project } = useProject();
+    const { project, launchpad } = useProject();
 
     useEffect(() => {
         if (project.uri.uri) {
@@ -27,8 +27,8 @@ export default function ProjectImage({ imageId }: { imageId: string }) {
                     <SVGMetadata 
                         svg={imageSrc} 
                         id={imageId}
-                        area={project.current_milestone.ha ? project.current_milestone.ha + "ha" : undefined}
-                        carbonUnits={project.current_milestone.ton ? project.current_milestone.ton + "t" : undefined}
+                        area={project.current_milestone.ha && launchpad.is_sold_out === false ? project.current_milestone.ha + "ha" : undefined}
+                        carbonUnits={project.current_milestone.ton && launchpad.is_sold_out === false ? project.current_milestone.ton + "t" : undefined}
                     />
                 </div>
             }
