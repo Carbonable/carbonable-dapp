@@ -19,6 +19,8 @@ import { NotificationSource } from "~/utils/notifications/sources";
 import InfiniteProgress from "~/components/Loaders/InfiniteProgress";
 import type { AssetsAllocationProps, CarbonCreditsProps, ContractsProps, NumericValueProps, OverviewProps } from "~/interfaces/farming";
 import SVGMetadata from "~/components/Images/SVGMetadata";
+import type { FarmStatus} from "~/utils/blockchain/traits";
+import { Traits, getTraitValue } from "~/utils/blockchain/traits";
 
 export const loader: LoaderFunction = async ({
     params
@@ -38,6 +40,7 @@ export const loader: LoaderFunction = async ({
 export default function FarmingPage() {
     const { project, slug } = useLoaderData();
     const { address, isConnected } = useAccount();
+    const farmStatus = getTraitValue(project.uri?.data?.attributes, Traits.STATUS) as FarmStatus;
 
     const fetcher = useFetcher();
     const fetcherPortfolio = useFetcher();
@@ -324,7 +327,8 @@ export default function FarmingPage() {
                             total={assetsAllocation?.total.displayable_value ? parseFloat(assetsAllocation?.total.displayable_value) : 0} 
                             handleDeposit={handleDeposit} 
                             handleWithdraw={handleWithdraw} 
-                            mustMigrate={mustMigrate} 
+                            mustMigrate={mustMigrate}
+                            farmingStatus={farmStatus}
                         />
                     </div>
                     <div className="relative bg-farming-footer bg-no-repeat bg-center bg-cover px-8 py-12 mt-12 rounded-2xl overflow-hidden md:p-16">
