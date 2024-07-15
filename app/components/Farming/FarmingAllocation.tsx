@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import SecondaryButton, { GreenButton } from "../Buttons/ActionButton";
 import { useNavigate } from "@remix-run/react";
+import { FarmStatus } from "~/utils/blockchain/traits";
 
-export default function FarmingAllocation({resaleAmount, offsetAmount, undepositedAmount, total, mustMigrate, handleDeposit, handleWithdraw}: {resaleAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void}) {
+export default function FarmingAllocation({resaleAmount, offsetAmount, undepositedAmount, total, mustMigrate, handleDeposit, handleWithdraw, farmingStatus}: {resaleAmount: number | undefined, offsetAmount: number | undefined, undepositedAmount: number| undefined, total: number | undefined, mustMigrate: boolean, handleDeposit: () => void, handleWithdraw: () => void, farmingStatus: FarmStatus}) {
     const [resalePercentage, setResalePercentage] = useState<string | undefined>(undefined);
     const [offsetPercentage, setOffsetPercentage] = useState<string | undefined>(undefined);
     const [undepositedPercentage, setUndepositedPercentage] = useState<string | undefined>(undefined);
@@ -50,7 +51,8 @@ export default function FarmingAllocation({resaleAmount, offsetAmount, undeposit
                         undepositedPercentage={undepositedPercentage} 
                         undepositedAmount={undepositedAmount}
                         handleDeposit={handleDeposit} 
-                        handleWithdraw={handleWithdraw} 
+                        handleWithdraw={handleWithdraw}
+                        farmingStatus={farmingStatus}
                     />
                 </div>
             </div>
@@ -58,7 +60,7 @@ export default function FarmingAllocation({resaleAmount, offsetAmount, undeposit
     )
 }
 
-function ActionButtons({mustMigrate, undepositedPercentage, undepositedAmount, handleDeposit, handleWithdraw}: {mustMigrate: boolean, undepositedPercentage: string | undefined, undepositedAmount: number | undefined, handleDeposit: () => void, handleWithdraw: () => void}) {
+function ActionButtons({mustMigrate, undepositedPercentage, undepositedAmount, handleDeposit, handleWithdraw, farmingStatus}: {mustMigrate: boolean, undepositedPercentage: string | undefined, undepositedAmount: number | undefined, handleDeposit: () => void, handleWithdraw: () => void, farmingStatus: FarmStatus}) {
     const navigate = useNavigate();
 
     if (mustMigrate) {
@@ -69,7 +71,7 @@ function ActionButtons({mustMigrate, undepositedPercentage, undepositedAmount, h
 
     return (
         <>
-            {(undepositedAmount !== undefined && undepositedAmount > 0) && <GreenButton onClick={handleDeposit}>Deposit</GreenButton>}
+            {(undepositedAmount !== undefined && undepositedAmount > 0 && farmingStatus === FarmStatus.LIVE) && <GreenButton onClick={handleDeposit}>Deposit</GreenButton>}
             {(undepositedAmount === undefined || undepositedAmount === 0) && <SecondaryButton className="cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Deposit</SecondaryButton>}
             {undepositedPercentage !== undefined && undepositedPercentage !== '100%' && <SecondaryButton className="ml-2" onClick={handleWithdraw}>Withdraw</SecondaryButton>}
             {(undepositedPercentage === undefined || undepositedPercentage === '100%') && <SecondaryButton className="ml-2 cursor-not-allowed bg-transparent border border-neutral-600 hover:bg-transparent text-neutral-500">Withdraw</SecondaryButton>}
