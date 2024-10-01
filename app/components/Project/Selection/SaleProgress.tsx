@@ -2,6 +2,10 @@ import { useProject } from "../ProjectWrapper";
 
 export default function SaleProgress() {
     const { launchpad, project } = useProject();
+
+    if (!project.metadata) {
+        return null;
+    }
     const currentMilestone = project.metadata.milestones.find((milestone) => milestone.id === project.current_milestone.id);
     const nextMilestone = project.metadata.milestones.find((milestone) => milestone.id === project.current_milestone.id + 1);
 

@@ -2,6 +2,10 @@ import { useProject } from "../ProjectWrapper";
 
 export default function ProjectKPIs() {
     const { project, launchpad } = useProject();
+
+    if (!project.current_milestone) {
+        return null;
+    }
     const remaining = launchpad.is_sold_out ? "0" : parseFloat(project.current_milestone.remaining.displayable_value).toFixed(0);
     const shares = 
         launchpad.is_sold_out ? 

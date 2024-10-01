@@ -27,8 +27,8 @@ export default function ProjectImage({ imageId }: { imageId: string }) {
                     <SVGMetadata 
                         svg={imageSrc} 
                         id={imageId}
-                        area={project.current_milestone.ha && launchpad.is_sold_out === false ? project.current_milestone.ha + "ha" : undefined}
-                        carbonUnits={project.current_milestone.ton && launchpad.is_sold_out === false ? project.current_milestone.ton + "t" : undefined}
+                        area={project.current_milestone?.ha && launchpad.is_sold_out === false ? project.current_milestone?.ha + "ha" : undefined}
+                        carbonUnits={project.current_milestone?.ton && launchpad.is_sold_out === false ? project.current_milestone?.ton + "t" : undefined}
                     />
                 </div>
             }
