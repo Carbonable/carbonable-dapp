@@ -13,7 +13,7 @@ processes = []
   auto_rollback = true
 
 [deploy]
-  release_command = "npx prisma migrate deploy && npx prisma db seed"
+  #release_command = "npx prisma migrate deploy && npx prisma db seed"
 
 [[services]]
   http_checks = []
