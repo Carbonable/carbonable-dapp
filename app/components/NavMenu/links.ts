@@ -40,6 +40,13 @@ export const links = [
         isOpen: false,
         outsideLink: false,
         icon: 'impact'
+    },
+    {
+        href: 'https://voyager.online/staking-dashboard',
+        label: 'Staking',
+        isOpen: true,
+        outsideLink: true,
+        icon: 'staking'
     }
 ];
 
