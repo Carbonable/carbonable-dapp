@@ -2,6 +2,8 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async () => {
+    if (!process.env.INDEXER_URL) return json(undefined);
+
     try {
         const block = await fetch(`${process.env.INDEXER_URL}/latest/block`, {});
         const value = await block.json();

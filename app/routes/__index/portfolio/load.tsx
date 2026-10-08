@@ -4,6 +4,8 @@ import { json } from "@remix-run/node";
 export const loader: LoaderFunction = async ({
     request, 
   }) => {
+    if (!process.env.INDEXER_URL) return json([]);
+
     try {
         const url = new URL(request.url);
         const wallet = url.searchParams.get("wallet");

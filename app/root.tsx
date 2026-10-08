@@ -31,15 +31,17 @@ export const loader: LoaderFunction = async () => {
     const avnuUrl = process.env.AVNU_URL;
     const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
     const activateStripePayment = process.env.ACTIVATE_STRIPE_PAYMENT === 'true';
+    // Unset in production since the indexer was deleted (see the README).
+    const indexerEnabled = Boolean(process.env.INDEXER_URL);
 
-    return json({ defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey, activateStripePayment });
+    return json({ defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey, activateStripePayment, indexerEnabled });
   } catch {
       return json([]);
   }
 };
 
 export default function App() {
-  const { defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey, activateStripePayment } = useLoaderData();
+  const { defaultNetwork, webWalletEnabled, rpcApiKey, avnuUrl, stripePublicKey, activateStripePayment, indexerEnabled } = useLoaderData();
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mustReloadMigration, setMustReloadMigration] = useState(false);
   const [mustReloadFarmingPage, setMustReloadFarmingPage] = useState(false);
@@ -49,6 +51,8 @@ export default function App() {
   const lastBlockFetcher = useFetcher();
 
   useEffect(() => {
+    if (!indexerEnabled) return;
+
     async function getLastBlock() {
       lastBlockFetcher.load(`/indexer/block`);
     }
@@ -58,7 +62,7 @@ export default function App() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [indexerEnabled]);
 
   useEffect(() => {
     if (lastBlockFetcher.data !== undefined) {

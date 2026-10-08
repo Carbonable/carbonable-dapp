@@ -7,25 +7,35 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { Badge, BadgeContract } from "@prisma/client";
 
+// The odyssey database (Fly Postgres app prod-carbonable-db) is down (2026-10): answer without badges
+// after 5 s rather than wait for Prisma to give up (37 s measured).
+const DATABASE_TIMEOUT_MS = 5000;
+
 export const loader: LoaderFunction = async ({
     request, 
   }) => {
     try {
-        const allBadges = await db.badge.findMany({
-            orderBy: [
-                {
-                    token_id: 'desc',
-                }
-            ]
-        });
-
         const selectedNetwork = process.env.NETWORK;
 
-        const contract = await db.badgeContract.findFirst({
-            where: {
-                networkId: selectedNetwork, 
-            }
-        });
+        const badgesAndContract = Promise.all([
+            db.badge.findMany({
+                orderBy: [
+                    {
+                        token_id: 'desc',
+                    }
+                ]
+            }),
+            db.badgeContract.findFirst({
+                where: {
+                    networkId: selectedNetwork,
+                }
+            }),
+        ]);
+        const timeout = new Promise<never>((_, reject) => setTimeout(() => {
+            reject(new Error(`No answer from the database after ${DATABASE_TIMEOUT_MS} ms`));
+        }, DATABASE_TIMEOUT_MS));
+
+        const [allBadges, contract] = await Promise.race([badgesAndContract, timeout]);
         return json({allBadges, contract});
     } catch (e) {
         console.error(e)
@@ -36,7 +46,8 @@ export const loader: LoaderFunction = async ({
 export default function Quest() {
     // tag badge from prisma client
     const data = useLoaderData();
-    const badges: Badge[] = data.allBadges;
+    // The loader answers [] when the database fails.
+    const badges: Badge[] = data.allBadges ?? [];
     const contract: BadgeContract = data.contract;
 
     return (

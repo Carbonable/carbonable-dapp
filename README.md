@@ -11,6 +11,25 @@
   <h3 align="center">Carbonable dApp written in React with Remix</h3>
 </div>
 
+## Production
+
+The current Carbonable app is https://app.carbonable.io (repository `Carbonable/dapp-v3`). This version stays online
+as https://app-v2.carbonable.io and https://private-sale.carbonable.io, on Fly (app `prod-carbonable-dapp`, org
+Carbonable), behind the Cloudflare proxy. It is deployed by hand from a clean checkout of `main`, there is no CI:
+
+```bash
+fly deploy . -c fly-env/fly_prod.toml --remote-only
+```
+
+Its backend no longer exists (state on 2026-10-08), and every page shows a notice that points to app.carbonable.io:
+
+- the indexer (Fly app `carbonable-mainnet-blue-indexer`, `INDEXER_URL=https://carbonable-mainnet-blue-indexer.fly.dev`)
+  was deleted. `INDEXER_URL` was removed from the app's secrets the same day: without it the launchpad, farming and
+  portfolio loaders answer "no data" at once, where each lookup of the deleted host took 8 to 13 s;
+- the leaderboard API (`GRAPHQL_ENDPOINT=https://carbonable-mainnet-leaderboard-backend.fly.dev/query`) no longer
+  exists either;
+- the odyssey database (Fly Postgres app `prod-carbonable-db`) is down.
+
 ## Usage
 
 ### Set up the project

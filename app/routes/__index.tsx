@@ -54,6 +54,11 @@ export default function Index() {
                 </div>
             </nav>
             <main className='w-full lg:w-[calc(100%_-_222px)] lg:ml-[222px] mt-[110px]' id="page-wrap">
+                <div className="mx-auto max-w-7xl">
+                    <div className="w-11/12 mx-auto mt-4 mb-6 px-4 py-3 rounded-xl border border-orange-dark bg-neutral-700 text-sm text-orange-light text-center">
+                        This version of the Carbonable app is no longer maintained: its launchpad, farming, portfolio and leaderboard data are no longer available. The current app is <a href="https://app.carbonable.io" className="underline font-bold">app.carbonable.io</a>.
+                    </div>
+                </div>
                 <Outlet context={{ notifs,
                                    setNotifs,
                                    mustReloadMigration,

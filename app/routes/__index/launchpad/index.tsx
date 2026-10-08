@@ -6,6 +6,8 @@ import LaunchpadCard from "~/components/Launchpad/Overview/ProjectCard";
 import { type LaunchpadLoaderData } from "~/types/project";
 
 export const loader: LoaderFunction = async () => {
+    if (!process.env.INDEXER_URL) return json([]);
+
     try {
         const projectsData = await fetch(`${process.env.INDEXER_URL}/launchpad/list`, {});
         const projectsJson = await projectsData.json();

@@ -10,6 +10,8 @@ import { GRAMS_PER_TON } from "~/utils/constant";
 import { shortenNumber, shortenNumberWithDigits } from "~/utils/utils";
 
 export const loader: LoaderFunction = async () => {
+    if (!process.env.INDEXER_URL) return json({});
+
     try {
         const allFarms = await fetch(`${process.env.INDEXER_URL}/farming/list`, {});
         const allFarmsJson = await allFarms.json();
@@ -43,7 +45,8 @@ export const meta: V2_MetaFunction = () => {
 
 export default function FarmingIndex() {
     const loaderData = useLoaderData();
-    const projects: any[] = loaderData[0].data;
+    // The loader answers {} when it has no farm list (no indexer, or an indexer error).
+    const projects: any[] = loaderData[0]?.data ?? [];
     const connectedGlobalFetcher = useFetcher();
     const { address, isConnected } = useAccount();
     const [myFarmingAssets, setMyFarmingAssets] = useState('-');
@@ -53,11 +56,11 @@ export default function FarmingIndex() {
     const [portfolio, setPortfolio] = useState([] as any);
     
     useEffect(() => {
-        if (isConnected) {
+        if (isConnected && projects.length > 0) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
             connectedGlobalFetcher.load(`/farming/list/global?wallet=${address}`);
         }
-    }, [address, isConnected]);
+    }, [address, isConnected, projects.length]);
 
     // Set portfolio data when data is loaded
     useEffect(() => {
@@ -117,7 +120,7 @@ export default function FarmingIndex() {
                         }
                     </div>
                     <div className="justify-end pr-2">
-                        <ClaimAll />
+                        {projects.length > 0 && <ClaimAll />}
                     </div>
                 </div>
                 <div className="flex flex-wrap justify-start mt-8 gap-8 w-full">
@@ -127,6 +130,11 @@ export default function FarmingIndex() {
                                 <FarmingCard project={project} key={index} portfolio={portfolio} />
                             )
                         })
+                    }
+                    { projects.length === 0 &&
+                        <div className="text-xl px-2 text-neutral-300">
+                            No farming projects available right now
+                        </div>
                     }
                 </div>
             </div>

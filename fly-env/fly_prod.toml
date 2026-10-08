@@ -15,6 +15,12 @@ processes = []
 [deploy]
   #release_command = "npx prisma migrate deploy && npx prisma db seed"
 
+# With 256 MB the machine had no memory left and kept reading its own code back from disk:
+# every page took 7 to 17 s (2026-10-08).
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
 [[services]]
   http_checks = []
   internal_port = 8080

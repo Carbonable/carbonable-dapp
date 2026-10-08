@@ -57,4 +57,5 @@ COPY --from=build /app/build /app/build
 COPY --from=build /app/public /app/public
 ADD . .
 
-CMD ["npm", "run", "start"]
+# remix-serve itself, not `npm run start`: npm would stay in memory as its parent process
+CMD ["/app/node_modules/.bin/remix-serve", "build"]

@@ -1,6 +1,7 @@
 import { useAccount } from "@starknet-react/core";
-import type { V2_MetaFunction } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { shortenNumber } from "~/utils/utils";
@@ -36,7 +37,12 @@ function KPI({title, value}: {title: string, value: string}) {
     )
 }
 
+export const loader: LoaderFunction = async () => {
+    return json({ indexerEnabled: Boolean(process.env.INDEXER_URL) });
+};
+
 export default function Portfolio() {
+    const { indexerEnabled } = useLoaderData();
     const { isConnected, address } = useAccount();
     const [investedAmount, setInvestedAmount] = useState("-");
     const [investedProjects, setInvestedProjects] = useState([] as any);
@@ -49,7 +55,7 @@ export default function Portfolio() {
 
     useEffect(() => {
         // Load portfolio data when user connects wallet or changes account
-        if (isConnected) {
+        if (isConnected && indexerEnabled) {
             fetcher.load(`/portfolio/load?wallet=${address}`);
             setMustReloadMigration(false);
             setRefreshData(false);
@@ -93,6 +99,17 @@ export default function Portfolio() {
             setNumberOfProjects((_.filter(projects, (project) => project.tokens.length > 0)).length)
         }
     }, [fetcher, isConnected]);
+
+    if (!indexerEnabled) {
+        return (
+            <div className="relative mx-auto md:mt-12 lg:mt-6 max-w-7xl">
+                <div className="relative w-11/12 mx-auto mb-12">
+                    <div className="uppercase font-bold text-xl text-left md:pl-1 2xl:text-2xl">My Assets</div>
+                    <div className="text-xl mt-4 md:pl-1 text-neutral-300">Portfolio data is not available in this version of the app.</div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="relative mx-auto md:mt-12 lg:mt-6 max-w-7xl">

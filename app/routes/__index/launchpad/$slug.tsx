@@ -11,6 +11,8 @@ import { urlFor } from "~/utils/sanity/image";
 import { type SanityContent } from "~/utils/sanity/types";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
+    if (!process.env.INDEXER_URL) throw new Response("Not Found", {status: 404});
+
     try {
       const projects = await fetch(`${process.env.INDEXER_URL}/launchpad/details/${params.slug}`, {});
       const project = await projects.json();

@@ -25,6 +25,8 @@ import { Traits, getTraitValue } from "~/utils/blockchain/traits";
 export const loader: LoaderFunction = async ({
     params
   }) => {
+    if (!process.env.INDEXER_URL) throw new Response("Not Found", {status: 404});
+
     try {
         const selectedNetwork = process.env.NETWORK;
         const slug = params.slug;
